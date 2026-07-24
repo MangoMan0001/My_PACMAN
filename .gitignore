@@ -5,3 +5,4 @@ test.txt
 __pycache__
 *.egg-info/
 .mypy_cache
+settings.json

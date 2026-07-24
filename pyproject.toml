@@ -9,14 +9,15 @@ description = "PACMAN"
 readme = "README.md"
 requires-python = ">=3.14"
 dependencies = [
-    "arcade>=3.3.3",
     "fire>=0.7.1",
     "flake8>=7.3.0",
     "flake8-bugbear>=25.11.29",
     "flake8-pyproject",
+    "mazegenerator",
     "mypy>=1.19.1",
     "pep8-naming>=0.15.1",
     "pydantic>=2.12.5",
+    "pygame-ce>=2.5.7",
 ]
 
 # "flake8-docstrings",
@@ -58,3 +59,6 @@ exclude = [
 	"data"
 ]
 max-line-length = 120
+
+[tool.uv.sources]
+mazegenerator = { path = "mazegenerator-2.1.0-py3-none-any.whl" }
