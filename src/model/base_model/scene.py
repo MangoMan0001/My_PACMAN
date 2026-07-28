@@ -1,11 +1,12 @@
 import pygame
 from abc import ABC, abstractmethod
 from typing import Any
-from pathlib import Path
+
+from src.model.base_model.config_model import ConfigModel
 
 
 class Scene(ABC):
-    def __init__(self, config: dict[str, int | list[dict[str, int]] | Path]):
+    def __init__(self, config: ConfigModel):
         self.config = config
 
     @abstractmethod

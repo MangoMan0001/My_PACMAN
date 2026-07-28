@@ -1,12 +1,12 @@
 import pygame
 from typing import Any
-from pathlib import Path
 
 from src.model.base_model.scene import Scene
+from src.model.base_model.config_model import ConfigModel
 
 
 class MainMenu(Scene):
-    def __init__(self, config: dict[str, int | list[dict[str, int]] | Path]):
+    def __init__(self, config: ConfigModel):
         super().__init__(config)
 
     def update(self, events: list[pygame.event.Event]) -> None | tuple[str, Any]:
@@ -14,7 +14,7 @@ class MainMenu(Scene):
         イベントを処理する。画面遷移が必要な場合はシーン名と受け渡すデータをタプルで返す。
         何もなければNoneを返す
         """
-        pass
+        return ("PLAY", None)
 
     def draw(self, screen: pygame.Surface) -> None:
         pass

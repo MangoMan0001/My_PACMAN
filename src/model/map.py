@@ -2,11 +2,12 @@ import pygame
 
 from mazegenerator import MazeGenerator
 from model.game_state import GameState
+from src.model.base_model.config_model import LevelModel
 from src.model.base_model.entity import Entity
 
 
 class Map(Entity):
-    def __init__(self, level: list[dict[str, int]], seed: int):
+    def __init__(self, level: LevelModel, seed: int):
         # 16進数や0,1などで構成された壁の配列データ
         self.x: int = level[0]['width']
         self.y: int = level[0]['height']

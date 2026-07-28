@@ -7,6 +7,10 @@ NAME        = pacman
 
 MAIN_DERECTRY = src
 
+# 追加ソース
+
+CONFIG_FILE = config.json
+
 # ==========================================
 #  Rules
 # ==========================================
@@ -32,7 +36,7 @@ install: ## 仮想環境を作成し、依存関係をインストールする
 # ------------------------------------------
 run: ## メインプログラムを実行
 	@echo "Running $(NAME)..."
-	uv run python -m $(MAIN_DERECTRY)
+	uv run python -m $(MAIN_DERECTRY) $(CONFIG_FILE)
 
 debug: ## pdbデバッガを使って実行
 	@echo "Debugging $(NAME)..."

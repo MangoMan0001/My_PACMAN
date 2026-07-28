@@ -1,9 +1,9 @@
 import pygame
-from pathlib import Path
 
-from game_manager import GameManager
+from src.model.base_model.config_model import ConfigModel
 from src.model.base_model.scene import Scene
 from src.model.scene.mainmenu import MainMenu
+from src.model.scene.game_manager import GameManager
 from src.model.scene.gameover import GameOver
 from src.model.scene.gameclear import GameClear
 from src.model.scene.pause import Pause
@@ -18,11 +18,14 @@ class Game:
 
         self.running = True
 
-    def run(self, config: dict[str, int | list[dict[str, int]] | Path]) -> None:
+    def run(self, config: ConfigModel) -> None:
         self.current_scene = MainMenu(config)
 
         while self.running:
             events = pygame.event.get()
+            print(type(events))
+            import sys
+            sys.exit(1)
 
             scene_request = self.current_scene.update(events)
 
@@ -33,7 +36,7 @@ class Game:
                     # メインメニュー
                     self.current_scene = MainMenu(config)
 
-                elif scene_name == "PLAYING":
+                elif scene_name == "PLAY":
                     # メニュー → プレイ画面
                     self.current_scene = GameManager(config)
 

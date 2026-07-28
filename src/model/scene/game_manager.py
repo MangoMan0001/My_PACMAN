@@ -1,6 +1,7 @@
 import pygame
 from typing import List, Optional
 
+from src.model.base_model.config_model import ConfigModel
 from src.model.base_model.entity import Entity
 from src.model.base_model.scene import Scene
 from src.model.map import Map
@@ -13,10 +14,10 @@ from src.model.character.clyde import Clyde
 
 
 class GameManager(Scene):
-    def __init__(self, wall_data: List[List[int]], item_data: List[List[int]]) -> None:
-        super.
+    def __init__(self, config: ConfigModel) -> None:
+        super().__init__(config)
         # 1. マップの生成
-        self.game_map: Map = Map(wall_data)
+        self.game_map: Map = Map(level=config.level, seed=config.seed)
 
         # 2. パックマンの生成
         self.pacman: Pacman = Pacman(32, 32, 2)

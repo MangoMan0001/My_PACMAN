@@ -2,10 +2,11 @@ import pygame
 from typing import Any
 
 from src.model.base_model.scene import Scene
+from src.model.base_model.config_model import ConfigModel
 
 
 class GameOver(Scene):
-    def __init__(self, config: dict[str, int | list[dict[str, int]] | Path], score: int):
+    def __init__(self, config: ConfigModel, score: int):
         super().__init__(config)
         self.score: int = score
 
