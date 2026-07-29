@@ -1,7 +1,7 @@
 from abc import abstractmethod
 
-from character import Character
-from model.game_state import GameState
+from .character import Character
+from src.model.game_state import GameState
 
 
 # --- ゴーストとその派生 ---

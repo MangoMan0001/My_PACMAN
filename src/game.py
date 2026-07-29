@@ -23,9 +23,6 @@ class Game:
 
         while self.running:
             events = pygame.event.get()
-            print(type(events))
-            import sys
-            sys.exit(1)
 
             scene_request = self.current_scene.update(events)
 

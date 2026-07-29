@@ -1,7 +1,7 @@
 import pygame
 from abc import ABC, abstractmethod
 
-from model.game_state import GameState
+from src.model.game_state import GameState
 
 
 # --- すべての基底クラス (描画と状態更新のみ) ---

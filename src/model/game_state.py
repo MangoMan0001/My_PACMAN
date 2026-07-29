@@ -1,16 +1,28 @@
-from model.map import Map
-from model.character.pacman import Pacman
-from model.base_model.ghost import Ghost
-from model.item_manager import ItemManager
+from __future__ import annotations
+from typing import TYPE_CHECKING
+
+
+from src.model.base_model.config_model import ConfigModel
+
+if TYPE_CHECKING:
+    from src.model.map import Map
+    from src.model.character.pacman import Pacman
+    from src.model.base_model.ghost import Ghost
+    from src.model.item_manager import ItemManager
 
 
 # --- ゲームの状態をすべて持つデータクラス ---
 class GameState:
-    def __init__(self, lives: int, map: Map, pacman: Pacman):
-        self.score = 0
-        self.lives = lives
-        self.map = map
-        self.item = ItemManager
-        self.keys: list[int] = []           # key入力情報
-        self.pacman = pacman                # Pacmanのインスタンスを保持
+    def __init__(self, config: ConfigModel):
+
+        # === OBJECT ===
+        self.config: ConfigModel = config   # configオブジェクト
+        self.map: Map | None = None         # Mapオブジェクト
+        self.item: ItemManager              # Itemsオブジェクト
+        self.pacman: Pacman                 # Pacmanオブジェクト
         self.ghosts: list[Ghost] = []       # 4匹のGhostのインスタンスをリストで保持
+
+        # === GAME STATUS ===
+        self.current_level: int = 0         # ステージの現在レベル
+        self.keys: list[int] = []           # key入力情報
+        self.score: int = 0                 # current score

@@ -1,4 +1,4 @@
-from entity import Entity
+from .entity import Entity
 
 
 # --- キャラクター系 (動く) ---

@@ -1,6 +1,6 @@
 import pygame
 
-from model.game_state import GameState
+from src.model.game_state import GameState
 from src.model.base_model.item import Item
 
 
