@@ -24,6 +24,10 @@ class Game:
         while self.running:
             events = pygame.event.get()
 
+            for event in events:
+                if event.type == pygame.QUIT:
+                    self.running = False
+
             scene_request = self.current_scene.update(events)
 
             if scene_request is not None:
