@@ -48,11 +48,11 @@ class MainMenu(Scene):
         y: int,
         color: tuple[int, int, int],
         string: str,
-        type: str = "info"
+        font_key: str = "info"
     ) -> None:
         # font.render(text, antialias, color, background=None) -> Surface:
         # antialiasはTrueで文字が滑らかになるが、処理が重くなる。今回は✕！
-        text_surface = self.font[type].render(string, False, color)
+        text_surface = self.font[font_key].render(string, False, color)
         # surface.blit(source, dest, area=None, special_flags=0) -> Rect
         # 今回はsource=描画する元のサーフェス、dest=(x, y)
         screen.blit(text_surface, (x, y))
