@@ -23,18 +23,11 @@ class Map(Entity):
         self.wall_color: tuple[int, int, int] = (255, 255, 255)
         self.space: int = 40
 
-        self.remake_screen: bool = True
-
     def update(self, game_state: GameState) -> None:
         pass
 
     def draw(self, screen: pygame.Surface) -> None:
         """mapのみを画面に描画する"""
-        if self.remake_screen:
-            pygame.display.set_mode((self.x * self.area_size + self.space * 2,
-                                     self.y * self.area_size + self.space * 2))
-            self.remake_screen = False
-
         map_len = self.x * self.area_size + self.wall_size
         pygame.draw.rect(screen, self.wall_color, (self.space, self.space, map_len, self.wall_size))
         pygame.draw.rect(screen, self.wall_color, (self.space, self.space, self.wall_size, map_len))
@@ -89,7 +82,5 @@ class Map(Entity):
         self.generate = MazeGenerator((self.x, self.y), perfect=False, seed=game_state.config.seed)
 
         self.wall_map = self.generate.maze
-        self.remake_screen = True
-        pass
 
 #    Private functions
