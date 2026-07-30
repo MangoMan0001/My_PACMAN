@@ -36,11 +36,10 @@ class MainMenu(Scene):
         画面遷移が必要な場合はシーン名と受け渡すデータをタプルで返す。
         何もなければNoneを返す
         """
-        # ===== "PLAY"から"MAIN_MENU"に変更してます。 =====
         for event in events:
             if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
                 return ("PLAY", None)
-        return ("MAIN_MENU", None)
+        return None
 
     def _string_put(
         self,
