@@ -1,4 +1,4 @@
-from .entity import Entity
+from src.model.base_model.entity import Entity
 
 
 # --- アイテム系 (動かない) ---
