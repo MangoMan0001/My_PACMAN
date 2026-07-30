@@ -153,7 +153,7 @@ wheels = [
 [[package]]
 name = "mazegenerator"
 version = "2.1.0"
-source = { path = "mazegenerator-2.1.0-py3-none-any.whl" }
+source = { path = "data/map/mazegenerator-2.1.0-py3-none-any.whl" }
 wheels = [
     { filename = "mazegenerator-2.1.0-py3-none-any.whl", hash = "sha256:98e12f7e989cef03dd4411657d7bee12653804aee87a568eddfaf21436ffd4aa" },
 ]
@@ -210,7 +210,7 @@ wheels = [
 [[package]]
 name = "pacman"
 version = "0.1.0"
-source = { editable = "." }
+source = { virtual = "." }
 dependencies = [
     { name = "fire" },
     { name = "flake8" },
@@ -229,7 +229,7 @@ requires-dist = [
     { name = "flake8", specifier = ">=7.3.0" },
     { name = "flake8-bugbear", specifier = ">=25.11.29" },
     { name = "flake8-pyproject" },
-    { name = "mazegenerator", path = "mazegenerator-2.1.0-py3-none-any.whl" },
+    { name = "mazegenerator", path = "data/map/mazegenerator-2.1.0-py3-none-any.whl" },
     { name = "mypy", specifier = ">=1.19.1" },
     { name = "pep8-naming", specifier = ">=0.15.1" },
     { name = "pydantic", specifier = ">=2.12.5" },

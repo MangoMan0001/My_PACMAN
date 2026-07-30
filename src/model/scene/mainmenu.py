@@ -1,0 +1,20 @@
+import pygame
+from typing import Any
+
+from src.model.base_model.scene import Scene
+from src.model.base_model.config_model import ConfigModel
+
+
+class MainMenu(Scene):
+    def __init__(self, config: ConfigModel):
+        super().__init__(config)
+
+    def update(self, events: list[pygame.event.Event]) -> None | tuple[str, Any]:
+        """
+        イベントを処理する。画面遷移が必要な場合はシーン名と受け渡すデータをタプルで返す。
+        何もなければNoneを返す
+        """
+        return ("PLAY", None)
+
+    def draw(self, screen: pygame.Surface) -> None:
+        pass
