@@ -1,5 +1,4 @@
 from __future__ import annotations
-import pygame
 from typing import TYPE_CHECKING
 
 
@@ -22,7 +21,6 @@ class GameState:
         self.item: ItemManager                      # Itemsオブジェクト
         self.pacman: Pacman                         # Pacmanオブジェクト
         self.ghosts: list[Ghost] = []               # 4匹のGhostのインスタンスをリストで保持
-        self.screen: pygame.Surface | None = None
 
         # === GAME STATUS ===
         self.current_level: int = 0                 # ステージの現在レベル

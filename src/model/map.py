@@ -1,9 +1,11 @@
 import pygame
+from typing import Literal
 
 from mazegenerator import MazeGenerator
 from src.model.game_state import GameState
-from src.model.base_model.config_model import LevelModel
 from src.model.base_model.entity import Entity
+
+DIRECTION = Literal['ABOVE', 'RIGHT', 'BOTTOM', 'LEFT']
 
 
 class Map(Entity):
@@ -24,14 +26,14 @@ class Map(Entity):
         self.remake_screen: bool = True
 
     def update(self, game_state: GameState) -> None:
-        if self.remake_screen:
-            game_state.screen = pygame.display.set_mode((self.x * self.area_size + self.space * 2,
-                                                         self.y * self.area_size + self.space * 2))
-            self.remake_screen = False
         pass
 
     def draw(self, screen: pygame.Surface) -> None:
         """mapのみを画面に描画する"""
+        if self.remake_screen:
+            pygame.display.set_mode((self.x * self.area_size + self.space * 2,
+                                     self.y * self.area_size + self.space * 2))
+            self.remake_screen = False
 
         map_len = self.x * self.area_size + self.wall_size
         pygame.draw.rect(screen, self.wall_color, (self.space, self.space, map_len, self.wall_size))
@@ -64,9 +66,18 @@ class Map(Entity):
                                                            self.area_size - self.wall_size,
                                                            self.area_size - self.wall_size))
 
-    def is_wall(self, x: int, y: int) -> bool:
+    def is_wall(self, x: int, y: int, direction: DIRECTION) -> bool:
         """指定された座標が壁かどうかを判定する"""
-        return True
+        cell = self.wall_map[y][x]
+        if direction == 'ABOVE':
+            return bool(cell & 1)
+        elif direction == 'RIGHT':
+            return bool(cell & 2)
+        elif direction == 'BOTTOM':
+            return bool(cell & 4)
+        elif direction == 'LEFT':
+            return bool(cell & 8)
+        return False
 
     def level_up(self, game_state: GameState) -> None:
         """クリア後のレベルアップ処理"""

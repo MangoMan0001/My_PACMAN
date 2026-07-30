@@ -40,6 +40,14 @@ class GameManager(Scene):
 
     def update(self, events: list[pygame.event.Event]) -> None | tuple[str, Any]:
         """毎フレーム呼ばれる処理"""
+
+        # debug
+        for event in events:
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_RETURN:
+                    self.game_state.current_level += 1
+                    self.map.level_up(self.game_state)
+
         self.map.update(self.game_state)
         self.item_mageer.update(self.game_state)
         return None
