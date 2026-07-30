@@ -18,7 +18,7 @@ class Map(Entity):
 
         self.wall_map: list[list[int]] = self.generater.maze  # 各要素16進数で各方向の壁の有無がリストで記録される
 
-        self.area_size: int = 64
+        self.area_size: int = 32
         self.wall_size: int = 1
         self.wall_color: tuple[int, int, int] = (255, 255, 255)
         self.space: int = 40
@@ -81,6 +81,8 @@ class Map(Entity):
 
     def level_up(self, game_state: GameState) -> None:
         """クリア後のレベルアップ処理"""
+        if len(game_state.config.level) <= game_state.current_level:
+            return
         self.x = game_state.config.level[game_state.current_level].width
         self.y = game_state.config.level[game_state.current_level].height
 
