@@ -47,6 +47,11 @@ class ItemManager:
         item_map[0][map.x - 1] = 1
         item_map[map.y - 1][0] = 1
         item_map[map.y - 1][map.x - 1] = 1
+
+        current_gums: int = 0
+
+        while current_gums < game_state.
+
         # print(item_map)
         # import sys
         # sys.exit(1)
