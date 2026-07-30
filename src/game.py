@@ -12,7 +12,8 @@ from src.model.scene.pause import Pause
 class Game:
     def __init__(self) -> None:
         pygame.init()
-        self.screen = pygame.display.set_mode((800, 600))
+        info = pygame.display.Info()
+        self.screen = pygame.display.set_mode((info.current_w, info.current_h))
 
         self.current_scene: Scene
 
@@ -53,5 +54,6 @@ class Game:
                     # プレイ画面 → ゲームクリア（スコアを渡す）
                     self.current_scene = GameClear(config)
 
+            self.screen.fill((0, 0, 0))
             self.current_scene.draw(self.screen)
             pygame.display.flip()
