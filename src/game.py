@@ -8,11 +8,15 @@ from src.model.scene.gameover import GameOver
 from src.model.scene.gameclear import GameClear
 from src.model.scene.pause import Pause
 
+SCREEN_WIDTH = 800
+SCREEN_HEIGHT = 600
 
 class Game:
     def __init__(self) -> None:
         pygame.init()
-        self.screen = pygame.display.set_mode((800, 600))
+        self.screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+        # ウィンドウのタイトルを設定
+        pygame.display.set_caption("Pac-Man")
 
         self.current_scene: Scene
 
