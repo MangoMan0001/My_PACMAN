@@ -20,6 +20,7 @@ class GameManager(Scene):
         self.game_state: GameState = GameState(config)
 
         self.map: Map = Map(self.game_state)
+        self.game_state.map = self.map
 
         self.item_mageer: ItemManager = ItemManager(self.game_state)
 

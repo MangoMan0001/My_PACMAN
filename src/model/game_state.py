@@ -18,8 +18,8 @@ class GameState:
         # === OBJECT ===
         self.config: ConfigModel = config           # configオブジェクト
         self.map: Map | None = None                 # Mapオブジェクト
-        self.item: ItemManager                      # Itemsオブジェクト
-        self.pacman: Pacman                         # Pacmanオブジェクト
+        self.item: ItemManager | None = None        # Itemsオブジェクト
+        self.pacman: Pacman | None = None           # Pacmanオブジェクト
         self.ghosts: list[Ghost] = []               # 4匹のGhostのインスタンスをリストで保持
 
         # === GAME STATUS ===
