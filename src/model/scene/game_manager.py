@@ -15,11 +15,11 @@ from src.model.character.clyde import Clyde
 
 
 class GameManager(Scene):
-    def __init__(self, config: ConfigModel) -> None:
+    def __init__(self, config: ConfigModel, screen: pygame.Surface) -> None:
         super().__init__(config)
         self.game_state: GameState = GameState(config)
 
-        self.map: Map = Map(self.game_state)
+        self.map: Map = Map(self.game_state, screen)
         self.game_state.map = self.map
 
         self.item_mageer: ItemManager = ItemManager(self.game_state)
@@ -41,7 +41,6 @@ class GameManager(Scene):
 
     def update(self, events: list[pygame.event.Event]) -> None | tuple[str, Any]:
         """毎フレーム呼ばれる処理"""
-
         # debug
         for event in events:
             if event.type == pygame.KEYDOWN:

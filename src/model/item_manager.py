@@ -1,5 +1,7 @@
 import pygame
 import random
+from enum import IntEnum
+from typing import Optional
 
 from src.model.base_model.item import Item
 from src.model.map import Map
@@ -8,17 +10,35 @@ from src.model.item.pacgum import Pacgum
 from src.model.item.super_pacgum import SuperPacgum
 
 
+class CellType(IntEnum):
+    PATH = 0
+    PACGUM = 1
+    SUPER_PACGUM = 2
+    BAN = 3  # 不可侵エリア
+
+
 class ItemManager:
     def __init__(self, game_state: GameState):
         self.pacgum_count: int = game_state.config.pacgum
         self.pacgum_point: int = game_state.config.points_per_pacgum
         self.super_pacgum_point: int = game_state.config.points_per_super_pacgum
 
-        self.item_map: list[list[int]] = self._generate_map(game_state)  # 0=通路 1=壁 2＝pacgum 3=super_pacgum
+        # 0=通路 1=pacgum 2＝super_pacgum 3=不可侵エリア
+        self.item_map: list[list[Optional[Item]]] = self._generate_map(game_state)
         self.pacgums: list[Pacgum] = self._generate_pacgum()
         self.super_pacgums: list[SuperPacgum] = self._generate_super_pacgum()
+        # print(self.item_map)
+        # print(self.pacgums)
+        # print(self.super_pacgums)
+        # import sys
+        # sys.exit(1)
 
     def update(self, game_state: GameState) -> None:
+        for item in self.pacgums:
+            item.update(game_state)
+
+        for item in self.super_pacgums:
+            item.update(game_state)
         pass
 
     def draw(self, screen: pygame.Surface) -> None:
@@ -35,30 +55,65 @@ class ItemManager:
 
 #    Private functions
 
-    def _generate_map(self, game_state: GameState) -> list[list[int]]:
+    def _generate_map(self, game_state: GameState) -> list[list[Optional[Item]]]:
         random.seed(game_state.config.seed)
 
         assert game_state.map is not None
         map: Map = game_state.map
 
-        item_map = [[0] * map.x for _ in range(map.y)]
+        temp_map = [[CellType.PATH] * map.x for _ in range(map.y)]
+        item_map: list[list[Optional[Item]]] = [[None] * map.x for _ in range(map.y)]
 
-        item_map[0][0] = 1
-        item_map[0][map.x - 1] = 1
-        item_map[map.y - 1][0] = 1
-        item_map[map.y - 1][map.x - 1] = 1
+        temp_map[0][0] = CellType.SUPER_PACGUM
+        temp_map[0][map.x - 1] = CellType.SUPER_PACGUM
+        temp_map[map.y - 1][0] = CellType.SUPER_PACGUM
+        temp_map[map.y - 1][map.x - 1] = CellType.SUPER_PACGUM
 
         current_gums: int = 0
 
-        while current_gums < game_state.
+        for y, line in enumerate(map.wall_map):
+            for x, cell in enumerate(line):
+                if cell == 15:
+                    temp_map[y][x] = CellType.BAN
 
-        # print(item_map)
-        # import sys
-        # sys.exit(1)
-        return []
+        while current_gums < game_state.config.pacgum:
+            for y, line in enumerate(temp_map):
+                for x, cell in enumerate(line):
+                    if game_state.config.pacgum <= current_gums:
+                        break
+                    if random.choice([True, False]) and cell == CellType.PATH:
+                        temp_map[y][x] = CellType.PACGUM
+                        current_gums += 1
+
+        for y, line in enumerate(temp_map):
+            for x, cell in enumerate(line):
+                if cell == CellType.PACGUM:
+                    item_map[y][x] = Pacgum(x, y, game_state.config.points_per_pacgum)
+                elif cell == CellType.SUPER_PACGUM:
+                    item_map[y][x] = SuperPacgum(x, y, game_state.config.points_per_super_pacgum)
+
+        return item_map
 
     def _generate_pacgum(self) -> list[Pacgum]:
-        return []
+        pacgum_list: list[Pacgum] = []
+
+        for y, line in enumerate(self.item_map):
+            for x, cell in enumerate(line):
+                if cell == Pacgum:
+                    gum = self.item_map[y][x]
+                    assert isinstance(gum, Pacgum)
+                    pacgum_list.append(gum)
+
+        return pacgum_list
 
     def _generate_super_pacgum(self) -> list[SuperPacgum]:
-        return []
+        super_pacgum_list: list[SuperPacgum] = []
+
+        for y, line in enumerate(self.item_map):
+            for x, cell in enumerate(line):
+                if type(cell) is SuperPacgum:
+                    gum = self.item_map[y][x]
+                    assert isinstance(gum, SuperPacgum)
+                    super_pacgum_list.append(gum)
+
+        return super_pacgum_list
