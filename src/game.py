@@ -28,6 +28,9 @@ class Game:
             for event in events:
                 if event.type == pygame.QUIT:
                     self.running = False
+                #= ==== デバッグ用にESCキーで終了できるようにしてます =====
+                if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
+                    self.running = False
 
             scene_request = self.current_scene.update(events)
 

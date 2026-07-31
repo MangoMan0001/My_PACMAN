@@ -37,7 +37,7 @@ class ConfigModel(BaseModel):
         height (int): 迷路の高さ（0〜42）。デフォルト(15)
         entry (tuple): スタート地点の座標 (x, y)。デフォルト(0, 0)
     """
-    highscore_filename: Path = Field(default=Path("scores.txt"),
+    highscore_filename: Path = Field(default=Path("scores.json"),
                                      description="highscore_filename")
 
     level: list[LevelModel] = Field(default_factory=list,
@@ -91,8 +91,8 @@ class ConfigModel(BaseModel):
         Raises:
             ValueError: ディレクトリと同名の場合や書き込み権限がない場合。
         """
-        if v.suffix != '.txt':
-            v = v.with_suffix('.txt')
+        if v.suffix != '.json':
+            v = v.with_suffix('.json')
 
         if v.exists() and v.is_dir():
             raise ValueError(f"A directory named {v.name} already exists.")
