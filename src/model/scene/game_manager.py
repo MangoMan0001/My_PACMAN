@@ -2,16 +2,11 @@ import pygame
 from typing import List, Optional, Any
 
 from src.model.base_model.config_model import ConfigModel
-from src.model.base_model.entity import Entity
 from src.model.base_model.scene import Scene
 from src.model.map import Map
 from src.model.item_manager import ItemManager
+from src.model.character_manager import CharacterManager
 from src.model.game_state import GameState
-from src.model.character.pacman import Pacman
-from src.model.character.blinky import Blinky
-from src.model.character.pinky import Pinky
-from src.model.character.inky import Inky
-from src.model.character.clyde import Clyde
 
 
 class GameManager(Scene):
@@ -23,6 +18,7 @@ class GameManager(Scene):
         self.game_state.map = self.map
 
         self.item_mageer: ItemManager = ItemManager(self.game_state)
+        self.chara_manager: CharacterManager = CharacterManager(self.game_state)
 
         # self.pacman: Pacman = Pacman(32, 32, 2)
 
@@ -47,9 +43,12 @@ class GameManager(Scene):
                 if event.key == pygame.K_RETURN:
                     self.game_state.current_level += 1
                     self.map.level_up(self.game_state)
+                    self.item_mageer.level_up(self.game_state)
+                    self.chara_manager.level_up(self.game_state)
 
         self.map.update(self.game_state)
         self.item_mageer.update(self.game_state)
+        self.chara_manager.update(self.game_state)
         return None
         # self.game_state.keycode = keycode
 
@@ -63,6 +62,7 @@ class GameManager(Scene):
     def draw(self, screen: pygame.Surface) -> None:
         self.map.draw(screen)
         self.item_mageer.draw(screen)
+        self.chara_manager.draw(screen)
         pass
         # self.game_map.draw(screen)
 

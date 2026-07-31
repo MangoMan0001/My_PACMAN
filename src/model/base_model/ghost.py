@@ -16,3 +16,7 @@ class Ghost(Character):
     @abstractmethod
     def _get_target(self, game_state: GameState) -> None:
         pass
+
+    @abstractmethod
+    def level_up(self, game_state: GameState) -> None:
+        pass

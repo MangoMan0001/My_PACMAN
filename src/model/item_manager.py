@@ -27,11 +27,6 @@ class ItemManager:
         self.item_map: list[list[Optional[Item]]] = self._generate_map(game_state)
         self.pacgums: list[Pacgum] = self._generate_pacgum()
         self.super_pacgums: list[SuperPacgum] = self._generate_super_pacgum()
-        # print(self.item_map)
-        # print(self.pacgums)
-        # print(self.super_pacgums)
-        # import sys
-        # sys.exit(1)
 
     def update(self, game_state: GameState) -> None:
         for item in self.pacgums:
@@ -43,6 +38,7 @@ class ItemManager:
 
     def draw(self, screen: pygame.Surface) -> None:
         """自分が持っている全アイテムを描画"""
+        print(self.pacgums)
         for item in self.pacgums:
             item.draw(screen)
 
@@ -51,7 +47,9 @@ class ItemManager:
 
     def level_up(self, game_state: GameState) -> None:
         """クリア後のレベルアップ処理"""
-        pass
+        self.item_map: list[list[Optional[Item]]] = self._generate_map(game_state)
+        self.pacgums: list[Pacgum] = self._generate_pacgum()
+        self.super_pacgums: list[SuperPacgum] = self._generate_super_pacgum()
 
 #    Private functions
 
@@ -69,21 +67,22 @@ class ItemManager:
         temp_map[map.y - 1][0] = CellType.SUPER_PACGUM
         temp_map[map.y - 1][map.x - 1] = CellType.SUPER_PACGUM
 
-        current_gums: int = 0
-
         for y, line in enumerate(map.wall_map):
             for x, cell in enumerate(line):
                 if cell == 15:
                     temp_map[y][x] = CellType.BAN
 
-        while current_gums < game_state.config.pacgum:
-            for y, line in enumerate(temp_map):
-                for x, cell in enumerate(line):
-                    if game_state.config.pacgum <= current_gums:
-                        break
-                    if random.choice([True, False]) and cell == CellType.PATH:
-                        temp_map[y][x] = CellType.PACGUM
-                        current_gums += 1
+        path_list: list[tuple[int, int]] = []
+        for y, line in enumerate(temp_map):
+            for x, cell in enumerate(line):
+                if cell == CellType.PATH:
+                    path_list.append((x, y))
+
+        gum_count = min(game_state.config.pacgum, len(path_list))
+        gum_list = random.sample(path_list, gum_count)
+
+        for x, y in gum_list:
+            temp_map[y][x] = CellType.PACGUM
 
         for y, line in enumerate(temp_map):
             for x, cell in enumerate(line):
@@ -99,11 +98,10 @@ class ItemManager:
 
         for y, line in enumerate(self.item_map):
             for x, cell in enumerate(line):
-                if cell == Pacgum:
+                if type(cell) is Pacgum:
                     gum = self.item_map[y][x]
                     assert isinstance(gum, Pacgum)
                     pacgum_list.append(gum)
-
         return pacgum_list
 
     def _generate_super_pacgum(self) -> list[SuperPacgum]:
@@ -115,5 +113,4 @@ class ItemManager:
                     gum = self.item_map[y][x]
                     assert isinstance(gum, SuperPacgum)
                     super_pacgum_list.append(gum)
-
         return super_pacgum_list

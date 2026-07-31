@@ -10,6 +10,8 @@ class SuperPacgum(Item):
         super().__init__(x, y, points)
         self.px: int = 0
         self.py: int = 0
+        self.color: tuple[int, int, int] = (0, 0, 255)
+        self.size: int = 8
 
     def update(self, game_state: GameState) -> None:
         assert game_state.map is not None
@@ -20,4 +22,16 @@ class SuperPacgum(Item):
     def draw(self, screen: pygame.Surface) -> None:
         if self.is_eaten:
             return
-        pygame.draw.rect(screen, (255, 0, 0), (self.px - 3, self.py - 3, 6, 6))
+        self._draw_rect(screen, self.color, (self.px - self.size // 2, self.py - self.size // 2,
+                                             self.size, self.size))
+
+    def level_up(self, game_state: GameState) -> None:
+        self.is_eaten = False
+
+#    Private functions
+
+    def _draw_rect(self, screen: pygame.Surface, color: tuple[int, int, int], rect: tuple[int, int, int, int]) -> None:
+        x, y, w, h = rect
+        for current_y in range(y, y + h):
+            for current_x in range(x, x + w):
+                screen.set_at((current_x, current_y), color)

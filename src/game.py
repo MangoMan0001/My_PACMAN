@@ -1,4 +1,5 @@
 import pygame
+import time
 
 from src.model.base_model.config_model import ConfigModel
 from src.model.base_model.scene import Scene
@@ -12,23 +13,32 @@ from src.model.scene.pause import Pause
 class Game:
     def __init__(self) -> None:
         pygame.init()
-        info = pygame.display.Info()
-        self.screen = pygame.display.set_mode((info.current_w, info.current_h))
+        self.width = 3840
+        self.height = 2160
+
+        self.screen = pygame.display.set_mode((self.width, self.height))
 
         self.current_scene: Scene
 
         self.running = True
+        self.pre_time: float = time.time()
+
+        self.black_bg = pygame.Surface((self.width, self.height))
 
     def run(self, config: ConfigModel) -> None:
         self.current_scene = MainMenu(config)
 
         while self.running:
+            if 1 / 60 > time.time() - self.pre_time:
+                continue
+            self.pre_time = time.time()
+
             events = pygame.event.get()
 
             for event in events:
                 if event.type == pygame.QUIT:
                     self.running = False
-                #= ==== デバッグ用にESCキーで終了できるようにしてます =====
+                #  ===== デバッグ用にESCキーで終了できるようにしてます =====
                 if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
                     self.running = False
 
@@ -56,7 +66,6 @@ class Game:
                 elif scene_name == "GAME_CLEAR":
                     # プレイ画面 → ゲームクリア（スコアを渡す）
                     self.current_scene = GameClear(config)
-
-            self.screen.fill((0, 0, 0))
+            self.screen.blit(self.black_bg, (0, 0))
             self.current_scene.draw(self.screen)
             pygame.display.flip()
