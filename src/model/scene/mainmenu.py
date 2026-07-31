@@ -23,6 +23,10 @@ from typing import Any
 from src.model.base_model.scene import Scene
 from src.model.base_model.config_model import ConfigModel
 
+PAC_FONT = {
+    chr(i): pygame.image.load(f"data/assets/PAC-FONT_{chr(i)}.png")
+    for i in range(ord('A'), ord('Z') + 1)
+}
 
 class MainMenu(Scene):
     """タイトル画面のシーン。
