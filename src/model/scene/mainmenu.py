@@ -1,8 +1,9 @@
 """
 Todo:
-    - [ ] SCREEN_WIDTH, SCREEN_HEIGHTは共通のはずなので、そこからimportしたい。
+    - [x] SCREEN_WIDTH, SCREEN_HEIGHTは共通のはずなので、そこからimportしたい。
     - [ ] 文字の大きさ等要調整。
     - [ ] 隠しコマンドの実装。
+    - [ ] 文字列を画像に置き換える。
     _draw_title:
         - [ ] 中の// 2の部分なに？調整で入れたけどわからん
     _draw_info:
@@ -24,8 +25,8 @@ from src.model.base_model.scene import Scene
 from src.model.base_model.config_model import ConfigModel
 
 PAC_FONT = {
-    chr(i): pygame.image.load(f"data/assets/PAC-FONT_{chr(i)}.png")
-    for i in range(ord('A'), ord('Z') + 1)
+    chr(i): pygame.image.load(f"data/assets/lower_128/PAC-FONT_{chr(i)}.png")
+    for i in range(ord('a'), ord('z') + 1)
 }
 
 class MainMenu(Scene):

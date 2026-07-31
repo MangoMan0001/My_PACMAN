@@ -17,7 +17,7 @@ def create_pacman_images(output_dir: str) -> None:
     pygame.image.save(surface, os.path.join(output_dir, "PACMAN_right.png"))
 
 
-def create_font_images(output_dir: str) -> None:
+def create_font_upper_images(output_dir: str) -> None:
     pygame.font.init()
     # OSに入っている標準フォントを使用
     font = pygame.font.Font("data/font/PAC-FONT.TTF", 128)  # フォントサイズ128
@@ -29,9 +29,23 @@ def create_font_images(output_dir: str) -> None:
         text_surface = font.render(char, True, (255, 255, 0))
         pygame.image.save(text_surface, os.path.join(output_dir, f"PAC-FONT_{char}.png"))
 
+def create_font_lower_images(output_dir: str) -> None:
+    pygame.font.init()
+    # OSに入っている標準フォントを使用
+    font = pygame.font.Font("data/font/PAC-FONT.TTF", 128)  # フォントサイズ128
+
+    # A〜Zまでの文字画像をループで一気に生成！
+    for char_code in range(ord('a'), ord('z') + 1):
+        char = chr(char_code)
+        # 文字を画像化（白色）
+        text_surface = font.render(char, True, (255, 255, 0))
+        pygame.image.save(text_surface, os.path.join(output_dir, f"PAC-FONT_{char}.png"))
 
 if __name__ == "__main__":
-    os.makedirs("data/assets", exist_ok=True)
-    create_pacman_images("data/assets")
-    create_font_images("data/assets")
+    os.makedirs("data/assets/Pacman", exist_ok=True)
+    os.makedirs("data/assets/upper_128", exist_ok=True)
+    os.makedirs("data/assets/lower_128", exist_ok=True)
+    create_pacman_images("data/assets/Pacman")
+    create_font_upper_images("data/assets/upper_128")
+    create_font_lower_images("data/assets/lower_128")
     print("画像の自動生成が完了しました！")
