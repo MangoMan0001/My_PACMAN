@@ -1,11 +1,9 @@
 import pygame
-from typing import Literal
 
 from mazegenerator import MazeGenerator
 from src.model.game_state import GameState
 from src.model.base_model.entity import Entity
-
-DIRECTION = Literal['ABOVE', 'RIGHT', 'BOTTOM', 'LEFT']
+from src.model.base_model.character import Direction
 
 
 class Map(Entity):
@@ -19,7 +17,7 @@ class Map(Entity):
         self.wall_map: list[list[int]] = self.generater.maze  # 各要素16進数で各方向の壁の有無がリストで記録される
 
         self.area_size: int = 32
-        self.wall_size: int = 1
+        self.wall_size: int = 2
         self.wall_color: tuple[int, int, int] = (255, 255, 255)
 
         self.map_len_x = self.x * (self.area_size + self.wall_size) + self.wall_size
@@ -44,18 +42,18 @@ class Map(Entity):
                 px = self.space_x + x * (self.area_size + self.wall_size) + self.wall_size
                 py = self.space_y + y * (self.area_size + self.wall_size) + self.wall_size
 
-                # # above
+                # # up
                 # if cell & 1:
                 #     self._draw_rect(screen, self.wall_color, (px, py, self.area_size, self.wall_size))
                 # right
                 if cell & 2:
-                    self._draw_rect(screen, self.wall_color, (px + self.area_size, py,
-                                                              self.wall_size, self.area_size + self.wall_size))
+                    self._draw_rect(screen, self.wall_color, (px + self.area_size, py - self.wall_size,
+                                                              self.wall_size, self.area_size + self.wall_size * 2))
 
-                # # bottom
+                # # down
                 if cell & 4:
-                    self._draw_rect(screen, self.wall_color, (px, py + self.area_size,
-                                                              self.area_size + self.wall_size, self.wall_size))
+                    self._draw_rect(screen, self.wall_color, (px - self.wall_size, py + self.area_size,
+                                                              self.area_size + self.wall_size * 2, self.wall_size))
                 # # left
                 # if cell & 8:
                 #     self._draw_rect(screen, self.wall_color, (px, py, self.wall_size, self.area_size))
@@ -65,19 +63,6 @@ class Map(Entity):
                                                           py,
                                                           self.area_size,
                                                           self.area_size))
-
-    def is_wall(self, x: int, y: int, direction: DIRECTION) -> bool:
-        """指定された座標が壁かどうかを判定する"""
-        cell = self.wall_map[y][x]
-        if direction == 'ABOVE':
-            return bool(cell & 1)
-        elif direction == 'RIGHT':
-            return bool(cell & 2)
-        elif direction == 'BOTTOM':
-            return bool(cell & 4)
-        elif direction == 'LEFT':
-            return bool(cell & 8)
-        return False
 
     def level_up(self, game_state: GameState) -> None:
         """クリア後のレベルアップ処理"""
@@ -97,7 +82,7 @@ class Map(Entity):
         self.space_y = self.screen_height // 2 - self.map_len_y // 2
 
     def area_center(self, x: int, y: int) -> tuple[int, int]:
-        """指定された座標の位置をピクセルで返す"""
+        """指定された座標の位置をピクセル座標で返す"""
         base_x = self.space_x + x * (self.area_size + self.wall_size) + self.wall_size
         base_y = self.space_y + y * (self.area_size + self.wall_size) + self.wall_size
 
@@ -107,10 +92,52 @@ class Map(Entity):
         return (px, py)
 
     def area_coorner(self, x: int, y: int) -> tuple[int, int]:
+        """セル内の左上のピクセル座標を返す"""
         base_x = self.space_x + x * (self.area_size + self.wall_size) + self.wall_size
         base_y = self.space_y + y * (self.area_size + self.wall_size) + self.wall_size
 
         return (base_x, base_y)
+
+    def is_moveable(self, x: int, y: int, px: int, py: int, direction: Direction) -> bool:
+        """指定された方向に移動できるかを判定する"""
+        center = self.is_center(px, py)
+        cx, cy = self.area_center(x, y)
+        cell = self.wall_map[y][x]
+        if direction == Direction.UP:
+            if center is None:
+                return px == cx
+            else:
+                return not bool(cell & 1)
+        elif direction == Direction.RIGHT:
+            if center is None:
+                print(px == cx)
+                return py == cy
+            else:
+                return not bool(cell & 2)
+        elif direction == Direction.DOWN:
+            if center is None:
+                return px == cx
+            else:
+                return not bool(cell & 4)
+        elif direction == Direction.LEFT:
+            if center is None:
+                print(px == cx)
+                return py == cy
+            else:
+                return not bool(cell & 8)
+        return False
+
+    def is_center(self, px: int, py: int) -> tuple[int, int] | None:
+        """指定されたピクセル座標が位置するセル内の中心か判定。真の場合はセル座標、偽の場合はNoneを返す。"""
+        x, y = self._get_area(px, py)
+        center = self.area_center(x, y)
+        # print((x, y), (px - self.space_x, py - self.space_y), (px, py), center)
+        if (px, py) == center:
+            # print('center')
+            return (x, y)
+        else:
+            # print('None')
+            return None
 
 #   Pacman method
     def init_area_pacman(self) -> tuple[int, int]:
@@ -127,3 +154,9 @@ class Map(Entity):
         for current_y in range(y, y + h):
             for current_x in range(x, x + w):
                 screen.set_at((current_x, current_y), color)
+
+    def _get_area(self, px: int, py: int) -> tuple[int, int]:
+        x = (px - self.space_x) // (self.area_size + self.wall_size)
+        y = (py - self.space_y) // (self.area_size + self.wall_size)
+
+        return (x, y)

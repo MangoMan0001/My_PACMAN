@@ -19,8 +19,8 @@ def create_pacman_sprites(output_dir: str) -> None:
     directions = {
         "RIGHT": [(size, 3), (size, size - 3)],
         "LEFT":  [(0, 3), (0, size - 3)],
-        "ABOVE":    [(3, 0), (size - 3, 0)],
-        "BOTTOM":  [(3, size), (size - 3, size)]
+        "UP":    [(3, 0), (size - 3, 0)],
+        "DOWN":  [(3, size), (size - 3, size)]
     }
 
     for dir_name, (p1, p2) in directions.items():

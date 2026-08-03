@@ -9,11 +9,11 @@ from src.model.base_model.character import Direction
 
 # --- 「現在のパックマンがいるマスの座標」に最短距離で向かう
 class Blinky(Ghost):
-    def __init__(self, x: int, y: int, speed: int, color: tuple[int, int, int], points: int) -> None:
+    def __init__(self, x: int, y: int, px: int, py: int, speed: int, color: tuple[int, int, int], points: int) -> None:
         super().__init__(x, y, speed, points)
         self.direction: Direction = Direction.LEFT  # 現在の進行方向
-        self.px: int = 0
-        self.py: int = 0
+        self.px: int = px
+        self.py: int = py
         self.size: int = 24
         self.color: tuple[int, int, int] = color
 
@@ -48,7 +48,6 @@ class Blinky(Ghost):
 
         key = f"{self.direction}_{self.frame}"
         screen.blit(self.images[key], (self.px - self.space, self.py - self.space))
-        pass
 
     def level_up(self, game_state: GameState) -> None:
         """クリア後のレベルアップ処理"""
@@ -56,6 +55,7 @@ class Blinky(Ghost):
         map: Map = game_state.map
 
         self.x, self.y = 0, 0
+        self.px, self.py = map.area_center(self.x, self.y)
 
     def _get_target(self, game_state: GameState) -> None:
         self.target = (0, 0)

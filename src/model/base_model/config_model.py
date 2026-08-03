@@ -14,16 +14,16 @@ class LevelModel(BaseModel):
 
 
 DEFAULT_LEVELS = [
-    LevelModel(width=11, height=11),   # レベル1
-    LevelModel(width=15, height=15),   # レベル2
-    LevelModel(width=21, height=21),   # レベル3
-    LevelModel(width=25, height=25),   # レベル4
-    LevelModel(width=31, height=31),   # レベル5
-    LevelModel(width=35, height=35),   # レベル6
-    LevelModel(width=41, height=41),   # レベル7
-    LevelModel(width=45, height=45),   # レベル8
-    LevelModel(width=51, height=51),   # レベル9
-    LevelModel(width=55, height=55),   # レベル10
+    LevelModel(width=5, height=5),   # レベル1
+    LevelModel(width=11, height=11),   # レベル2
+    LevelModel(width=15, height=15),   # レベル3
+    LevelModel(width=21, height=21),   # レベル4
+    LevelModel(width=25, height=25),   # レベル5
+    # LevelModel(width=35, height=35),   # レベル6
+    # LevelModel(width=41, height=41),   # レベル7
+    # LevelModel(width=45, height=45),   # レベル8
+    # LevelModel(width=51, height=51),   # レベル9
+    # LevelModel(width=55, height=55),   # レベル10
 ]
 
 
@@ -39,6 +39,15 @@ class ConfigModel(BaseModel):
     """
     highscore_filename: Path = Field(default=Path("scores.json"),
                                      description="highscore_filename")
+
+    display_width: int = Field(ge=1920,
+                               le=3840,
+                               default=1920,
+                               description='display_width')
+    display_height: int = Field(ge=1080,
+                                le=2160,
+                                default=1080,
+                                description='display_height')
 
     level: list[LevelModel] = Field(default_factory=list,
                                     description='map_levels')

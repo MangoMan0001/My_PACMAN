@@ -60,10 +60,13 @@ def main(config_path: str = 'config.json') -> None:
     config_json = load_config(config_path)
     # print(config_json.model_dump_json(indent=4))
 
-    Game().run(config_json)
+    Game(config_json).run()
 
     # print_window(config_json)
 
 
 if __name__ == "__main__":
-    fire.Fire(main)
+    try:
+        fire.Fire(main)
+    except Exception as e:
+        print(e)

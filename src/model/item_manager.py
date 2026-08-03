@@ -38,7 +38,6 @@ class ItemManager:
 
     def draw(self, screen: pygame.Surface) -> None:
         """自分が持っている全アイテムを描画"""
-        print(self.pacgums)
         for item in self.pacgums:
             item.draw(screen)
 
@@ -51,39 +50,53 @@ class ItemManager:
         self.pacgums: list[Pacgum] = self._generate_pacgum()
         self.super_pacgums: list[SuperPacgum] = self._generate_super_pacgum()
 
+#   Pacman method
+
+    def try_eat(self, x: int, y: int) -> Item:
+        """指定された座標にアイテムがあれば取得し、取得したオブジェクトタイプを返す"""
+        item = self.item_map[y][x]
+        assert item is Item
+        return item
+
 #    Private functions
 
     def _generate_map(self, game_state: GameState) -> list[list[Optional[Item]]]:
+
         random.seed(game_state.config.seed)
 
         assert game_state.map is not None
         map: Map = game_state.map
 
+        # 各オブジェクトの座標リストを初期化
         temp_map = [[CellType.PATH] * map.x for _ in range(map.y)]
         item_map: list[list[Optional[Item]]] = [[None] * map.x for _ in range(map.y)]
 
+        # SuperPacgumのみ四隅に配置
         temp_map[0][0] = CellType.SUPER_PACGUM
         temp_map[0][map.x - 1] = CellType.SUPER_PACGUM
         temp_map[map.y - 1][0] = CellType.SUPER_PACGUM
         temp_map[map.y - 1][map.x - 1] = CellType.SUPER_PACGUM
 
+        # 42を除外
         for y, line in enumerate(map.wall_map):
             for x, cell in enumerate(line):
                 if cell == 15:
                     temp_map[y][x] = CellType.BAN
 
+        # リストに座標を入力
         path_list: list[tuple[int, int]] = []
         for y, line in enumerate(temp_map):
             for x, cell in enumerate(line):
                 if cell == CellType.PATH:
                     path_list.append((x, y))
 
+        # パックガムの生成位置をランダムに選択
         gum_count = min(game_state.config.pacgum, len(path_list))
         gum_list = random.sample(path_list, gum_count)
-
         for x, y in gum_list:
             temp_map[y][x] = CellType.PACGUM
 
+        # 座標リストをもとに各オブジェクトの生成
         for y, line in enumerate(temp_map):
             for x, cell in enumerate(line):
                 if cell == CellType.PACGUM:

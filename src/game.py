@@ -11,10 +11,11 @@ from src.model.scene.pause import Pause
 
 
 class Game:
-    def __init__(self) -> None:
+    def __init__(self, config: ConfigModel) -> None:
         pygame.init()
-        self.width = 3840
-        self.height = 2160
+        self.config = config
+        self.width = self.config.display_width
+        self.height = self.config.display_height
 
         self.screen = pygame.display.set_mode((self.width, self.height))
 
@@ -25,8 +26,8 @@ class Game:
 
         self.black_bg = pygame.Surface((self.width, self.height))
 
-    def run(self, config: ConfigModel) -> None:
-        self.current_scene = MainMenu(config)
+    def run(self) -> None:
+        self.current_scene = MainMenu(self.config)
 
         while self.running:
             if 1 / 60 > time.time() - self.pre_time:
@@ -49,23 +50,23 @@ class Game:
 
                 if scene_name == "MAIN_MENU":
                     # メインメニュー
-                    self.current_scene = MainMenu(config)
+                    self.current_scene = MainMenu(self.config)
 
                 elif scene_name == "PLAY":
                     # メニュー → プレイ画面
-                    self.current_scene = GameManager(config, self.screen)
+                    self.current_scene = GameManager(self.config, self.screen)
 
                 elif scene_name == "GAME_OVER":
                     # プレイ画面 → ゲームオーバー（スコアを渡す）
-                    self.current_scene = GameOver(config, score=data)
+                    self.current_scene = GameOver(self.config, score=data)
 
                 elif scene_name == "PAUSE":
                     # プレイ画面 → ゲームポーズ
-                    self.current_scene = Pause(config)
+                    self.current_scene = Pause(self.config)
 
                 elif scene_name == "GAME_CLEAR":
                     # プレイ画面 → ゲームクリア（スコアを渡す）
-                    self.current_scene = GameClear(config)
+                    self.current_scene = GameClear(self.config)
             self.screen.blit(self.black_bg, (0, 0))
             self.current_scene.draw(self.screen)
             pygame.display.flip()

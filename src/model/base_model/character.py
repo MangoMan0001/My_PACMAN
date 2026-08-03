@@ -4,9 +4,9 @@ from src.model.base_model.entity import Entity
 
 
 class Direction(StrEnum):
-    ABOVE = 'above'
+    UP = 'up'
     RIGHT = 'right'
-    BOTTOM = 'bottom'
+    DOWN = 'down'
     LEFT = 'left'
     STOP = 'stop'
 

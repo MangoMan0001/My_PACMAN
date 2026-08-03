@@ -9,11 +9,11 @@ from src.model.base_model.character import Direction
 
 # --- 「パックマンが今向いている方向の、4マス先の座標」を狙って移動
 class Pinky(Ghost):
-    def __init__(self, x: int, y: int, speed: int, color: tuple[int, int, int], points: int) -> None:
+    def __init__(self, x: int, y: int, px: int, py: int, speed: int, color: tuple[int, int, int], points: int) -> None:
         super().__init__(x, y, speed, points)
         self.direction: Direction = Direction.LEFT  # 現在の進行方向
-        self.px: int = 0
-        self.py: int = 0
+        self.px: int = px
+        self.py: int = py
         self.size: int = 24
         self.color: tuple[int, int, int] = color
 
@@ -56,6 +56,7 @@ class Pinky(Ghost):
         map: Map = game_state.map
 
         self.x, self.y = map.x - 1, 0
+        self.px, self.py = map.area_center(self.x, self.y)
 
     def _get_target(self, game_state: GameState) -> None:
         self.target = (0, 0)

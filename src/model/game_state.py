@@ -1,6 +1,6 @@
 from __future__ import annotations
-from typing import TYPE_CHECKING
-
+import pygame
+from typing import TYPE_CHECKING, Literal
 
 from src.model.base_model.config_model import ConfigModel
 
@@ -9,6 +9,8 @@ if TYPE_CHECKING:
     from src.model.character.pacman import Pacman
     from src.model.base_model.ghost import Ghost
     from src.model.item_manager import ItemManager
+
+STATUS = Literal['READY', 'PLAYING']
 
 
 # --- ゲームの状態をすべて持つデータクラス ---
@@ -22,7 +24,8 @@ class GameState:
         self.pacman: Pacman | None = None           # Pacmanオブジェクト
         self.ghosts: list[Ghost] = []               # 4匹のGhostのインスタンスをリストで保持
 
-        # === GAME STATUS ===
+        # === GAME PRAMETER ===
+        self.game_status: STATUS = 'READY'          # GAMEの現在の状態
         self.current_level: int = 0                 # ステージの現在レベル
-        self.keys: list[int] = []                   # key入力情報
+        self.events: list[pygame.event.Event] = []  # key入力情報
         self.score: int = 0                         # current score

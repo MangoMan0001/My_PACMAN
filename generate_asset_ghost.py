@@ -15,8 +15,8 @@ def create_ghost_sprites(output_dir: str) -> None:
     # 1. 方向ごとの「顔（白目＋黒目）全体」のシフト量 (dx, dy)
     # これにより、白目ごとそっちの方向に移動するため「顔ごと向いている」表現になります
     face_offsets = {
-        "above":    (0, -2),
-        "bottom":  (0, 2),
+        "up":    (0, -2),
+        "down":  (0, 2),
         "left":  (-2, 0),
         "right": (2, 0)
     }
