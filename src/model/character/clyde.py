@@ -1,5 +1,6 @@
 import pygame
 import time
+from collections import deque
 
 from src.model.game_state import GameState
 from src.model.map import Map
@@ -55,9 +56,27 @@ class Clyde(Ghost):
         assert game_state.map is not None
         map: Map = game_state.map
 
-        self._get_target(game_state)
+        # セルの中心に到達したら、現在の座標を確定
+        # ターゲットとルートを更新し、次の方向を決定する
+        coord = map.is_center(self.px, self.py)
+        if coord is not None:
+            self.x, self.y = coord
+            self.target = self._get_target(game_state)
+            self.route = self._get_route(game_state)
+            if self.route:
+                self.direction = self.route[0]
+            else:
+                self.direction = Direction.STOP
 
-        self.px, self.py = map.cell_center(self.x, self.y)
+        # self.px, self.py = map.cell_center(self.x, self.y)
+        if self.direction == Direction.UP:
+            self.py -= self.speed
+        elif self.direction == Direction.RIGHT:
+            self.px += self.speed
+        elif self.direction == Direction.DOWN:
+            self.py += self.speed 
+        elif self.direction == Direction.LEFT:
+            self.px -= self.speed
 
         current_time = time.time()
         if self.anim_interval < current_time - self.last_anim_time:
@@ -95,4 +114,73 @@ class Clyde(Ghost):
         Returns:
             tuple[int, int]: ゴーストの移動目標座標
         """
-        pass
+        pacman = game_state.pacman
+        assert pacman is not None
+
+        return (pacman.x, pacman.y)
+
+    def _get_route(self, game_state: GameState) -> list[Direction]:
+        """ゴーストの移動ルートを取得する
+
+        Args:
+            game_state (GameState): ゲームの状態を保持するオブジェクト
+
+        Returns:
+            list[Direction]: ゴーストの移動ルートのリスト
+        """
+        assert game_state.map is not None
+        map: Map = game_state.map
+
+        start = (self.x, self.y)
+        goal = self.target
+        if start == goal:
+            return []
+
+        # 各方向のDirectionと座標の変化量
+        moves: list[tuple[Direction, int, int]] = [
+            (Direction.UP, 0, -1),
+            (Direction.RIGHT, 1, 0),
+            (Direction.DOWN, 0, 1),
+            (Direction.LEFT, -1, 0)
+        ]
+
+        queue: deque[tuple[int, int]] = deque([start])
+        visited: set[tuple[int, int]] = {start}
+        # 各座標をキーに、その座標に到達する直前の座標を値として保持する辞書
+        came_from: dict[tuple[int, int], tuple[Direction, tuple[int, int]]] = {}
+
+        while queue:
+            current_x, current_y = queue.popleft()
+            if (current_x, current_y) == goal:
+                break
+
+            for direction, direction_x, direction_y in moves:
+                next_x = current_x + direction_x
+                next_y = current_y + direction_y
+                # マップの範囲外
+                if not (0 <= next_x < map.x and 0 <= next_y < map.y):
+                    continue
+                # 壁がある
+                if not map.is_wall(current_x, current_y, direction):
+                    continue
+                # 訪問済み
+                if (next_x, next_y) in visited:
+                    continue
+                visited.add((next_x, next_y))
+                came_from[(next_x, next_y)] = (direction, (current_x, current_y))
+                queue.append((next_x, next_y))
+
+        # ゴールに到達できなかった場合は空のリストを返す
+        if goal not in came_from:
+            return []
+
+        # ゴールからスタートまでのルートを逆順にたどり、方向のリストを作成する
+        route: list[Direction] = []
+        current = goal
+        while current != start:
+            direction, previous = came_from[current]
+            route.append(direction)
+            current = previous
+        route.reverse()
+
+        return route
