@@ -14,6 +14,7 @@ dependencies = [
     "flake8-bugbear>=25.11.29",
     "flake8-pyproject",
     "mazegenerator",
+    "mlx",
     "mypy>=1.19.1",
     "pep8-naming>=0.15.1",
     "pydantic>=2.12.5",
@@ -59,3 +60,4 @@ max-line-length = 120
 
 [tool.uv.sources]
 mazegenerator = { path = "data/map/mazegenerator-2.1.0-py3-none-any.whl" }
+mlx = { path = "data/mlx/mlx-2.2-py3-none-any.whl" }
