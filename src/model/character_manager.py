@@ -54,5 +54,20 @@ class CharacterManager:
         for ghost in self.ghosts:
             ghost.level_up(game_state)
 
+    def get_pos_pacman_cell(self) -> tuple[int, int]:
+        """Pacmanのポジションを取得する.
+
+        Returns:
+            tuple[int, int]: _description_
+        """
+        return self.pacman.get_pos_cell()
+
+    def get_pos_pacman_pixel(self) -> tuple[int, int]:
+        """Pacmanのポジションを取得する.
+
+        Returns:
+            tuple[int, int]: _description_
+        """
+        return self.pacman.get_pos_pixel()
 
 #    Private functions

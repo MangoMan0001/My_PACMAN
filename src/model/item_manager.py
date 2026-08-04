@@ -8,6 +8,7 @@ from src.model.map import Map
 from src.model.game_state import GameState
 from src.model.item.pacgum import Pacgum
 from src.model.item.super_pacgum import SuperPacgum
+from src.model.character.pacman import Pacman
 
 
 class CellType(IntEnum):
@@ -50,18 +51,48 @@ class ItemManager:
         self.pacgums: list[Pacgum] = self._generate_pacgum()
         self.super_pacgums: list[SuperPacgum] = self._generate_super_pacgum()
 
-#   Pacman method
-
-    def try_eat(self, x: int, y: int) -> Item:
+    def try_eat(self, game_state: GameState) -> None | Item:
         """指定された座標にアイテムがあれば取得し、取得したオブジェクトタイプを返す"""
+        assert game_state.map is not None
+        assert game_state.pacman is not None
+        map: Map = game_state.map
+        pacman: Pacman = game_state.pacman
+
+        px, py = pacman.px, pacman.py
+        x, y = map.get_cell(px, py)
         item = self.item_map[y][x]
-        assert item is Item
+        if item is None:
+            return None
+
+        coords = [
+            (px - pacman.size // 3, py),
+            (px + pacman.size // 3, py),
+            (px, py - pacman.size // 3),
+            (px, py + pacman.size // 3),
+            ]
+
+        if (item.px, item.py) in coords:
+            item.is_eaten = True
+            self.item_map[y][x] = None
         return item
+
+    def is_get_all_items(self) -> bool:
+        """すべてのアイテムを取得したか否か
+
+        Returns:
+            bool: _description_
+        """
+        for pacgum in self.pacgums:
+            if not pacgum.is_eaten:
+                return False
+        for super_pacgum in self.super_pacgums:
+            if not super_pacgum.is_eaten:
+                return False
+        return True
 
 #    Private functions
 
     def _generate_map(self, game_state: GameState) -> list[list[Optional[Item]]]:
-
         random.seed(game_state.config.seed)
 
         assert game_state.map is not None
@@ -82,6 +113,10 @@ class ItemManager:
             for x, cell in enumerate(line):
                 if cell == 15:
                     temp_map[y][x] = CellType.BAN
+
+        # pacmanの出現位置を除外
+        x, y = map.init_area_pacman()
+        temp_map[y][x] = CellType.BAN
 
         # リストに座標を入力
         path_list: list[tuple[int, int]] = []

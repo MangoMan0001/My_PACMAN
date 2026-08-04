@@ -82,11 +82,10 @@ class Map(Entity):
         self.space_y = self.screen_height // 2 - self.map_len_y // 2
 
     def area_center(self, x: int, y: int) -> tuple[int, int]:
-        """指定された座標の位置をピクセル座標で返す"""
+        """指定された座標の中心をピクセル座標で返す"""
         base_x = self.space_x + x * (self.area_size + self.wall_size) + self.wall_size
         base_y = self.space_y + y * (self.area_size + self.wall_size) + self.wall_size
 
-        # 通路の開始位置(base_x)  ＋ 通路の幅の半分((area_size - wall_size) // 2)
         px = base_x + self.area_size // 2
         py = base_y + self.area_size // 2
         return (px, py)
@@ -110,7 +109,6 @@ class Map(Entity):
                 return not bool(cell & 1)
         elif direction == Direction.RIGHT:
             if center is None:
-                print(px == cx)
                 return py == cy
             else:
                 return not bool(cell & 2)
@@ -121,7 +119,6 @@ class Map(Entity):
                 return not bool(cell & 4)
         elif direction == Direction.LEFT:
             if center is None:
-                print(px == cx)
                 return py == cy
             else:
                 return not bool(cell & 8)
@@ -129,7 +126,7 @@ class Map(Entity):
 
     def is_center(self, px: int, py: int) -> tuple[int, int] | None:
         """指定されたピクセル座標が位置するセル内の中心か判定。真の場合はセル座標、偽の場合はNoneを返す。"""
-        x, y = self._get_area(px, py)
+        x, y = self.get_cell(px, py)
         center = self.area_center(x, y)
         # print((x, y), (px - self.space_x, py - self.space_y), (px, py), center)
         if (px, py) == center:
@@ -138,6 +135,21 @@ class Map(Entity):
         else:
             # print('None')
             return None
+
+    def get_cell(self, px: int, py: int) -> tuple[int, int]:
+        """指定された座標のピクセル座標が位置するセル座標を返す.
+
+        Args:
+            px (int): _description_
+            py (int): _description_
+
+        Returns:
+            tuple[int, int]: _description_
+        """
+        x = (px - self.space_x) // (self.area_size + self.wall_size)
+        y = (py - self.space_y) // (self.area_size + self.wall_size)
+
+        return (x, y)
 
 #   Pacman method
     def init_area_pacman(self) -> tuple[int, int]:
@@ -154,9 +166,3 @@ class Map(Entity):
         for current_y in range(y, y + h):
             for current_x in range(x, x + w):
                 screen.set_at((current_x, current_y), color)
-
-    def _get_area(self, px: int, py: int) -> tuple[int, int]:
-        x = (px - self.space_x) // (self.area_size + self.wall_size)
-        y = (py - self.space_y) // (self.area_size + self.wall_size)
-
-        return (x, y)

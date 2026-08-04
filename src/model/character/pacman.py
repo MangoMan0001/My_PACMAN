@@ -101,5 +101,8 @@ class Pacman(Character):
         self.next_direction: Direction = Direction.LEFT
         self.is_moving = False
 
-    def get_pos(self) -> tuple[int, int]:
+    def get_pos_cell(self) -> tuple[int, int]:
         return (self.x, self.y)
+
+    def get_pos_pixel(self) -> tuple[int, int]:
+        return (self.px, self.py)

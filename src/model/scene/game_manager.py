@@ -19,24 +19,14 @@ class GameManager(Scene):
         self.game_state.map = self.map
 
         self.item_mageer: ItemManager = ItemManager(self.game_state)
+        self.game_state.item = self.item_mageer
+
         self.character_manager: CharacterManager = CharacterManager(self.game_state)
+        self.game_state.pacman = self.character_manager.pacman
+        self.game_state.ghosts = self.character_manager.ghosts
 
         self.time = time.time()
-
-        # self.pacman: Pacman = Pacman(32, 32, 2)
-
-        # self.items: List[Entity] = self.game_map.generate_items(item_data)
-        # self.ghosts: List[Entity] = [
-        #     Blinky(128, 128, 2, "RED"),
-        #     Pinky(160, 128, 2, "PINK"),
-        #     Inky(192, 128, 2, "CYAN"),
-        #     Clyde(224, 128, 2, "ORANGE")
-        # ]
-
-        # self.entities: List[Entity] = []
-        # self.entities.extend(self.items)
-        # self.entities.extend(self.ghosts)
-        # self.entities.append(self.pacman)
+        self.start_time = time.time()
 
     def update(self, events: list[pygame.event.Event]) -> None | tuple[str, Any]:
         """毎フレーム呼ばれる処理"""
@@ -50,34 +40,43 @@ class GameManager(Scene):
                     self.item_mageer.level_up(self.game_state)
                     self.character_manager.level_up(self.game_state)
                     self.game_state.game_status = 'READY'
+                    self.time = time.time()
+                    self.start_time = time.time()
 
+        # ゲーム状態のフラグ管理　3秒間開始しない
         current_time = time.time()
         if 3 < current_time - self.time:
             self.game_state.game_status = 'PLAYING'
-            self.time = current_time
 
+        if self.game_state.config.level_max_time < current_time - self.start_time:
+            return ("GAME_OVER", None)
+
+        # パックガムの取得処理
+        print(self.game_state.score)
+        item = self.item_mageer.try_eat(self.game_state)
+        if item is not None:
+            self.game_state.score += item.points
+
+        # level_up条件処理
+        if self.item_mageer.is_get_all_items():
+            self.game_state.current_level += 1
+            self.map.level_up(self.game_state)
+            self.item_mageer.level_up(self.game_state)
+            self.character_manager.level_up(self.game_state)
+            self.game_state.game_status = 'READY'
+            self.start_time = time.time()
+            self.time = time.time()
+
+        # 各オブジェクトのUpdate実行
         self.map.update(self.game_state)
         self.item_mageer.update(self.game_state)
         self.character_manager.update(self.game_state)
         return None
-        # self.game_state.keycode = keycode
-
-        # for entity in self.entities:
-        #     entity.update(self.game_state)
-
-        # self._check_collisions()
-
-        # self._check_level_clear()
 
     def draw(self, screen: pygame.Surface) -> None:
         self.map.draw(screen)
         self.item_mageer.draw(screen)
         self.character_manager.draw(screen)
-        pass
-        # self.game_map.draw(screen)
-
-        # for entity in self.entities:
-        #     entity.draw(screen)
 
 #    Private functions
 

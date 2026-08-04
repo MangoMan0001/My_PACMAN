@@ -8,8 +8,6 @@ from src.model.map import Map
 class Pacgum(Item):
     def __init__(self, x: int, y: int, points: int) -> None:
         super().__init__(x, y, points)
-        self.px: int = 0
-        self.py: int = 0
         self.color: tuple[int, int, int] = (0, 255, 255)
         self.size: int = 6
 
