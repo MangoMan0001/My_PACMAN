@@ -31,6 +31,7 @@ class Blinky(Ghost):
         self.py: int = py
         self.size: int = 24
         self.color: tuple[int, int, int] = color
+        self.init_cell: tuple[int, int] = (x, y)
 
         self.space: int = self.size // 2
 
@@ -55,7 +56,7 @@ class Blinky(Ghost):
         assert game_state.map is not None
         map: Map = game_state.map
 
-        self._get_target(game_state)
+        self.target = self._get_target(game_state)
 
         self.px, self.py = map.cell_center(self.x, self.y)
 
@@ -84,11 +85,18 @@ class Blinky(Ghost):
         self.x, self.y = 0, 0
         self.px, self.py = map.cell_center(self.x, self.y)
 
-    def _get_target(self, game_state: GameState) -> None:
-        """Blinkyの移動目標座標を更新する関数。
+    def _get_target(self, game_state: GameState) -> tuple[int, int]:
+        """ゴーストの移動目標座標を取得する
 
         Args:
-            game_state (GameState): ゲームの状態を保持するGameStateオブジェクト
+            game_state (GameState): ゲームの状態を保持するオブジェクト
+
+        Returns:
+            tuple[int, int]: ゴーストの移動目標座標
         """
-        self.target = (0, 0)
-        pass
+        pacman = game_state.pacman
+        assert pacman is not None
+
+        return (pacman.x, pacman.y)
+
+    def _get_route(self, game_state: GameState) -> list[Direction]:

@@ -21,11 +21,14 @@ class Ghost(Character):
 
     # 各ゴーストの独自アルゴリズム
     @abstractmethod
-    def _get_target(self, game_state: GameState) -> None:
-        """ゴーストの移動目標座標を更新する
+    def _get_target(self, game_state: GameState) -> tuple[int, int]:
+        """ゴーストの移動目標座標を取得する
 
         Args:
             game_state (GameState): ゲームの状態を保持するオブジェクト
+
+        Returns:
+            tuple[int, int]: ゴーストの移動目標座標
         """
         pass
 

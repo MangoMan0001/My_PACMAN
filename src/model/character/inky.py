@@ -86,11 +86,14 @@ class Inky(Ghost):
         self.x, self.y = 0, map.y - 1
         self.px, self.py = map.cell_center(self.x, self.y)
 
-    def _get_target(self, game_state: GameState) -> None:
-        """Inkyの移動目標座標を更新する関数。
+    def _get_target(self, game_state: GameState) -> tuple[int, int]:
+        """ゴーストの移動目標座標を取得する
 
         Args:
-            game_state (GameState): ゲームの状態を保持するGameStateオブジェクト
+            game_state (GameState): ゲームの状態を保持するオブジェクト
+
+        Returns:
+            tuple[int, int]: ゴーストの移動目標座標
         """
         self.target = (0, 0)
         pass
