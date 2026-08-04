@@ -46,8 +46,9 @@ class Game:
         self.current_scene = MainMenu(self.config)
 
         while self.running:
-            if 1 / 60 > time.time() - self.pre_time:
-                continue
+            dt = time.time() - self.pre_time
+            if dt < 1 / 60:
+                time.sleep(1 / 60 - dt)
             self.pre_time = time.time()
 
             events = pygame.event.get()
