@@ -127,4 +127,3 @@ class ImageFont:
             cursor_x += width + self.letter_spacing
 
         return text_image
-

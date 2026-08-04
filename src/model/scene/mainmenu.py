@@ -29,23 +29,23 @@ from src.model.image_font import ImageFont
 class MainMenu(Scene):
     """タイトル画面のシーン。
 
-    Attributes:
-        TITLE_SIZE (int): タイトルの文字サイズ。
-        INFO_SIZE (int): インフォの文字サイズ。
-        BACKGROUND_COLOR (tuple[int, int, int]): 背景色(RGB)
-        TITLE_COLOR (tuple[int, int, int]): タイトルの文字色(RGB)
-        INFO_COLOR (tuple[int, int, int]): インフォの文字色(RGB)
-
     Args:
         config (ConfigModel): 設定モデル。
 
     Attributes:
-        title_text (str): タイトルの文字列。
+        BACKGROUND_COLOR (tuple[int, int, int]): 背景色(RGB)
+        CURSOR_SPACE (int): カーソルとメニュー項目の間隔
+        ITEM_LINE_SPACE (float): メニュー項目の行間
+
+        number_font (ImageFont): 数字用のフォント。
         menu_text (list[str]): メニュー項目の文字列リスト。
         cursor_image (pygame.Surface): カーソル画像。
         title_image (pygame.Surface): タイトル画像。
+        info_image (list[pygame.Surface]): ゲームスタートのインフォ画像。
+        score_image (pygame.Surface): スコア画像。
         item_images (list[pygame.Surface]): メニュー項目の画像リスト。
         selected_index (int): 選択中のメニュー項目のインデックス。
+        scores (dict[str, int]): ハイスコアの辞書。キーはプレイヤー名、値はスコア。
     """
 
     BACKGROUND_COLOR = (0, 0, 0)  # 黒
@@ -55,21 +55,23 @@ class MainMenu(Scene):
     def __init__(self, config: ConfigModel) -> None:
         super().__init__(config)
 
-        asset_root = Path(__file__).resolve().parents[3] / "data" / "assets"
-        cursor_path = str(asset_root / "Pacman" / "PACMAN_right_32.png")
-
-        title_font = ImageFont(asset_root / "upper_256")
-        info_font = ImageFont(asset_root / "upper_128")
-        menu_font = ImageFont(asset_root / "upper_64")
+        title_font = ImageFont(Path("pacfont_256"))
+        info_font = ImageFont(Path("pacfont_128"))
+        menu_font = ImageFont(Path("pacfont_64"))
         self.number_font = ImageFont(
-            asset_root / "misaki_64", filename_pattern="misaki-FONT_{char}.png"
+            Path("nonefont_32"), filename_pattern="none-FONT_{char}.png"
         )
 
         title_text = "PAC-MAN"
         info_text = "PUSH SPACE TO PLAY"
         score_text = "HIGH SCORE RANKING"
-        self.menu_text = ["QUIT"]
+        self.menu_text = ["PLAY", "QUIT"]
 
+        # cursor用に使用。
+        asset_root = Path(__file__).resolve().parents[3] / "data" / "assets"
+        cursor_path = str(asset_root / "Pacman" / "PACMAN_right_32.png")
+
+        # convert_alpha()を使ってmlxと同じく透過情報を持つSurfaceに変換する。
         self.cursor_image = pygame.image.load(cursor_path).convert_alpha()
         self.title_image = title_font.render_text(title_text)
         self.info_image = info_font.render_text(info_text)
@@ -82,7 +84,7 @@ class MainMenu(Scene):
         self.selected_index = 0
 
         # のちのちハイスコアの表示に使う。 -> 必要なくなったかも
-        self.scores: dict[str, int] | None = None
+        self.scores: dict[str, int] = self._set_highscore()
 
     def update(
         self, events: list[pygame.event.Event]
@@ -103,19 +105,23 @@ class MainMenu(Scene):
         """
         for event in events:
             if event.type == pygame.KEYDOWN:
-                if event.key == (pygame.K_UP, pygame.K_w):
+                # 上、wキーでメニュー項目の選択
+                if event.key in (pygame.K_UP, pygame.K_w):
                     self.selected_index = (
                         self.selected_index - 1) % len(self.menu_text)
-                elif event.key == (pygame.K_DOWN, pygame.K_s):
+                # 下、sキーでメニュー項目の選択
+                elif event.key in (pygame.K_DOWN, pygame.K_s):
                     self.selected_index = (
                         self.selected_index + 1) % len(self.menu_text)
+                # スペースキーでゲーム開始
                 elif event.key == pygame.K_SPACE:
                     return ("PLAY", None)
+                # エンターキーで選択中のメニュー項目をアクティブにする。
                 elif event.key == pygame.K_RETURN:
                     label = self.menu_text[self.selected_index]
-                    if label == "Push  SPACE  to  play":
+                    if label == "PLAY":
                         return ("PLAY", None)
-                    elif label == "Quit":
+                    elif label == "QUIT":
                         pygame.event.post(pygame.event.Event(pygame.QUIT))
         return None
 
@@ -127,11 +133,11 @@ class MainMenu(Scene):
         Returns:
             dict[str, int]: ハイスコアの辞書。キーはプレイヤー名、値はスコア。
         """
-        # try:
-        with open(self.config.highscore_filename, "r", encoding="utf-8") as f:
-            scores = json.load(f)
-        # except (FileNotFoundError, json.JSONDecodeError):
-        #     scores = {}
+        try:
+            with open(self.config.highscore_filename, "r", encoding="utf-8") as f:
+                scores = json.load(f)
+        except (FileNotFoundError, json.JSONDecodeError):
+            scores = {}
         return dict(sorted(scores.items(), key=lambda x: x[1], reverse=True))
 
     def _draw_score(
@@ -145,41 +151,30 @@ class MainMenu(Scene):
             y (int): 画面の高さ
         """
         score_x = (x - self.score_image.get_width()) // 2
-        score_y = (y // 30) * 10
+        score_y = (y // 30) * 8
         screen.blit(self.score_image, (score_x, score_y))
 
-        scores: dict[str, int] = self._set_highscore()
-        if self.scores is None or self.scores is not scores:
-            self.scores = scores
+        base_x = score_x
+        name_offset = 100
+        score_offset = 500
+        pts_offset = 800
 
-        highscore_x = score_x - 200
         for i, (name, score) in enumerate(self.scores.items()):
             ranking = i + 1
+            # 上位10位まで表示する
             if ranking > 10:
                 break
-            highscore_y = (y // 30) * (i + 12)
+            row_y = (y // 30) * (i + 11)
 
-            ranking_text = f"{ranking}."
-            ranking_images = self.number_font.render_text(ranking_text)
-            ranking_x = highscore_x
-            ranking_y = highscore_y
+            ranking_images = self.number_font.render_text(f"{ranking}.")
+            name_images = self.number_font.render_text(name)
+            score_images = self.number_font.render_text(f" - {score}")
+            pts_images = self.number_font.render_text(" pts")
 
-            name_text = name
-            name_images = self.number_font.render_text(name_text)
-            name_x = highscore_x + 150
-
-            score_text = f" - {score}"
-            score_images = self.number_font.render_text(score_text)
-            player_score_x = highscore_x + 800
-
-            pts_text = " pts"
-            pts_images = self.number_font.render_text(pts_text)
-            pts_x = highscore_x + 1200
-
-            screen.blit(ranking_images, (ranking_x, ranking_y))
-            screen.blit(name_images, (name_x, ranking_y))
-            screen.blit(score_images, (player_score_x, ranking_y))
-            screen.blit(pts_images, (pts_x, ranking_y))
+            screen.blit(ranking_images, (base_x, row_y))
+            screen.blit(name_images, (base_x + name_offset, row_y))
+            screen.blit(score_images, (base_x + score_offset, row_y))
+            screen.blit(pts_images, (base_x + pts_offset, row_y))
 
     def _menu_item_draw(
         self, screen: pygame.Surface, screen_x: int, screen_y: int
@@ -187,8 +182,8 @@ class MainMenu(Scene):
         """メニュー項目の描画
         """
         item_height = max(item.get_height() for item in self.item_images)
-        line_step = item_height + (item_height * int(self.ITEM_LINE_SPACE))
-        start_y = (screen_y // 30) * 23
+        line_step = item_height + int(item_height * self.ITEM_LINE_SPACE)
+        start_y = (screen_y // 30) * 21
 
         for index, image in enumerate(self.item_images):
             item_x = (screen_x - image.get_width()) // 2
@@ -218,7 +213,7 @@ class MainMenu(Scene):
         # ======== テキスト、x座標、y座標を計算して描画する一連の流れ ========
         # -> 関数に分離する？
         title_x = (screen_x - self.title_image.get_width()) // 2
-        title_y = (screen_y // 30) * 4
+        title_y = (screen_y // 30) * 1
         screen.blit(self.title_image, (title_x, title_y))
 
         # ======== テキスト、x座標、y座標を計算して描画する一連の流れ ========
