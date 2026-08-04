@@ -112,7 +112,8 @@ class ItemManager:
         if (item.px, item.py) in coords:
             item.is_eaten = True
             self.item_map[y][x] = None
-        return item
+            return item
+        return None
 
     def is_get_all_items(self) -> bool:
         """全てのアイテムを取得したか判定する。
