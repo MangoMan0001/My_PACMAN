@@ -15,6 +15,19 @@ STATUS = Literal['READY', 'PLAYING']
 
 # --- ゲームの状態をすべて持つデータクラス ---
 class GameState:
+    """ゲームの状態を保持するクラス。
+
+    Attributes:
+        config (ConfigModel): ゲームの設定を保持するConfigModelオブジェクト
+        map (Map | None): ゲームのマップを管理するMapオブジェクト
+        item (ItemManager | None): アイテムの管理を行うItemManagerオブジェクト
+        pacman (Pacman | None): Pacmanのインスタンス
+        ghosts (list[Ghost]): 4匹のGhostのインスタンスをリストで保持
+        game_status (STATUS): ゲームの現在の状態（READYまたはPLAYING）
+        current_level (int): ステージの現在レベル
+        events (list[pygame.event.Event]): pygameのイベントリスト
+        score (int): 現在のスコア
+    """
     def __init__(self, config: ConfigModel):
 
         # === OBJECT ===

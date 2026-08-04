@@ -11,6 +11,18 @@ from src.model.scene.pause import Pause
 
 
 class Game:
+    """ゲームのメインクラス。
+
+    Attributes:
+        config (ConfigModel): 設定情報を保持するConfigModelオブジェクト
+        width (int): 画面の幅
+        height (int): 画面の高さ
+        screen (pygame.Surface): ゲーム画面のSurfaceオブジェクト
+        current_scene (Scene): 現在のシーンを保持するSceneオブジェクト
+        running (bool): ゲームが実行中かどうかのフラグ
+        pre_time (float): 前回のフレームの時間を保持する変数
+        black_bg (pygame.Surface): 黒い背景のSurfaceオブジェクト
+    """
     def __init__(self, config: ConfigModel) -> None:
         pygame.init()
         self.config = config
@@ -27,6 +39,10 @@ class Game:
         self.black_bg = pygame.Surface((self.width, self.height))
 
     def run(self) -> None:
+        """ゲームのメインループを実行する関数。
+
+        ゲームのメインループを実行し、シーンの更新と描画を行う。
+        """
         self.current_scene = MainMenu(self.config)
 
         while self.running:

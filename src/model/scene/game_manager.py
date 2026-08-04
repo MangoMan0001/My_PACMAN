@@ -11,6 +11,16 @@ from src.model.game_state import GameState
 
 
 class GameManager(Scene):
+    """ゲームの進行を管理するクラス。
+
+    Attributes:
+        game_state (GameState): ゲームの状態を保持するGameStateオブジェクト
+        map (Map): ゲームのマップを管理するMapオブジェクト
+        item_manager (ItemManager): アイテムの管理を行うItemManagerオブジェクト
+        character_manager (CharacterManager): キャラクターの管理を行うCharacterManagerオブジェクト
+        time (float): ゲームの経過時間を保持する変数
+        start_time (float): ゲームの開始時間を保持する変数
+    """
     def __init__(self, config: ConfigModel, screen: pygame.Surface) -> None:
         super().__init__(config)
         self.game_state: GameState = GameState(config)
@@ -29,7 +39,16 @@ class GameManager(Scene):
         self.start_time = time.time()
 
     def update(self, events: list[pygame.event.Event]) -> None | tuple[str, Any]:
-        """毎フレーム呼ばれる処理"""
+        """ゲームの状態を更新する関数。
+
+        Args:
+            events (list[pygame.event.Event]): pygameのイベントリスト。
+
+        Returns:
+            None | tuple[str, Any]:
+                ゲームオーバーやゲームクリアなどの状態変化があれば、シーン名と受け渡すデータをタプルで返す。
+                何もなければNoneを返す。
+        """
         # debug
         self.game_state.events = events
         for event in events:
@@ -74,6 +93,11 @@ class GameManager(Scene):
         return None
 
     def draw(self, screen: pygame.Surface) -> None:
+        """ゲームの状態を描画する関数。
+
+        Args:
+            screen (pygame.Surface): 描画先のpygame.Surfaceオブジェクト。
+        """
         self.map.draw(screen)
         self.item_mageer.draw(screen)
         self.character_manager.draw(screen)

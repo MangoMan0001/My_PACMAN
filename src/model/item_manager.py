@@ -12,6 +12,14 @@ from src.model.character.pacman import Pacman
 
 
 class CellType(IntEnum):
+    """セルの種類を表す列挙型。
+
+    Attributes:
+        PATH (int): 通路を表す値（0）
+        PACGUM (int): パックガムを表す値（1）
+        SUPER_PACGUM (int): スーパー・パックガムを表す値（2）
+        BAN (int): 不可侵エリアを表す値（3）
+    """
     PATH = 0
     PACGUM = 1
     SUPER_PACGUM = 2
@@ -19,6 +27,16 @@ class CellType(IntEnum):
 
 
 class ItemManager:
+    """ゲーム内のアイテムを管理するクラス。
+
+    Attributes:
+        pacgum_count (int): パックガムの数
+        pacgum_point (int): パックガムの得点
+        super_pacgum_point (int): スーパー・パックガムの得点
+        item_map (list[list[Optional[Item]]]): アイテムの配置を表す2次元リスト
+        pacgums (list[Pacgum]): パックガムのリスト
+        super_pacgums (list[SuperPacgum]): スーパー・パックガムのリスト
+    """
     def __init__(self, game_state: GameState):
         self.pacgum_count: int = game_state.config.pacgum
         self.pacgum_point: int = game_state.config.points_per_pacgum
@@ -30,6 +48,11 @@ class ItemManager:
         self.super_pacgums: list[SuperPacgum] = self._generate_super_pacgum()
 
     def update(self, game_state: GameState) -> None:
+        """自分が持っている全アイテムを更新
+
+        Args:
+            game_state (GameState): ゲームの状態を保持するGameStateオブジェクト
+        """
         for item in self.pacgums:
             item.update(game_state)
 
@@ -38,7 +61,11 @@ class ItemManager:
         pass
 
     def draw(self, screen: pygame.Surface) -> None:
-        """自分が持っている全アイテムを描画"""
+        """自分が持っている全アイテムを描画
+
+        Args:
+            screen (pygame.Surface): 描画対象のSurfaceオブジェクト
+        """
         for item in self.pacgums:
             item.draw(screen)
 
@@ -46,13 +73,24 @@ class ItemManager:
             item.draw(screen)
 
     def level_up(self, game_state: GameState) -> None:
-        """クリア後のレベルアップ処理"""
+        """レベルアップ時にアイテムをリセットする
+
+        Args:
+            game_state (GameState): ゲームの状態を保持するGameStateオブジェクト
+        """
         self.item_map: list[list[Optional[Item]]] = self._generate_map(game_state)
         self.pacgums: list[Pacgum] = self._generate_pacgum()
         self.super_pacgums: list[SuperPacgum] = self._generate_super_pacgum()
 
     def try_eat(self, game_state: GameState) -> None | Item:
-        """指定された座標にアイテムがあれば取得し、取得したオブジェクトタイプを返す"""
+        """Pacmanがアイテムを取得できるか判定し、取得できる場合はアイテムを取得する。
+
+        Args:
+            game_state (GameState): ゲームの状態を保持するGameStateオブジェクト
+
+        Returns:
+            Optional[Item]: 取得したアイテムを返す。取得できなかった場合はNoneを返す。
+        """
         assert game_state.map is not None
         assert game_state.pacman is not None
         map: Map = game_state.map
@@ -77,10 +115,10 @@ class ItemManager:
         return item
 
     def is_get_all_items(self) -> bool:
-        """すべてのアイテムを取得したか否か
+        """全てのアイテムを取得したか判定する。
 
         Returns:
-            bool: _description_
+            bool: 全てのアイテムを取得した場合はTrue、そうでない場合はFalse
         """
         for pacgum in self.pacgums:
             if not pacgum.is_eaten:
@@ -93,6 +131,14 @@ class ItemManager:
 #    Private functions
 
     def _generate_map(self, game_state: GameState) -> list[list[Optional[Item]]]:
+        """アイテムの配置を生成する。
+
+        Args:
+            game_state (GameState): ゲームの状態を保持するGameStateオブジェクト
+
+        Returns:
+            list[list[Optional[Item]]]: アイテムの配置を表す2次元リスト
+        """
         random.seed(game_state.config.seed)
 
         assert game_state.map is not None
@@ -142,6 +188,11 @@ class ItemManager:
         return item_map
 
     def _generate_pacgum(self) -> list[Pacgum]:
+        """パックガムのリストを生成する。
+
+        Returns:
+            list[Pacgum]: パックガムのリスト
+        """
         pacgum_list: list[Pacgum] = []
 
         for y, line in enumerate(self.item_map):
@@ -153,6 +204,11 @@ class ItemManager:
         return pacgum_list
 
     def _generate_super_pacgum(self) -> list[SuperPacgum]:
+        """スーパー・パックガムのリストを生成する。
+
+        Returns:
+            list[SuperPacgum]: スーパー・パックガムのリスト
+        """
         super_pacgum_list: list[SuperPacgum] = []
 
         for y, line in enumerate(self.item_map):
