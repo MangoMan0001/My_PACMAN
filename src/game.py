@@ -61,6 +61,7 @@ class Game:
                     self.running = False
 
             scene_request = self.current_scene.update(events)
+            scene_request = ("GAME_OVER", 999999)
 
             if scene_request is not None:
                 scene_name, data = scene_request
