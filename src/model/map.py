@@ -183,6 +183,7 @@ class Map(Entity):
 
         wall_mapの各要素は16進数で各方向の壁の有無を表す。
         壁なら1: 上、2: 右、4: 下、8: 左のビットが立っている。
+        is_moveable()と同じく通れればTrueを返すため、壁がない=True。
 
         Args:
             x (int): セル単位でのx座標
