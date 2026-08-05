@@ -70,6 +70,15 @@ class Ghost(Character):
         """
         pass
 
+    @abstractmethod
+    def level_up(self, game_state: GameState) -> None:
+        """クリア後のレベルアップ処理
+
+        Args:
+            game_state (GameState): ゲームの状態を保持するGameStateオブジェクト
+        """
+        pass
+
     def update(self, game_state: GameState) -> None:
         """Blinkyの状態を更新する関数。
 
@@ -89,10 +98,7 @@ class Ghost(Character):
             self.x, self.y = coord
             self.target = self._get_target(game_state)
             self.route = self._get_route(game_state)
-            if self.route:
-                self.direction = self.route[0]
-            else:
-                self.direction = Direction.STOP
+            self.direction = self.route[0]
 
         if self.direction == Direction.UP:
             self.py -= self.speed
@@ -117,18 +123,6 @@ class Ghost(Character):
         key = f"{self.direction}_{self.frame}"
         screen.blit(self.images[key], (self.px - self.space, self.py - self.space))
 
-    def level_up(self, game_state: GameState) -> None:
-        """クリア後のレベルアップ処理
-
-        Args:
-            game_state (GameState): ゲームの状態を保持するGameStateオブジェクト
-        """
-        assert game_state.map is not None
-        map: Map = game_state.map
-
-        self.x, self.y = 0, 0
-        self.px, self.py = map.cell_center(self.x, self.y)
-
     def _get_route(self, game_state: GameState) -> list[Direction]:
         """ゴーストの移動ルートを取得する。
 
@@ -146,9 +140,18 @@ class Ghost(Character):
         # start: ゴーストの現在位置、goal: ターゲット(各ゴーストで異なる)の座標
         start = (self.x, self.y)
         goal = self.target
+        x, y = start
+
         # ゴーストの現在位置とターゲットが同じ場合は空のリストを返す
         if start == goal:
-            return []
+            if not map.is_wall(x, y, Direction.UP) and self.direction != Direction.DOWN:
+                return [Direction.UP]
+            elif not map.is_wall(x, y, Direction.RIGHT) and self.direction != Direction.LEFT:
+                return [Direction.RIGHT]
+            elif not map.is_wall(x, y, Direction.DOWN) and self.direction != Direction.UP:
+                return [Direction.DOWN]
+            elif not map.is_wall(x, y, Direction.LEFT) and self.direction != Direction.RIGHT:
+                return [Direction.LEFT]
 
         # 各方向のDirectionと座標の変化量の対応リスト
         moves: list[tuple[Direction, int, int]] = [
@@ -158,11 +161,21 @@ class Ghost(Character):
             (Direction.LEFT, -1, 0)
         ]
 
+        # 各方向の逆を持つ辞書
+        reverse_direction: dict[Direction, Direction] = {
+            Direction.UP: Direction.DOWN,
+            Direction.DOWN: Direction.UP,
+            Direction.RIGHT: Direction.LEFT,
+            Direction.LEFT: Direction.RIGHT,
+        }
+
         # キューと訪問済みの座標を保存する
         queue: deque[tuple[int, int]] = deque([start])
         visited: set[tuple[int, int]] = {start}
         # 各座標をキーに、その座標に到達する直前の座標と方向をバリューとして保存
-        came_from: dict[tuple[int, int], tuple[Direction, tuple[int, int]]] = {}
+        came_from: dict[tuple[int, int], tuple[Direction, tuple[int, int]]] = {
+            (x, y): (self.direction, (x, y))
+            }
 
         while queue:
             current_x, current_y = queue.popleft()
@@ -176,7 +189,11 @@ class Ghost(Character):
                 if not (0 <= next_x < map.x and 0 <= next_y < map.y):
                     continue
                 # 壁がある
-                if not map.is_wall(current_x, current_y, direction):
+                if map.is_wall(current_x, current_y, direction):
+                    continue
+                # 逆方向への移動を除外
+                pre_direction, _ = came_from[(current_x, current_y)]
+                if reverse_direction[direction] == pre_direction:
                     continue
                 # 訪問済み
                 if (next_x, next_y) in visited:
@@ -188,7 +205,7 @@ class Ghost(Character):
 
         # ゴールに到達できなかった場合は空のリストを返す
         if goal not in came_from:
-            return []
+            return [reverse_direction[self.direction]]
 
         # ゴールからスタートまでのルートを逆順にたどり、方向のリストを作成する
         route: list[Direction] = []

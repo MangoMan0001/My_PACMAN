@@ -3,6 +3,7 @@ import pygame
 from src.model.game_state import GameState
 from src.model.base_model.ghost import Ghost
 from src.model.base_model.character import Direction
+from src.model.map import Map
 
 
 # --- パックマンとの距離が「8マス以上」離れている時はBlinkyと同じ 「8マス以内」に近づくと自分の初期位置をターゲットにする
@@ -15,13 +16,28 @@ class Clyde(Ghost):
     """
     def __init__(self, x: int, y: int, px: int, py: int, speed: int, color: tuple[int, int, int], points: int) -> None:
         super().__init__(x, y, px, py, speed, color, points)
+        self.direction = Direction.LEFT
 
         for direction in Direction:
-            if direction == Direction.STOP:
-                continue
+            # if direction == Direction.STOP:
+            #     continue
             for freme in [0, 1]:
                 key = f"{direction}_{freme}"
                 self.images[key] = pygame.image.load(f"assets/ghost/ghost_clyde_{key}.png")
+
+    def level_up(self, game_state: GameState) -> None:
+        """クリア後のレベルアップ処理
+
+        Args:
+            game_state (GameState): ゲームの状態を保持するGameStateオブジェクト
+        """
+        assert game_state.map is not None
+        map: Map = game_state.map
+
+        self.init_cell = (map.x - 1, map.y - 1)
+        self.x, self.y = self.init_cell
+        self.px, self.py = map.cell_center(self.x, self.y)
+        self.direction = Direction.LEFT
 
     def _get_target(self, game_state: GameState) -> tuple[int, int]:
         """ゴーストの移動目標座標を取得する

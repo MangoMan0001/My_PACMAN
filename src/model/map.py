@@ -195,14 +195,13 @@ class Map(Entity):
         """
         cell = self.wall_map[y][x]
         if direction == Direction.UP:
-            return not bool(cell & 1)
+            return bool(cell & 1)
         elif direction == Direction.RIGHT:
-            return not bool(cell & 2)
+            return bool(cell & 2)
         elif direction == Direction.DOWN:
-            return not bool(cell & 4)
+            return bool(cell & 4)
         elif direction == Direction.LEFT:
-            return not bool(cell & 8)
-
+            return bool(cell & 8)
         return False
 
     def is_center(self, px: int, py: int) -> tuple[int, int] | None:
