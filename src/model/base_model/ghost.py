@@ -98,7 +98,8 @@ class Ghost(Character):
             self.x, self.y = coord
             self.target = self._get_target(game_state)
             self.route = self._get_route(game_state)
-            self.direction = self.route[0]
+            if self.route:
+                self.direction = self.route[0]
 
         if self.direction == Direction.UP:
             self.py -= self.speed
