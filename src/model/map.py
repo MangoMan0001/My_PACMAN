@@ -182,8 +182,7 @@ class Map(Entity):
         """指定されたセル座標に壁があるか判定する。
 
         wall_mapの各要素は16進数で各方向の壁の有無を表す。
-        壁なら1: 上、2: 右、4: 下、8: 左のビットが立っている。
-        is_moveable()と同じく通れればTrueを返すため、壁がない=True。
+        壁なら 1: 上、2: 右、4: 下、8: 左 のビットが立っている。
 
         Args:
             x (int): セル単位でのx座標
@@ -191,7 +190,7 @@ class Map(Entity):
             direction (Direction): 判定する方向を表すDirection列挙型
 
         Returns:
-            bool: 壁がない(通れる)場合はTrue、壁がある場合はFalse
+            bool: 壁がある場合はTrue、壁がない(通れる)場合はFalse
         """
         cell = self.wall_map[y][x]
         if direction == Direction.UP:
