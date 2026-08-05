@@ -42,3 +42,4 @@ class GameState:
         self.current_level: int = 0                 # ステージの現在レベル
         self.events: list[pygame.event.Event] = []  # key入力情報
         self.score: int = 0                         # current score
+        self.lives: int = config.lives              # 残機数

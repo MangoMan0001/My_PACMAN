@@ -75,7 +75,7 @@ class Blinky(Ghost):
         elif self.direction == Direction.RIGHT:
             self.px += self.speed
         elif self.direction == Direction.DOWN:
-            self.py += self.speed 
+            self.py += self.speed
         elif self.direction == Direction.LEFT:
             self.px -= self.speed
 

@@ -89,4 +89,52 @@ class CharacterManager:
         """
         return self.pacman.get_pos_pixel()
 
+    def is_hit(self, game_state: GameState) -> bool:
+        """Pacmanがゴーストに当たったか判定する。
+
+        Args:
+            game_state (GameState): ゲームの状態を保持するGameStateオブジェクト
+
+        Returns:
+            bool: Pacmanがゴーストに当たった場合はTrue、そうでない場合はFalse
+        """
+        assert game_state.map is not None
+        map: Map = game_state.map
+        pacman: Pacman = self.pacman
+
+        px, py = pacman.px, pacman.py
+        x, y = map.get_cell(px, py)
+
+        pacman_coords = [
+            (px - pacman.size // 3, py),
+            (px + pacman.size // 3, py),
+            (px, py - pacman.size // 3),
+            (px, py + pacman.size // 3),
+            ]
+
+        for ghost in self.ghosts:
+            gx, gy = ghost.px, ghost.py
+            top = gy - ghost.size // 3
+            right = gx + ghost.size // 3
+            bottom = gy + ghost.size // 3
+            left = gx - ghost.size // 3
+            for px, py in pacman_coords:
+                if py == gy and left < px < right:
+                    return True
+                if px == gx and top < py < bottom:
+                    return True
+        return False
+
+    def hit(self, game_state: GameState) -> None:
+        """Pacmanがゴーストに当たった場合の処理。
+
+        Args:
+            game_state (GameState): ゲームの状態を保持するGameStateオブジェクト
+        """
+        self.pacman.level_up(game_state)
+
+        for ghost in self.ghosts:
+            ghost.level_up(game_state)
+
+
 #    Private functions

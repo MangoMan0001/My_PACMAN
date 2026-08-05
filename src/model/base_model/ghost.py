@@ -18,6 +18,7 @@ class Ghost(Character):
         self.is_scared: bool = False  # いじけてるかどうか
         self.target: tuple[int, int] = (0, 0)  # 移動目標座標
         self.points: int = points  # 取得時のポイント
+        self.size: int = 24
 
     # 各ゴーストの独自アルゴリズム
     @abstractmethod
