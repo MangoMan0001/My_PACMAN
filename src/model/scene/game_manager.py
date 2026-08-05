@@ -67,14 +67,27 @@ class GameManager(Scene):
         if 3 < current_time - self.time:
             self.game_state.game_status = 'PLAYING'
 
+        # 時間制限処理
         if self.game_state.config.level_max_time < current_time - self.start_time:
             return ("GAME_OVER", None)
 
         # パックガムの取得処理
-        print(self.game_state.score)
         item = self.item_mageer.try_eat(self.game_state)
         if item is not None:
             self.game_state.score += item.points
+            print(self.game_state.score)
+
+        # Ghostとの衝突判定処理
+        if self.character_manager.is_hit(self.game_state):
+            self.character_manager.hit(self.game_state)
+            self.game_state.lives -= 1
+            print(self.game_state.lives)
+            self.game_state.game_status = 'READY'
+            self.time = time.time()
+            self.start_time = time.time()
+
+        if self.game_state.lives < 0:
+            return ("GAME_OVER", None)
 
         # level_up条件処理
         if self.item_mageer.is_get_all_items():
@@ -103,11 +116,3 @@ class GameManager(Scene):
         self.character_manager.draw(screen)
 
 #    Private functions
-
-    def _check_collisions(self) -> None:
-        # パックマンとゴーストの衝突判定などをここに書く
-        pass
-
-    def _check_level_clear(self) -> None:
-        # 残りのガム(is_eaten == False)の数を数え、0ならマップ再生成などの処理
-        pass
