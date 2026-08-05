@@ -78,13 +78,13 @@ class GameManager(Scene):
             print(self.game_state.score)
 
         # Ghostとの衝突判定処理
-        # if self.character_manager.is_hit(self.game_state):
-        #     self.character_manager.hit(self.game_state)
-        #     self.game_state.lives -= 1
-        #     print(self.game_state.lives)
-        #     self.game_state.game_status = 'READY'
-        #     self.time = time.time()
-        #     self.start_time = time.time()
+        if self.character_manager.is_hit(self.game_state):
+            self.character_manager.hit(self.game_state)
+            self.game_state.lives -= 1
+            print(self.game_state.lives)
+            self.game_state.game_status = 'READY'
+            self.time = time.time()
+            self.start_time = time.time()
 
         if self.game_state.lives < 0:
             return ("GAME_OVER", None)
