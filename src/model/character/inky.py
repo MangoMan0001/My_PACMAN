@@ -48,7 +48,35 @@ class Inky(Ghost):
         Returns:
             tuple[int, int]: ゴーストの移動目標座標
         """
+        assert game_state.map is not None
+        map: Map = game_state.map
         pacman = game_state.pacman
         assert pacman is not None
+        blinky = game_state.ghosts[0]
+        assert blinky is not None
 
-        return (pacman.x, pacman.y)
+        # --- パックマンの位置と、赤ゴースト（Blinky）の位置の両方を使って計算する...?
+        offset: dict[Direction, tuple[int, int]] = {
+            Direction.UP: (0, -1),
+            Direction.DOWN: (0, 1),
+            Direction.LEFT: (-1, 0),
+            Direction.RIGHT: (1, 0),
+        }
+        offset_x, offset_y = offset.get(pacman.direction, (0, 0))
+        target_x = max(0, min(map.x - 1, pacman.x + (pacman.x - blinky.x)))
+        target_y = max(0, min(map.y - 1, pacman.y + (pacman.y - blinky.y)))
+
+        while map.is_reachable(target_x, target_y) is False:
+            print("Inky入れた入れた入れた入れた入れた入れた入れた入れた")
+            if pacman.direction == Direction.LEFT or pacman.direction == Direction.RIGHT:
+                if target_x > pacman.x:
+                    target_x -= 1
+                elif target_x < pacman.x:
+                    target_x += 1
+            if pacman.direction == Direction.UP or pacman.direction == Direction.DOWN:
+                if target_y > pacman.y:
+                    target_y -= 1
+                elif target_y < pacman.y:
+                    target_y += 1
+
+        return (target_x, target_y)
