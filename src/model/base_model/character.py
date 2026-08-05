@@ -9,7 +9,6 @@ class Direction(StrEnum):
     RIGHT = 'right'
     DOWN = 'down'
     LEFT = 'left'
-    STOP = 'stop'
 
 
 # --- キャラクター系 (動く) ---
@@ -23,4 +22,4 @@ class Character(Entity):
     def __init__(self, x: int, y: int, speed: int):
         super().__init__(x, y)
         self.speed: int = speed
-        self.direction: Direction = Direction.STOP  # 現在の進行方向
+        self.direction: Direction = Direction.LEFT  # 現在の進行方向

@@ -178,6 +178,31 @@ class Map(Entity):
                 return not bool(cell & 8)
         return False
 
+    def is_wall(self, x: int, y: int, direction: Direction) -> bool:
+        """指定されたセル座標に壁があるか判定する。
+
+        wall_mapの各要素は16進数で各方向の壁の有無を表す。
+        壁なら 1: 上、2: 右、4: 下、8: 左 のビットが立っている。
+
+        Args:
+            x (int): セル単位でのx座標
+            y (int): セル単位でのy座標
+            direction (Direction): 判定する方向を表すDirection列挙型
+
+        Returns:
+            bool: 壁がある場合はTrue、壁がない(通れる)場合はFalse
+        """
+        cell = self.wall_map[y][x]
+        if direction == Direction.UP:
+            return bool(cell & 1)
+        elif direction == Direction.RIGHT:
+            return bool(cell & 2)
+        elif direction == Direction.DOWN:
+            return bool(cell & 4)
+        elif direction == Direction.LEFT:
+            return bool(cell & 8)
+        return False
+
     def is_center(self, px: int, py: int) -> tuple[int, int] | None:
         """指定されたピクセル座標が位置するセル内で、中心にいるか判定する。
         中心にいる場合はそのセルの座標を返し、中心にいない場合はNoneを返す。
