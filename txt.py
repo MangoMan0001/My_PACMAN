@@ -86,7 +86,7 @@ def create_font_misaki_images(output_dir: str) -> None:
 def create_font_none_images(output_dir: str) -> None:
     pygame.font.init()
     # フォントを使用。サイズ64
-    font = pygame.font.Font(None, 32)
+    font = pygame.font.Font(None, 128)
 
     # A〜Zまでの文字画像をループで一気に生成
     for char_code in range(ord('A'), ord('Z') + 1):
@@ -121,10 +121,10 @@ if __name__ == "__main__":
     # os.makedirs("data/assets/Pacman", exist_ok=True)
     # os.makedirs("data/assets/upper_256", exist_ok=True)
     # os.makedirs("data/assets/lower_128", exist_ok=True)
-    os.makedirs("data/assets/nonefont_32", exist_ok=True)
+    os.makedirs("data/assets/nonefont_128", exist_ok=True)
 
     # create_pacman_images("data/assets/Pacman")
     # create_font_upper_images("data/assets/upper_256")
     # create_font_lower_images("data/assets/lower_128")
-    create_font_none_images("data/assets/nonefont_32")
+    create_font_none_images("data/assets/nonefont_128")
     print("画像の自動生成が完了しました！")

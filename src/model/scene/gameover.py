@@ -15,7 +15,7 @@ class GameOver(Scene):
         self.hight: int = 0
 
         game_over_font = ImageFont(Path("pacfont_256"))
-        your_score_font = ImageFont(Path("misakifont_64"))
+        your_score_font = ImageFont(Path("nonefont_128"), filename_pattern="none-FONT_{char}.png")
         # self.number_font = ImageFont(
         #     Path("nonefont_32"), filename_pattern="none-FONT_{char}.png"
         # )
@@ -49,8 +49,12 @@ class GameOver(Scene):
         イベントを処理する。画面遷移が必要な場合はシーン名と受け渡すデータをタプルで返す。
         何もなければNoneを返す
         """
+        for event in events:
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.k:
 
-        pass
+        return None
+
 
     def draw(self, screen: pygame.Surface) -> None:
         width = screen.get_width()
@@ -58,12 +62,16 @@ class GameOver(Scene):
 
         cx, cy = width // 2, height // 2
         tx, ty = cx // 2, cy // 2
-        base_x = cx - self.game_over_img.get_width() // 2
-        base_y = cy - self.game_over_img.get_height() // 2
+        title_x = cx - self.game_over_img.get_width() // 2
+        title_y = cy - self.game_over_img.get_height() // 2
 
-        screen.blit(self.game_over_img, (base_x, base_y - ty))
-        screen.blit(self.score_img, (cx, cy))
-        # screen.blit(self.game_over_img, (base_x, base_y - ty))
-        print(self.score_img.get_width())
-        import sys
-        sys.exit(1)
+        space_x = 40
+        score_width = self.score_img.get_width()
+        raw_score_width = self.raw_socre_img.get_width()
+
+        screen.blit(self.game_over_img, (title_x, title_y - ty))
+        screen.blit(self.score_img, (cx - score_width - space_x, cy))
+        screen.blit(self.raw_socre_img, (cx + space_x, cy))
+        # print(self.score_img, self.raw_socre_img)
+        # import sys
+        # sys.exit(1)
