@@ -145,6 +145,7 @@ class Ghost(Character):
 
         # ゴーストの現在位置とターゲットが同じ場合は空のリストを返す
         if start == goal:
+            print("========== pin ==========")
             if not map.is_wall(x, y, Direction.UP) and self.direction != Direction.DOWN:
                 return [Direction.UP]
             elif not map.is_wall(x, y, Direction.RIGHT) and self.direction != Direction.LEFT:
