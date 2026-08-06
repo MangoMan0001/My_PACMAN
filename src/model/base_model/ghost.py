@@ -159,7 +159,7 @@ class Ghost(Character):
             Direction.LEFT: Direction.RIGHT,
         }
 
-        # ゴーストの現在位置とターゲットが同じ場合は空のリストを返す
+        # ゴールがスタートと同じ場合、またはゴールに到達できない場合の処理
         if start == goal:
             print("========== pin ==========")
             if not map.is_wall(x, y, Direction.UP) and self.direction != Direction.DOWN:
