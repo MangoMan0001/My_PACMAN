@@ -4,6 +4,8 @@ from typing import Any
 
 from src.model.base_model.config_model import ConfigModel
 from src.model.base_model.scene import Scene
+from src.model.scene.pause import Pause
+from src.model.scene.hud import HUD
 from src.model.map import Map
 from src.model.item_manager import ItemManager
 from src.model.character_manager import CharacterManager
@@ -28,15 +30,19 @@ class GameManager(Scene):
         self.map: Map = Map(self.game_state, screen)
         self.game_state.map = self.map
 
-        self.item_mageer: ItemManager = ItemManager(self.game_state)
-        self.game_state.item = self.item_mageer
+        self.item_manager: ItemManager = ItemManager(self.game_state)
+        self.game_state.item = self.item_manager
 
         self.character_manager: CharacterManager = CharacterManager(self.game_state)
         self.game_state.pacman = self.character_manager.pacman
         self.game_state.ghosts = self.character_manager.ghosts
 
+        self.pause_scene: Pause = Pause(config)
+        self.hud: HUD = HUD(config)
+
         self.time = time.time()
         self.start_time = time.time()
+        self.max_time = self.game_state.config.level_max_time
 
     def update(self, events: list[pygame.event.Event]) -> None | tuple[str, Any]:
         """ゲームの状態を更新する関数。
@@ -56,11 +62,12 @@ class GameManager(Scene):
                 if event.key == pygame.K_RETURN:
                     self.game_state.current_level += 1
                     self.map.level_up(self.game_state)
-                    self.item_mageer.level_up(self.game_state)
+                    self.item_manager.level_up(self.game_state)
                     self.character_manager.level_up(self.game_state)
                     self.game_state.game_status = 'READY'
                     self.time = time.time()
                     self.start_time = time.time()
+                elif event.key == pygame.K_p:
 
         # ゲーム状態のフラグ管理　3秒間開始しない
         current_time = time.time()
@@ -68,11 +75,11 @@ class GameManager(Scene):
             self.game_state.game_status = 'PLAYING'
 
         # 時間制限処理
-        if self.game_state.config.level_max_time < current_time - self.start_time:
+        if self.max_time < current_time - self.start_time:
             return ("GAME_OVER", None)
 
         # パックガムの取得処理
-        item = self.item_mageer.try_eat(self.game_state)
+        item = self.item_manager.try_eat(self.game_state)
         if item is not None:
             self.game_state.score += item.points
             print(self.game_state.score)
@@ -90,10 +97,10 @@ class GameManager(Scene):
             return ("GAME_OVER", None)
 
         # level_up条件処理
-        if self.item_mageer.is_get_all_items():
+        if self.item_manager.is_get_all_items():
             self.game_state.current_level += 1
             self.map.level_up(self.game_state)
-            self.item_mageer.level_up(self.game_state)
+            self.item_manager.level_up(self.game_state)
             self.character_manager.level_up(self.game_state)
             self.game_state.game_status = 'READY'
             self.start_time = time.time()
@@ -101,8 +108,9 @@ class GameManager(Scene):
 
         # 各オブジェクトのUpdate実行
         self.map.update(self.game_state)
-        self.item_mageer.update(self.game_state)
+        self.item_manager.update(self.game_state)
         self.character_manager.update(self.game_state)
+        self.hud.update(events)
         return None
 
     def draw(self, screen: pygame.Surface) -> None:
@@ -112,7 +120,7 @@ class GameManager(Scene):
             screen (pygame.Surface): 描画先のpygame.Surfaceオブジェクト。
         """
         self.map.draw(screen)
-        self.item_mageer.draw(screen)
+        self.item_manager.draw(screen)
         self.character_manager.draw(screen)
-
+        self.hud.draw(screen, self.game_state)
 #    Private functions
