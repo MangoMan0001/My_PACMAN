@@ -1,13 +1,20 @@
 import pygame
 from typing import Any
+from pathlib import Path
 
 from src.model.base_model.scene import Scene
 from src.model.base_model.config_model import ConfigModel
+from src.model.image_font import ImageFont
 
 
-class Pause(Scene):
+class HUD(Scene):
     def __init__(self, config: ConfigModel):
         super().__init__(config)
+
+        self.hud_font = ImageFont(Path("nonefont_64"))
+        highscore_text = "High Score:"
+
+        self.score_image = self.hud_
 
     def update(self, events: list[pygame.event.Event]) -> None | tuple[str, Any]:
         """
