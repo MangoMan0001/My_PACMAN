@@ -143,17 +143,6 @@ class Ghost(Character):
         goal = self.target
         x, y = start
 
-        # ゴーストの現在位置とターゲットが同じ場合は空のリストを返す
-        if start == goal:
-            if not map.is_wall(x, y, Direction.UP) and self.direction != Direction.DOWN:
-                return [Direction.UP]
-            elif not map.is_wall(x, y, Direction.RIGHT) and self.direction != Direction.LEFT:
-                return [Direction.RIGHT]
-            elif not map.is_wall(x, y, Direction.DOWN) and self.direction != Direction.UP:
-                return [Direction.DOWN]
-            elif not map.is_wall(x, y, Direction.LEFT) and self.direction != Direction.RIGHT:
-                return [Direction.LEFT]
-
         # 各方向のDirectionと座標の変化量の対応リスト
         moves: list[tuple[Direction, int, int]] = [
             (Direction.UP, 0, -1),
@@ -169,6 +158,20 @@ class Ghost(Character):
             Direction.RIGHT: Direction.LEFT,
             Direction.LEFT: Direction.RIGHT,
         }
+
+        # ゴールがスタートと同じ場合は、現在位置から抜ける方向を選ぶ
+        if start == goal:
+            if not map.is_wall(x, y, Direction.UP) and self.direction != Direction.DOWN:
+                return [Direction.UP]
+            elif not map.is_wall(x, y, Direction.RIGHT) and self.direction != Direction.LEFT:
+                return [Direction.RIGHT]
+            elif not map.is_wall(x, y, Direction.DOWN) and self.direction != Direction.UP:
+                return [Direction.DOWN]
+            elif not map.is_wall(x, y, Direction.LEFT) and self.direction != Direction.RIGHT:
+                return [Direction.LEFT]
+            # パックマンと同じセルかつゴーストが壁に囲まれている場合は、逆方向に進む
+            else:
+                return [reverse_direction[self.direction]]
 
         # キューと訪問済みの座標を保存する
         queue: deque[tuple[int, int]] = deque([start])
@@ -204,9 +207,18 @@ class Ghost(Character):
                 came_from[(next_x, next_y)] = (direction, (current_x, current_y))
                 queue.append((next_x, next_y))
 
-        # ゴールに到達できなかった場合は空のリストを返す
-        if goal not in came_from:
-            return [reverse_direction[self.direction]]
+        # ゴールに到達できなかった場合は、探索済みかつ到達可能なセルの中でゴールに最も近いセルを選ぶ
+        if goal not in came_from or goal == start:
+            # スタートじゃないセルの中で、到達可能なものを探す
+            reachable_cells = [cell for cell in came_from.keys() if cell != start]
+            # スタートとゴールが同じ場合逆方向に進む
+            if not reachable_cells:
+                return [reverse_direction[self.direction]]
+            original_goal_x, original_goal_y = goal
+            # 到達可能なセルの中で、ゴールに最も近いセルを選ぶ
+            goal = min(
+                reachable_cells, key=lambda cell: abs(cell[0] - original_goal_x) + abs(cell[1] - original_goal_y)
+            )
 
         # ゴールからスタートまでのルートを逆順にたどり、方向のリストを作成する
         route: list[Direction] = []
