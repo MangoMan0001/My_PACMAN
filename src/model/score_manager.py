@@ -26,7 +26,7 @@ class ScoreManager():
         scores (list[dict[str, str | int]]): スコアのリスト
     """
     def __init__(self, config: ConfigModel):
-        self.file_path: Path = Path('data/score') / config.highscore_filename
+        self.file_path: Path = Path('data/score') / config.highscore_filename.name
         self.scores: list[dict[str, str | int]] = [{'name': 'No One', 'score': 0}]
 
         # 既にファイルがある場合読み込む
