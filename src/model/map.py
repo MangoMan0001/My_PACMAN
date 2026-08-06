@@ -203,6 +203,21 @@ class Map(Entity):
             return bool(cell & 8)
         return False
 
+    def is_reachable(self, x: int, y: int) -> bool:
+        """指定されたセル座標が中心の42ブロックかどうか判定し、到達可能かどうかを返す。
+
+        Args:
+            x (int): セル単位でのx座標
+            y (int): セル単位でのy座標
+
+        Returns:
+            bool: 到達可能な場合はTrue、到達不可能な場合はFalse
+        """
+        if x < 0 or x >= self.x or y < 0 or y >= self.y:
+            return False
+        cell = self.wall_map[y][x]
+        return cell != 15
+
     def is_center(self, px: int, py: int) -> tuple[int, int] | None:
         """指定されたピクセル座標が位置するセル内で、中心にいるか判定する。
         中心にいる場合はそのセルの座標を返し、中心にいない場合はNoneを返す。
