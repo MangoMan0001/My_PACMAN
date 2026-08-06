@@ -108,20 +108,25 @@ class ConfigModel(BaseModel):
         Raises:
             ValueError: ファイル名が不正な場合
         """
+        # .jsonでないのなら.jsonを加える
         if v.suffix != '.json':
             v = v.with_suffix('.json')
 
+        # 同名のディレクトリが存在するか
         if v.exists() and v.is_dir():
             raise ValueError(f"A directory named {v.name} already exists.")
 
+        # ファイル名に禁止文字が含まれているか、実際に開けるか
         try:
+            # ファイルが存在する場合追記モードでopen
             if v.exists():
                 with open(v, 'a'):
                     pass
+            # ファイルが存在しない場合新規作成モードでopen
             else:
                 with open(v, 'x'):
                     pass
-                v.unlink()
+                v.unlink()  # ファイル削除
         except OSError as e:
             raise ValueError(f"File_NameError: {e}")
         return v
