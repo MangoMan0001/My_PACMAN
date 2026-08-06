@@ -27,8 +27,6 @@ class GameOver(Scene):
     def __init__(self, config: ConfigModel, score: int, score_manager: ScoreManager):
         super().__init__(config)
         self.score: int = score
-        self.width: int = 0
-        self.hight: int = 0
         self.score_manager: ScoreManager = score_manager
 
         self.max_name_len: int = 8
