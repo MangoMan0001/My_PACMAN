@@ -112,6 +112,10 @@ class ConfigModel(BaseModel):
         if v.suffix != '.json':
             v = v.with_suffix('.json')
 
+        # ディレクトリ指定は禁止（ファイル名のみ許可）
+        if v.parent != Path('.'):
+            raise ValueError("highscore_filename must be a filename without directories.")
+
         # 同名のディレクトリが存在するか
         if v.exists() and v.is_dir():
             raise ValueError(f"A directory named {v.name} already exists.")
