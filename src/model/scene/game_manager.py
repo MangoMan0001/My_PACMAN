@@ -87,7 +87,7 @@ class GameManager(Scene):
             self.start_time = time.time()
 
         if self.game_state.lives < 0:
-            return ("GAME_OVER", None)
+            return ("GAME_OVER", self.game_state.score)
 
         # level_up条件処理
         if self.item_mageer.is_get_all_items():

@@ -8,6 +8,7 @@ from src.model.scene.game_manager import GameManager
 from src.model.scene.gameover import GameOver
 from src.model.scene.gameclear import GameClear
 from src.model.scene.pause import Pause
+from src.model.score_manager import ScoreManager
 
 
 class Game:
@@ -37,6 +38,8 @@ class Game:
         self.pre_time: float = time.time()
 
         self.black_bg = pygame.Surface((self.width, self.height))
+
+        self.score_manager = ScoreManager(config)
 
     def run(self) -> None:
         """ゲームのメインループを実行する関数。
@@ -75,7 +78,7 @@ class Game:
 
                 elif scene_name == "GAME_OVER":
                     # プレイ画面 → ゲームオーバー（スコアを渡す）
-                    self.current_scene = GameOver(self.config, score=data)
+                    self.current_scene = GameOver(self.config, data, self.score_manager)
 
                 elif scene_name == "PAUSE":
                     # プレイ画面 → ゲームポーズ
