@@ -51,13 +51,16 @@ class Pinky(Ghost):
         pacman = game_state.pacman
         assert pacman is not None
 
+        # Direction: 目標座標のズレ
         offset: dict[Direction, tuple[int, int]] = {
             Direction.UP: (0, -1),
             Direction.DOWN: (0, 1),
             Direction.LEFT: (-1, 0),
             Direction.RIGHT: (1, 0),
         }
+        # パックマンが向いている方向からズレる値を取得
         offset_x, offset_y = offset.get(pacman.direction, (0, 0))
+        # pinkyの目標座標は4マス先か、マップ外ならマップ内の端に設定
         target_x = max(0, min(map.x - 1, pacman.x + offset_x * 4))
         target_y = max(0, min(map.y - 1, pacman.y + offset_y * 4))
 
