@@ -2,11 +2,19 @@ import pygame
 import time
 from collections import deque
 from abc import abstractmethod
+from enum import Enum, auto
 
 from .character import Character
 from src.model.game_state import GameState
 from src.model.map import Map
 from src.model.base_model.character import Direction
+
+
+class GhostMode(Enum):
+    CHASE = auto()
+    SCATTER = auto()
+    SCARED = auto()
+    EATEN = auto()
 
 
 # --- ゴーストの基底クラス ---
@@ -36,8 +44,15 @@ class Ghost(Character):
     def __init__(self, x: int, y: int, px: int, py: int, speed: int, color: tuple[int, int, int], points: int) -> None:
         super().__init__(x, y, speed)
 
-        self.is_scared: bool = False
         self.points: int = points
+        self.current_mode: GhostMode = GhostMode.CHASE
+        self.mode_time: dict[GhostMode, int] = {
+            GhostMode.CHASE: 20,
+            GhostMode.SCATTER: 8,
+            GhostMode.SCARED: 8,
+            GhostMode.EATEN: 0
+        }
+        self.time: float = time.time()
 
         self.direction: Direction = Direction.LEFT
         self.px: int = px
@@ -49,35 +64,20 @@ class Ghost(Character):
         self.space: int = self.size // 2
 
         self.images: dict[str, pygame.Surface] = {}
+        for direction in Direction:
+            for freme in [0, 1]:
+                key = f"eye_{direction}"
+                self.images[key] = pygame.image.load(f"assets/ghost/eyes/{key}.png")
+                key = f"scared_{freme}"
+                self.images[key] = pygame.image.load(f"assets/ghost/ghost_{key}.png")
 
         self.frame: int = 1
         self.last_anim_time: float = time.time()
         self.anim_interval: float = 0.15
+        self.skip_move: bool = False
 
         self.target: tuple[int, int] = (0, 0)
         self.route: list[Direction] = []
-
-    # 各ゴーストの独自アルゴリズム
-    @abstractmethod
-    def _get_target(self, game_state: GameState) -> tuple[int, int]:
-        """ゴーストの移動目標座標を取得する
-
-        Args:
-            game_state (GameState): ゲームの状態を保持するオブジェクト
-
-        Returns:
-            tuple[int, int]: ゴーストの移動目標座標
-        """
-        pass
-
-    @abstractmethod
-    def level_up(self, game_state: GameState) -> None:
-        """クリア後のレベルアップ処理
-
-        Args:
-            game_state (GameState): ゲームの状態を保持するGameStateオブジェクト
-        """
-        pass
 
     def update(self, game_state: GameState) -> None:
         """Blinkyの状態を更新する関数。
@@ -91,6 +91,15 @@ class Ghost(Character):
         assert game_state.map is not None
         map: Map = game_state.map
 
+        # Mode Swich
+        current_time = time.time()
+        if self.mode_time[self.current_mode] <= current_time - self.time:
+            self._mode_change()
+            self.time = time.time()
+        # Mode Swicht - 捕食
+        if self.current_mode == GhostMode.EATEN and (self.x, self.y) == self.target:
+            self.current_mode = GhostMode.CHASE
+
         # セルの中心に到達したら、現在の座標を確定
         # ターゲットとルートを更新し、次の方向を決定する
         coord = map.is_center(self.px, self.py)
@@ -101,19 +110,31 @@ class Ghost(Character):
             if self.route:
                 self.direction = self.route[0]
 
-        if self.direction == Direction.UP:
-            self.py -= self.speed
-        elif self.direction == Direction.RIGHT:
-            self.px += self.speed
-        elif self.direction == Direction.DOWN:
-            self.py += self.speed
-        elif self.direction == Direction.LEFT:
-            self.px -= self.speed
-
+        # Animation
         current_time = time.time()
         if self.anim_interval < current_time - self.last_anim_time:
             self.frame = 1 - self.frame
             self.last_anim_time = current_time
+
+        # いじけ時　Frame skip
+        if self.current_mode == GhostMode.SCARED:
+            self.skip_move = not self.skip_move
+            if self.skip_move:
+                return
+
+        # Movement
+        move_step = 3 if self.current_mode == GhostMode.EATEN else 1
+        for _ in range(move_step):
+            if self.direction == Direction.UP:
+                self.py -= self.speed
+            elif self.direction == Direction.RIGHT:
+                self.px += self.speed
+            elif self.direction == Direction.DOWN:
+                self.py += self.speed
+            elif self.direction == Direction.LEFT:
+                self.px -= self.speed
+            if map.is_center is not None:
+                break
 
     def draw(self, screen: pygame.Surface) -> None:
         """ゴーストを描画する関数。
@@ -121,8 +142,43 @@ class Ghost(Character):
         Args:
             screen (pygame.Surface): 描画対象のSurfaceオブジェクト
         """
-        key = f"{self.direction}_{self.frame}"
+        if self.current_mode == GhostMode.EATEN:
+            key = f"eye_{self.direction}"
+        elif self.current_mode == GhostMode.SCARED:
+            key = f"scared_{self.frame}"
+        else:
+            key = f"{self.direction}_{self.frame}"
         screen.blit(self.images[key], (self.px - self.space, self.py - self.space))
+
+    @abstractmethod
+    def level_up(self, game_state: GameState) -> None:
+        """クリア後のレベルアップ処理
+
+        Args:
+            game_state (GameState): ゲームの状態を保持するGameStateオブジェクト
+        """
+        pass
+
+    def be_scared(self) -> None:
+        self.current_mode = GhostMode.SCARED
+
+    def be_eaten(self) -> None:
+        self.current_mode = GhostMode.EATEN
+
+#    Praivate Method
+
+    # 各ゴーストの独自アルゴリズム
+    @abstractmethod
+    def _get_target(self, game_state: GameState) -> tuple[int, int]:
+        """ゴーストの移動目標座標を取得する
+
+        Args:
+            game_state (GameState): ゲームの状態を保持するオブジェクト
+
+        Returns:
+            tuple[int, int]: ゴーストの移動目標座標
+        """
+        pass
 
     def _get_route(self, game_state: GameState) -> list[Direction]:
         """ゴーストの移動ルートを取得する。
@@ -230,3 +286,11 @@ class Ghost(Character):
         route.reverse()
 
         return route
+
+    def _mode_change(self) -> None:
+        if self.current_mode == GhostMode.CHASE:
+            self.current_mode = GhostMode.SCATTER
+        elif self.current_mode == GhostMode.SCATTER:
+            self.current_mode = GhostMode.CHASE
+        elif self.current_mode == GhostMode.SCARED:
+            self.current_mode = GhostMode.CHASE

@@ -1,7 +1,7 @@
 import pygame
 
 from src.model.game_state import GameState
-from src.model.base_model.ghost import Ghost
+from src.model.base_model.ghost import Ghost, GhostMode
 from src.model.base_model.character import Direction
 from src.model.map import Map
 
@@ -36,6 +36,7 @@ class Blinky(Ghost):
         self.x, self.y = self.init_cell
         self.px, self.py = map.cell_center(self.x, self.y)
         self.direction = Direction.RIGHT
+        self.current_mode = GhostMode.CHASE
 
     def _get_target(self, game_state: GameState) -> tuple[int, int]:
         """ゴーストの移動目標座標を取得する。
@@ -51,4 +52,6 @@ class Blinky(Ghost):
         pacman = game_state.pacman
         assert pacman is not None
 
+        if self.current_mode != GhostMode.CHASE:
+            return self.init_cell
         return (pacman.x, pacman.y)

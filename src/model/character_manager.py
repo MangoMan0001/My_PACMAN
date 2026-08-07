@@ -1,6 +1,6 @@
 import pygame
 
-from src.model.base_model.ghost import Ghost
+from src.model.base_model.ghost import Ghost, GhostMode
 from src.model.map import Map
 from src.model.game_state import GameState
 from src.model.character.pacman import Pacman
@@ -33,9 +33,9 @@ class CharacterManager:
 
         self.ghosts: list[Ghost] = [
             Blinky(0, 0, bx, by, speed, (255, 0, 0), game_state.config.points_per_ghost),
-            Pinky(map.x - 1, 0, px, py, speed, (255, 182, 193), game_state.config.points_per_ghost),
-            Inky(0, map.y - 1, ix, iy, speed, (0, 255, 255), game_state.config.points_per_ghost),
-            Clyde(map.x - 1, map.y - 1, cx, cy, speed, (255, 165, 0), game_state.config.points_per_ghost),
+            # Pinky(map.x - 1, 0, px, py, speed, (255, 182, 193), game_state.config.points_per_ghost),
+            # Inky(0, map.y - 1, ix, iy, speed, (0, 255, 255), game_state.config.points_per_ghost),
+            # Clyde(map.x - 1, map.y - 1, cx, cy, speed, (255, 165, 0), game_state.config.points_per_ghost),
         ]
 
     def update(self, game_state: GameState) -> None:
@@ -46,6 +46,7 @@ class CharacterManager:
         """
         if game_state.game_status == 'READY':
             return
+
         self.pacman.update(game_state)
 
         for ghost in self.ghosts:
@@ -136,5 +137,17 @@ class CharacterManager:
         for ghost in self.ghosts:
             ghost.level_up(game_state)
 
+    def be_scared(self) -> None:
+        for ghost in self.ghosts:
+            ghost.be_scared()
+
+    def is_eaten(self) -> bool:
+        if self.ghosts[0].current_mode == GhostMode.SCARED:
+            for ghost in self.ghosts:
+                ghost.current_mode = GhostMode.EATEN
+            return True
+        return False
+
+    def is_no
 
 #    Private functions

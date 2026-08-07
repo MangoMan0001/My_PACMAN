@@ -8,6 +8,7 @@ from src.model.map import Map
 from src.model.item_manager import ItemManager
 from src.model.character_manager import CharacterManager
 from src.model.game_state import GameState
+from src.model.item.super_pacgum import SuperPacgum
 
 
 class GameManager(Scene):
@@ -75,17 +76,24 @@ class GameManager(Scene):
         item = self.item_mageer.try_eat(self.game_state)
         if item is not None:
             self.game_state.score += item.points
-            print(self.game_state.score)
+            # SuperPacgum取得時　ゴーストをいじけモードへ
+            if type(item) is SuperPacgum:
+                self.character_manager.be_scared()
 
         # Ghostとの衝突判定処理
         if self.character_manager.is_hit(self.game_state):
-            self.character_manager.hit(self.game_state)
-            self.game_state.lives -= 1
-            print(self.game_state.lives)
-            self.game_state.game_status = 'READY'
-            self.time = time.time()
-            self.start_time = time.time()
+            # 捕食時
+            if self.character_manager.is_eaten():
+                self.game_state.score += self.game_state.config.points_per_ghost
+            # 通常時
+            elif:
+                self.character_manager.hit(self.game_state)
+                self.game_state.lives -= 1
+                self.game_state.game_status = 'READY'
+                self.time = time.time()
+                self.start_time = time.time()
 
+        # ゲームオーバー処理 残ライフ
         if self.game_state.lives < 0:
             return ("GAME_OVER", self.game_state.score)
 

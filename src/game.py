@@ -27,8 +27,8 @@ class Game:
     def __init__(self, config: ConfigModel) -> None:
         pygame.init()
         self.config = config
-        self.width = self.config.display_width
-        self.height = self.config.display_height
+        self.width = 1920
+        self.height = 1080
 
         self.screen = pygame.display.set_mode((self.width, self.height))
 
