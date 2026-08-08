@@ -42,7 +42,8 @@ class HUD(Scene):
         """
         self.score = game_state.score
         self.lives = game_state.lives
-        self.remaining_time = game_state.config.level_max_time - game_state.game_timer
+        if game_state.game_status == "PLAYING":
+            self.remaining_time = game_state.config.level_max_time - game_state.game_timer
         # 過去のハイスコアを現在プレイ中のスコアが上回った場合、ハイスコアを更新
         if self.highscore < game_state.score:
             self.highscore = game_state.score
