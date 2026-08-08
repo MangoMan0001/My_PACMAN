@@ -12,6 +12,7 @@ from src.model.scene.pause import Pause
 from src.model.scene.hud import HUD
 from src.model.item.super_pacgum import SuperPacgum
 from src.model.base_model.ghost import GhostMode
+from src.model.score_manager import ScoreManager
 
 
 class GameManager(Scene):
@@ -24,7 +25,7 @@ class GameManager(Scene):
         character_manager (CharacterManager): キャラクターの管理を行うCharacterManagerオブジェクト
         pre_time (float): 前回のフレームの時間を保持する変数
     """
-    def __init__(self, config: ConfigModel, screen: pygame.Surface) -> None:
+    def __init__(self, config: ConfigModel, screen: pygame.Surface, score_manager: ScoreManager) -> None:
         super().__init__(config)
         self.game_state: GameState = GameState(config)
 
@@ -49,7 +50,7 @@ class GameManager(Scene):
         # HUDの初期化
         # highscoreにどっかからhighscoreを取得する処理いれる
         # self.hud: HUD = HUD(config, highscore)
-        self.hud: HUD = HUD(config, 100)  # 仮のハイスコアを設定
+        self.hud: HUD = HUD(config, score_manager.get_highscore())
 
         # ゲームの経過時間を管理する変数の初期化
         self.pre_time = time.time()

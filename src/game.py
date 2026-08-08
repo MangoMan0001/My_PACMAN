@@ -71,7 +71,7 @@ class Game:
 
                 elif scene_name == "PLAY":
                     # メニュー → プレイ画面
-                    self.current_scene = GameManager(self.config, self.screen)
+                    self.current_scene = GameManager(self.config, self.screen, self.score_manager)
 
                 elif scene_name == "GAME_OVER":
                     # プレイ画面 → ゲームオーバー（スコアを渡す）

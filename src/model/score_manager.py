@@ -57,6 +57,14 @@ class ScoreManager():
         self.scores.append({'name': name, 'score': score})
         self._save_file()
 
+    def get_highscore(self) -> int:
+        """ハイスコアを取得するメソッド。
+
+        Returns:
+            int: ハイスコア
+        """
+        return int(max(self.scores, key=lambda x: x['score'])['score'])
+
     def get_sorted_score(self) -> list[dict[str, str | int]]:
         """スコアを降順にソートして返すメソッド。
 
