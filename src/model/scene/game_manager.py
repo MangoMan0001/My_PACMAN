@@ -43,6 +43,7 @@ class GameManager(Scene):
         # Pauseシーンの初期化
         self.pause_scene: Pause = Pause(config)
         self.paused: bool = False
+        self.pause_start_time: float = 0.0  # ポーズ開始時刻を保持する変数
 
         # HUDの初期化
         # highscoreにどっかからhighscoreを取得する処理いれる
@@ -53,6 +54,17 @@ class GameManager(Scene):
         self.time = time.time()
         self.start_time = time.time()
         self.max_time = self.game_state.config.level_max_time
+
+    def _resume(self) -> None:
+        """ゲームを再開するための処理。
+
+        GameStateに時間が保持されたら破棄できるかも
+        """
+        # pause_start_timeを使って経過時間を調整する
+        pause_duration = time.time() - self.pause_start_time
+        self.start_time += pause_duration
+        self.time += pause_duration
+        self.paused = False
 
     def update(self, events: list[pygame.event.Event]) -> None | tuple[str, Any]:
         """ゲームの状態を更新する関数。
@@ -68,9 +80,35 @@ class GameManager(Scene):
         # debug
         # debugに実際の処理を追加してます。
         self.game_state.events = events
+
+        # ポーズ中の処理を優先して行う
+        if self.paused:
+            action = self.pause_scene.update(events)
+            if action == "RESUME":
+                self._resume()
+                return None
+            elif action == "RETRY":
+                return ("PLAY", None)
+            elif action == "HOW_TO_PLAY":
+                # How to Playのシーンに遷移する処理をここに追加する
+                pass
+            elif action == "CHEAT_MODE":
+                # Cheat ModeのフラグをここでON？HUDの表示も変える
+                pass
+            elif action == "QUIT":
+                return ("MAIN_MENU", None)
+            return None
+
         for event in events:
             if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_RETURN:
+                if event.key == pygame.K_p:
+                    if self.paused:
+                        self._resume()
+                    else:
+                        self.paused = True
+                        self.pause_start_time = time.time()
+                        self.pause_scene.reset()
+                elif event.key == pygame.K_RETURN:
                     self.game_state.current_level += 1
                     self.map.level_up(self.game_state)
                     self.item_manager.level_up(self.game_state)
@@ -78,16 +116,6 @@ class GameManager(Scene):
                     self.game_state.game_status = 'READY'
                     self.time = time.time()
                     self.start_time = time.time()
-                # Pキーでポーズの切り替え
-                elif event.key == pygame.K_p:
-                    if self.paused:
-                        # タイマーを再開するために、pause_start_timeを使って経過時間を調整する
-                        self.pause_scene._resume()
-                    else:
-                        self.paused = True
-
-            if self.paused:
-                return self.pause_scene.updata_pause_memu(events)
 
         # ゲーム状態のフラグ管理　3秒間開始しない
         current_time = time.time()
@@ -130,7 +158,7 @@ class GameManager(Scene):
         self.map.update(self.game_state)
         self.item_manager.update(self.game_state)
         self.character_manager.update(self.game_state)
-        # GameStateのマージに合わせて、remining_timeを削除する予定
+        # GameStateのマージに合わせて、remaining_timeを削除する予定
         self.hud.update(self.game_state, self.max_time - (current_time - self.start_time))
         return None
 
@@ -144,7 +172,5 @@ class GameManager(Scene):
         self.item_manager.draw(screen)
         self.character_manager.draw(screen)
         self.hud.draw(screen)
-        # if self.paused:
-        #     self.screen.blit(self.dither_surface, (0, 0))
-        #     self._draw_pause_menu(screen)
-#    Private functions
+        if self.paused:
+            self.pause_scene.draw(screen)
