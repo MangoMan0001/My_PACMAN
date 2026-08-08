@@ -7,7 +7,6 @@ from src.model.scene.mainmenu import MainMenu
 from src.model.scene.game_manager import GameManager
 from src.model.scene.gameover import GameOver
 from src.model.scene.gameclear import GameClear
-from src.model.scene.pause import Pause
 
 
 class Game:
@@ -76,10 +75,6 @@ class Game:
                 elif scene_name == "GAME_OVER":
                     # プレイ画面 → ゲームオーバー（スコアを渡す）
                     self.current_scene = GameOver(self.config, score=data)
-
-                elif scene_name == "PAUSE":
-                    # プレイ画面 → ゲームポーズ
-                    self.current_scene = Pause(self.config)
 
                 elif scene_name == "GAME_CLEAR":
                     # プレイ画面 → ゲームクリア（スコアを渡す）
