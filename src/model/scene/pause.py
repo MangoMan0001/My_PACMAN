@@ -1,10 +1,8 @@
 import pygame
-from typing import Any
 from pathlib import Path
 
 from src.model.base_model.scene import Scene
 from src.model.base_model.config_model import ConfigModel
-from src.model.game_state import GameState
 from src.model.image_font import ImageFont
 
 
@@ -60,7 +58,7 @@ class Pause(Scene):
         for event in events:
             if event.type == pygame.KEYDOWN:
                 # pキーでポーズ解除
-                if event.key == pygame.K_p:
+                if event.key == pygame.K_ESCAPE:
                     return "RESUME"
                 # 上、wキーでメニュー項目の選択
                 elif event.key in (pygame.K_UP, pygame.K_w):
