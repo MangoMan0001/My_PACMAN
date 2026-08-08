@@ -7,7 +7,6 @@ from src.model.scene.mainmenu import MainMenu
 from src.model.scene.game_manager import GameManager
 from src.model.scene.gameover import GameOver
 from src.model.scene.gameclear import GameClear
-from src.model.scene.pause import Pause
 from src.model.score_manager import ScoreManager
 
 
@@ -60,9 +59,6 @@ class Game:
             for event in events:
                 if event.type == pygame.QUIT:
                     self.running = False
-                #  ===== デバッグ用にESCキーで終了できるようにしてます =====
-                if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
-                    self.running = False
 
             scene_request = self.current_scene.update(events)
 
@@ -79,7 +75,7 @@ class Game:
 
                 elif scene_name == "GAME_OVER":
                     # プレイ画面 → ゲームオーバー（スコアを渡す）
-                    self.current_scene = GameOver(self.config, score=data)
+                    self.current_scene = GameOver(self.config, data, self.score_manager)
 
                 elif scene_name == "GAME_CLEAR":
                     # プレイ画面 → ゲームクリア（スコアを渡す）
