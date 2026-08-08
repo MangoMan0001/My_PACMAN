@@ -71,7 +71,7 @@ class GameManager(Scene):
                     self.item_mageer.level_up(self.game_state)
                     self.character_manager.level_up(self.game_state)
                     self.game_state.game_status = 'READY'
-                    self.start_time = time.time()
+                    self.game_state.game_timer = 0.0
                 if event.key == pygame.K_ESCAPE:
                     self.game_state.game_status = 'PAUSE'
 

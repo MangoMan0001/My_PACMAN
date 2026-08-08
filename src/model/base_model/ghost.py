@@ -132,7 +132,7 @@ class Ghost(Character):
                 return
 
         # Movement
-        move_step = 3 if self.current_mode == GhostMode.EATEN else 1
+        move_step = 5 if self.current_mode == GhostMode.EATEN else 1
         for _ in range(move_step):
             if self.direction == Direction.UP:
                 self.py -= self.speed
@@ -142,7 +142,7 @@ class Ghost(Character):
                 self.py += self.speed
             elif self.direction == Direction.LEFT:
                 self.px -= self.speed
-            if map.is_center is not None:
+            if map.is_center(self.px, self.py) is not None:
                 break
 
     def draw(self, screen: pygame.Surface) -> None:

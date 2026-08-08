@@ -106,7 +106,7 @@ class Pacman(Character):
                 self.py += self.speed
             elif self.direction == Direction.LEFT and map.is_moveable(self.x, self.y, self.px, self.py, Direction.LEFT):
                 self.px -= self.speed
-            if map.is_center is not None:
+            if map.is_center(self.px, self.py) is not None:
                 break
 
     def draw(self, screen: pygame.Surface) -> None:
