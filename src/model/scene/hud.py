@@ -2,12 +2,11 @@ import pygame
 from typing import Any
 from pathlib import Path
 
-from src.model.base_model.scene import Scene
 from src.model.base_model.config_model import ConfigModel
 from src.model.image_font import ImageFont
 
 
-class HUD(Scene):
+class HUD:
     """ゲーム中のHUD(スコア、ハイスコア、残機、レベル、残り時間)を描画するシーン。
 
     Attributes:
@@ -22,7 +21,7 @@ class HUD(Scene):
             config (ConfigModel): 設定モデル。
             highscore (int): ハイスコア。
         """
-        super().__init__(config)
+        self.config = config
         self.highscore = highscore
         self.hud_font = ImageFont(Path("nonefont_32"), filename_pattern="none-FONT_{char}.png")
 
@@ -35,7 +34,7 @@ class HUD(Scene):
         self.lives = self.config.lives
         self.remaining_time = config.level_max_time
 
-    def update(self, game_state: Any) -> None | tuple[str, Any]:
+    def update(self, game_state: Any) -> None:
         """
         イベントを処理する。画面遷移が必要な場合はシーン名と受け渡すデータをタプルで返す。
         何もなければNoneを返す
@@ -44,6 +43,8 @@ class HUD(Scene):
         self.lives = game_state.lives
         if game_state.game_status == "PLAYING":
             self.remaining_time = game_state.config.level_max_time - game_state.game_timer
+        elif game_state.game_status == "READY":
+            self.remaining_time = game_state.config.level_max_time
         # 過去のハイスコアを現在プレイ中のスコアが上回った場合、ハイスコアを更新
         if self.highscore < game_state.score:
             self.highscore = game_state.score
