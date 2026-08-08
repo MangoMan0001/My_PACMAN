@@ -1,12 +1,11 @@
 import pygame
 from pathlib import Path
 
-from src.model.base_model.scene import Scene
 from src.model.base_model.config_model import ConfigModel
 from src.model.image_font import ImageFont
 
 
-class Pause(Scene):
+class Pause:
     """ゲーム中のポーズメニューを描画するシーン。
 
     Attributes:
@@ -21,15 +20,15 @@ class Pause(Scene):
     ITEM_LINE_SPACE = 0.5  # メニュー項目の行間
 
     def __init__(self, config: ConfigModel) -> None:
-        super().__init__(config)
+        self.config = config
         title_font = ImageFont(Path("pacfont_64"))
         memu_font = ImageFont(Path("nonefont_32"), filename_pattern="none-FONT_{char}.png")
 
         # メニューの選択インデックス
         self.selected_index: int = 0
         self.title_image = title_font.render_text("PAUSE")
-        self.memu_items: list[str] = ["Resume", "Retry", "How to Play", "Cheat Mode", "Quit"]
-        self.item_images = [memu_font.render_text(item) for item in self.memu_items]
+        self.menu_items: list[str] = ["Resume", "Retry", "How to Play", "Cheat Mode", "Quit"]
+        self.item_images = [memu_font.render_text(item) for item in self.menu_items]
 
         # カーソル、透過背景を初期化
         asset_root = Path(__file__).resolve().parents[3] / "data" / "assets"
@@ -63,14 +62,14 @@ class Pause(Scene):
                 # 上、wキーでメニュー項目の選択
                 elif event.key in (pygame.K_UP, pygame.K_w):
                     self.selected_index = (
-                        self.selected_index - 1) % len(self.memu_items)
+                        self.selected_index - 1) % len(self.menu_items)
                 # 下、sキーでメニュー項目の選択
                 elif event.key in (pygame.K_DOWN, pygame.K_s):
                     self.selected_index = (
-                        self.selected_index + 1) % len(self.memu_items)
+                        self.selected_index + 1) % len(self.menu_items)
                 # エンターキーで選択中のメニュー項目をアクティブにする。
                 elif event.key == pygame.K_RETURN:
-                    label = self.memu_items[self.selected_index]
+                    label = self.menu_items[self.selected_index]
                     if label == "Resume":
                         return "RESUME"
                     elif label == "Retry":
@@ -81,6 +80,7 @@ class Pause(Scene):
                         return "CHEAT_MODE"
                     elif label == "Quit":
                         return "QUIT"
+        return None
 
     def _title_draw(self, screen: pygame.Surface, screen_x: int, screen_y: int) -> None:
         """PAUSEのタイトルを画面中央に描画する。"""
