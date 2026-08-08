@@ -1,6 +1,6 @@
 import pygame
 
-from src.model.base_model.ghost import Ghost
+from src.model.base_model.ghost import Ghost, GhostMode
 from src.model.map import Map
 from src.model.game_state import GameState
 from src.model.character.pacman import Pacman
@@ -15,7 +15,9 @@ class CharacterManager:
 
     Attributes:
         pacman (Pacman): Pacmanのインスタンス
-        ghosts (list[Ghost]): 4匹のGhostのインスタンスをリストで保持
+        ghosts (list[Ghost]): ゴーストのインスタンスのリスト
+        pacman_blinking_time (float): Pacmanが点滅している時間
+        is_pacman_drawable (bool): Pacmanが描画可能かどうかのフラグ
     """
     def __init__(self, game_state: GameState):
         assert game_state.map is not None
@@ -38,15 +40,33 @@ class CharacterManager:
             Clyde(map.x - 1, map.y - 1, cx, cy, speed, (255, 165, 0), game_state.config.points_per_ghost),
         ]
 
+        self.pacman_blinking_time: float = 0
+        self.is_pacman_drawable: bool = True
+
     def update(self, game_state: GameState) -> None:
         """自分が持っている全キャラクターを更新する。
 
         Args:
             game_state (GameState): ゲームの状態を保持するGameStateオブジェクト
         """
-        if game_state.game_status == 'READY':
+        # pacman点滅処理
+        if 0 < self.pacman_blinking_time:
+            self.pacman_blinking_time -= game_state.dt
+            if int(self.pacman_blinking_time * 10) % 2 == 0:
+                self.is_pacman_drawable = False
+            else:
+                self.is_pacman_drawable = True
+            if self.pacman_blinking_time <= 0:
+                self.is_pacman_drawable = True
+
+        if game_state.game_status in ('READY', 'HIT'):
             return
+
         self.pacman.update(game_state)
+
+        # チート ゴースト凍結 「マヒャド！」 「ブリザガ！」
+        if game_state.is_cheat_frozen:
+            return
 
         for ghost in self.ghosts:
             ghost.update(game_state)
@@ -57,7 +77,8 @@ class CharacterManager:
         Args:
             screen (pygame.Surface): 描画対象のSurfaceオブジェクト
         """
-        self.pacman.draw(screen)
+        if self.is_pacman_drawable:
+            self.pacman.draw(screen)
 
         for ghost in self.ghosts:
             ghost.draw(screen)
@@ -89,14 +110,14 @@ class CharacterManager:
         """
         return self.pacman.get_pos_pixel()
 
-    def is_hit(self, game_state: GameState) -> bool:
+    def is_hit(self, game_state: GameState) -> None | Ghost:
         """Pacmanがゴーストに当たったか判定する。
 
         Args:
             game_state (GameState): ゲームの状態を保持するGameStateオブジェクト
 
         Returns:
-            bool: Pacmanがゴーストに当たった場合はTrue、そうでない場合はFalse
+            Optional[Ghost]: 当たったゴーストを返す。衝突していない場合はNoneを返す。
         """
         assert game_state.map is not None
         map: Map = game_state.map
@@ -120,13 +141,21 @@ class CharacterManager:
             left = gx - ghost.size // 3
             for px, py in pacman_coords:
                 if py == gy and left < px < right:
-                    return True
+                    return ghost
                 if px == gx and top < py < bottom:
-                    return True
-        return False
+                    return ghost
+        return None
 
     def hit(self, game_state: GameState) -> None:
         """Pacmanがゴーストに当たった場合の処理。
+
+        Args:
+            game_state (GameState): ゲームの状態を保持するGameStateオブジェクト
+        """
+        self.pacman_blinking_time = 1.5
+
+    def reset(self, game_state: GameState) -> None:
+        """ゲームの状態をリセットする。
 
         Args:
             game_state (GameState): ゲームの状態を保持するGameStateオブジェクト
@@ -136,5 +165,21 @@ class CharacterManager:
         for ghost in self.ghosts:
             ghost.level_up(game_state)
 
+    def be_scared(self) -> None:
+        """ゴーストをいじけ状態にする関数。"""
+        for ghost in self.ghosts:
+            ghost.be_scared()
+
+    def is_eaten(self) -> bool:
+        """ゴーストが全て捕食後状態か判定する。
+
+        Returns:
+            bool: ゴーストが全て捕食後状態の場合はTrue、そうでない場合はFalse
+        """
+        if self.ghosts[0].current_mode == GhostMode.SCARED:
+            for ghost in self.ghosts:
+                ghost.current_mode = GhostMode.EATEN
+            return True
+        return False
 
 #    Private functions

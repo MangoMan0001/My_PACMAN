@@ -183,7 +183,7 @@ class MainMenu(Scene):
         """
         item_height = max(item.get_height() for item in self.item_images)
         line_step = item_height + int(item_height * self.ITEM_LINE_SPACE)
-        start_y = (screen_y // 30) * 21
+        start_y = (screen_y // 30) * 20
 
         for index, image in enumerate(self.item_images):
             item_x = (screen_x - image.get_width()) // 2

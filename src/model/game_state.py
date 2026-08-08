@@ -10,7 +10,7 @@ if TYPE_CHECKING:
     from src.model.base_model.ghost import Ghost
     from src.model.item_manager import ItemManager
 
-STATUS = Literal['READY', 'PLAYING']
+STATUS = Literal['READY', 'PLAYING', 'HIT', 'PAUSE']
 
 
 # --- ゲームの状態をすべて持つデータクラス ---
@@ -27,6 +27,9 @@ class GameState:
         current_level (int): ステージの現在レベル
         events (list[pygame.event.Event]): pygameのイベントリスト
         score (int): 現在のスコア
+        lives (int): 残機数
+        dt (float): 前回フレームからの経過時間
+        game_timer (float): 進行中ゲームの経過時間
     """
     def __init__(self, config: ConfigModel):
 
@@ -43,3 +46,13 @@ class GameState:
         self.events: list[pygame.event.Event] = []  # key入力情報
         self.score: int = 0                         # current score
         self.lives: int = config.lives              # 残機数
+
+        self.dt: float = 0.0                        # 前回フレームからの経過時間
+        self.game_timer: float = 0.0                # 進行中ゲームの経過時間
+
+        # === CHEAT PRAMETER ===
+        self.is_cheat_star: bool = False            # チートフラグ 無敵化
+        self.is_cheat_skip: bool = False            # チートフラグ ステージスキップ
+        self.is_cheat_frozen: bool = False          # チートフラグ ゴースト凍結
+        self.is_cheat_1up: bool = False             # チートフラグ 追加ライフ
+        self.is_cheat_dash: bool = False            # チートフラグ パックマンスピードアップ

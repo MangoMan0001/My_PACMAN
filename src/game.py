@@ -7,6 +7,8 @@ from src.model.scene.mainmenu import MainMenu
 from src.model.scene.game_manager import GameManager
 from src.model.scene.gameover import GameOver
 from src.model.scene.gameclear import GameClear
+from src.model.scene.pause import Pause
+from src.model.score_manager import ScoreManager
 
 
 class Game:
@@ -21,12 +23,13 @@ class Game:
         running (bool): ゲームが実行中かどうかのフラグ
         pre_time (float): 前回のフレームの時間を保持する変数
         black_bg (pygame.Surface): 黒い背景のSurfaceオブジェクト
+        score_manager (ScoreManager): スコア管理を行うScoreManagerオブジェクト
     """
     def __init__(self, config: ConfigModel) -> None:
         pygame.init()
         self.config = config
-        self.width = self.config.display_width
-        self.height = self.config.display_height
+        self.width = 1920
+        self.height = 1080
 
         self.screen = pygame.display.set_mode((self.width, self.height))
 
@@ -36,6 +39,8 @@ class Game:
         self.pre_time: float = time.time()
 
         self.black_bg = pygame.Surface((self.width, self.height))
+
+        self.score_manager = ScoreManager(config)
 
     def run(self) -> None:
         """ゲームのメインループを実行する関数。

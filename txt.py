@@ -86,7 +86,7 @@ def create_font_misaki_images(output_dir: str) -> None:
 def create_font_none_images(output_dir: str) -> None:
     pygame.font.init()
     # フォントを使用。サイズ64
-    font = pygame.font.Font(None, 32)
+    font = pygame.font.Font(None, 128)
 
     # A〜Zまでの文字画像をループで一気に生成
     for char_code in range(ord('A'), ord('Z') + 1):

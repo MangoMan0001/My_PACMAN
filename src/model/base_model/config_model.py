@@ -52,15 +52,6 @@ class ConfigModel(BaseModel):
     highscore_filename: Path = Field(default=Path("scores.json"),
                                      description="highscore_filename")
 
-    display_width: int = Field(ge=1920,
-                               le=3840,
-                               default=1920,
-                               description='display_width')
-    display_height: int = Field(ge=1080,
-                                le=2160,
-                                default=1080,
-                                description='display_height')
-
     level: list[LevelModel] = Field(default_factory=list,
                                     description='map_levels')
 
@@ -108,20 +99,29 @@ class ConfigModel(BaseModel):
         Raises:
             ValueError: ファイル名が不正な場合
         """
+        # .jsonでないのなら.jsonを加える
         if v.suffix != '.json':
             v = v.with_suffix('.json')
 
+        # ディレクトリ指定は禁止（ファイル名のみ許可）
+        if v.parent != Path('.'):
+            raise ValueError("highscore_filename must be a filename without directories.")
+
+        # 同名のディレクトリが存在するか
         if v.exists() and v.is_dir():
             raise ValueError(f"A directory named {v.name} already exists.")
 
+        # ファイル名に禁止文字が含まれているか、実際に開けるか
         try:
+            # ファイルが存在する場合追記モードでopen
             if v.exists():
                 with open(v, 'a'):
                     pass
+            # ファイルが存在しない場合新規作成モードでopen
             else:
                 with open(v, 'x'):
                     pass
-                v.unlink()
+                v.unlink()  # ファイル削除
         except OSError as e:
             raise ValueError(f"File_NameError: {e}")
         return v

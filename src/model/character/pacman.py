@@ -1,5 +1,4 @@
 import pygame
-import time
 
 from src.model.game_state import GameState
 from src.model.map import Map
@@ -35,16 +34,16 @@ class Pacman(Character):
 
         self.space: int = self.size // 2
 
-        self.img_closed = pygame.image.load('assets/pacman/pacman_closed.png').convert_alpha()
+        self.img_closed = pygame.image.load('data/assets/pacman/pacman_closed.png').convert_alpha()
         self.img_open = {
-            Direction.UP: pygame.image.load('assets/pacman/pacman_open_up.png').convert_alpha(),
-            Direction.RIGHT: pygame.image.load('assets/pacman/pacman_open_right.png').convert_alpha(),
-            Direction.DOWN: pygame.image.load('assets/pacman/pacman_open_down.png').convert_alpha(),
-            Direction.LEFT: pygame.image.load('assets/pacman/pacman_open_left.png').convert_alpha()
+            Direction.UP: pygame.image.load('data/assets/pacman/pacman_open_up.png').convert_alpha(),
+            Direction.RIGHT: pygame.image.load('data/assets/pacman/pacman_open_right.png').convert_alpha(),
+            Direction.DOWN: pygame.image.load('data/assets/pacman/pacman_open_down.png').convert_alpha(),
+            Direction.LEFT: pygame.image.load('data/assets/pacman/pacman_open_left.png').convert_alpha()
         }
 
         self.is_mouth_opne: bool = False
-        self.last_anim_time: float = time.time()
+        self.anim_timer: float = 0.0
         self.anim_interval: float = 0.15
 
         self.key_status: dict[int, bool] = {
@@ -66,10 +65,10 @@ class Pacman(Character):
         map: Map = game_state.map
 
         # アニメーション
-        current_time = time.time()
-        if self.anim_interval < current_time - self.last_anim_time:
+        self.anim_timer += game_state.dt
+        if self.anim_interval < self.anim_timer:
             self.is_mouth_opne = not self.is_mouth_opne
-            self.last_anim_time = current_time
+            self.anim_timer = 0.0
 
         # 座標変更
         coord = map.is_center(self.px, self.py)
@@ -95,16 +94,20 @@ class Pacman(Character):
             self.direction = self.next_direction
 
         # 実際の移動
-        if not self.is_moving:
-            return
-        if self.direction == Direction.UP and map.is_moveable(self.x, self.y, self.px, self.py, Direction.UP):
-            self.py -= self.speed
-        elif self.direction == Direction.RIGHT and map.is_moveable(self.x, self.y, self.px, self.py, Direction.RIGHT):
-            self.px += self.speed
-        elif self.direction == Direction.DOWN and map.is_moveable(self.x, self.y, self.px, self.py, Direction.DOWN):
-            self.py += self.speed
-        elif self.direction == Direction.LEFT and map.is_moveable(self.x, self.y, self.px, self.py, Direction.LEFT):
-            self.px -= self.speed
+        move_step = 3 if game_state.is_cheat_dash else 1
+        for _ in range(move_step):
+            if not self.is_moving:
+                return
+            if self.direction == Direction.UP and map.is_moveable(self.x, self.y, self.px, self.py, Direction.UP):
+                self.py -= self.speed
+            elif self.direction == Direction.RIGHT and map.is_moveable(self.x, self.y, self.px, self.py, Direction.RIGHT):
+                self.px += self.speed
+            elif self.direction == Direction.DOWN and map.is_moveable(self.x, self.y, self.px, self.py, Direction.DOWN):
+                self.py += self.speed
+            elif self.direction == Direction.LEFT and map.is_moveable(self.x, self.y, self.px, self.py, Direction.LEFT):
+                self.px -= self.speed
+            if map.is_center(self.px, self.py) is not None:
+                break
 
     def draw(self, screen: pygame.Surface) -> None:
         """パックマンを描画する関数。
