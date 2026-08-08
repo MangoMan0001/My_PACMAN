@@ -8,8 +8,6 @@ from src.model.image_font import ImageFont
 class HUD:
     """ゲーム中のHUD(スコア、ハイスコア、残機、レベル、残り時間)を描画するシーン。
 
-    状態は持たずに、渡されたGameStateの情報をもとに描画する。
-
     Attributes:
         highscore (int): ハイスコア。
         hud_font (ImageFont): HUD描画用のフォント。
@@ -26,22 +24,22 @@ class HUD:
 
         # 残機表示用
         asset_root = Path(__file__).resolve().parents[3] / "data" / "assets"
-        cursor_path = str(asset_root / "Pacman" / "PACMAN_right_32.png")
-        self.life_image = pygame.image.load(cursor_path).convert_alpha()
+        life_path = str(asset_root / "Pacman" / "PACMAN_right_32.png")
+        self.life_image = pygame.image.load(life_path).convert_alpha()
 
         self.score = 0
         self.lives = 3
-        self.remining_time = 0
+        self.remaining_time = 0
 
-    def update(self, game_state: Any, remining_time: float) -> None | tuple[str, Any]:
+    def update(self, game_state: Any, remaining_time: float) -> None | tuple[str, Any]:
         """
         イベントを処理する。画面遷移が必要な場合はシーン名と受け渡すデータをタプルで返す。
         何もなければNoneを返す
         """
         self.score = game_state.score
         self.lives = game_state.lives
-        self.remining_time = remining_time
-        # self.remining_time = game_state.game_timer
+        self.remaining_time = remaining_time
+        # self.remaining_time = game_state.game_timer
         # 過去のハイスコアを現在プレイ中のスコアが上回った場合、ハイスコアを更新
         if self.highscore < game_state.score:
             self.highscore = game_state.score
@@ -80,7 +78,7 @@ class HUD:
         # time_text_image = self.hud_font.render_text("TIME")
         time_x = (screen.get_width() // 30) * 20
         # screen.blit(time_text_image, (time_x, hud_text_y))
-        time_image = self.hud_font.render_text(f"{int(self.remining_time)}")
+        time_image = self.hud_font.render_text(f"{int(self.remaining_time)}")
         screen.blit(time_image, (time_x, hud_text_y + 20))
 
         # 残機を描画
