@@ -56,7 +56,7 @@ exclude = [
     "__init__.py",
 	"data"
 ]
-max-line-length = 120
+max-line-length = 130
 
 [tool.uv.sources]
 mazegenerator = { path = "data/map/mazegenerator-2.1.0-py3-none-any.whl" }

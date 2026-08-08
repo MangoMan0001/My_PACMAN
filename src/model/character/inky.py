@@ -13,6 +13,7 @@ class Inky(Ghost):
     Inky、アオスケ、きまぐれ、bashful、恥ずかしがりのキャラクター。
 
     Attributes:
+        direction (Direction): ゴーストの現在の移動方向
         images (dict[str, pygame.Surface]): キャラクターの画像を格納する辞書。
     """
     def __init__(self, x: int, y: int, px: int, py: int, speed: int, color: tuple[int, int, int], points: int) -> None:
@@ -22,7 +23,7 @@ class Inky(Ghost):
         for direction in Direction:
             for freme in [0, 1]:
                 key = f"{direction}_{freme}"
-                self.images[key] = pygame.image.load(f"assets/ghost/ghost_inky_{key}.png")
+                self.images[key] = pygame.image.load(f"data/assets/ghost/ghost_inky_{key}.png")
 
     def level_up(self, game_state: GameState) -> None:
         """クリア後のレベルアップ処理。

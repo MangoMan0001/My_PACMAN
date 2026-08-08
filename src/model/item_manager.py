@@ -182,9 +182,11 @@ class ItemManager:
         for y, line in enumerate(temp_map):
             for x, cell in enumerate(line):
                 if cell == CellType.PACGUM:
-                    item_map[y][x] = Pacgum(x, y, game_state.config.points_per_pacgum)
+                    item_map[y][x] = Pacgum(x, y, game_state.config.points_per_pacgum,
+                                            (0, 255, 255), 6)
                 elif cell == CellType.SUPER_PACGUM:
-                    item_map[y][x] = SuperPacgum(x, y, game_state.config.points_per_super_pacgum)
+                    item_map[y][x] = SuperPacgum(x, y, game_state.config.points_per_super_pacgum,
+                                                 (0, 0, 255), 8)
 
         return item_map
 
