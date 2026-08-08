@@ -1,3 +1,7 @@
+"""
+- [ ] 現在updateのfor event in events:の中と、Pauseシーンのupdateの両方でPause/Resumeの処理を行っている
+Pause中のEnterがデバッグのEnterに吸われてしまうので、削除したらfor event ループの中でPause/Resumeの処理を行うようにする
+"""
 import pygame
 import time
 from typing import Any
@@ -108,10 +112,11 @@ class GameManager(Scene):
                     self.character_manager.level_up(self.game_state)
                     self.game_state.game_status = 'READY'
                     self.game_state.game_timer = 0.0
+                # Escapeが押された時PLAYING<->PAUSEを切り替える
                 if event.key == pygame.K_ESCAPE:
                     if self.game_state.game_status == 'PAUSE':
                         self.game_state.game_status = 'PLAYING'
-                    else:
+                    elif self.game_state.game_status == 'PLAYING':
                         self.game_state.game_status = 'PAUSE'
 
         # -------- all object update --------
@@ -120,7 +125,6 @@ class GameManager(Scene):
         self.map.update(self.game_state)
         self.item_manager.update(self.game_state)
         self.character_manager.update(self.game_state)
-        # GameStateのマージに合わせて、remaining_timeを削除する予定
         self.hud.update(self.game_state)
         return scene_request
 
