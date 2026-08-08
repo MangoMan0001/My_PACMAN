@@ -4,12 +4,12 @@ from typing import Any
 
 from src.model.base_model.config_model import ConfigModel
 from src.model.base_model.scene import Scene
-from src.model.scene.pause import Pause
-from src.model.scene.hud import HUD
 from src.model.map import Map
 from src.model.item_manager import ItemManager
 from src.model.character_manager import CharacterManager
 from src.model.game_state import GameState
+from src.model.scene.pause import Pause
+from src.model.scene.hud import HUD
 
 
 class GameManager(Scene):
@@ -27,19 +27,29 @@ class GameManager(Scene):
         super().__init__(config)
         self.game_state: GameState = GameState(config)
 
+        # Mapの初期化、GameStateにセット
         self.map: Map = Map(self.game_state, screen)
         self.game_state.map = self.map
 
+        # ItemManagerの初期化、GameStateにセット
         self.item_manager: ItemManager = ItemManager(self.game_state)
         self.game_state.item = self.item_manager
 
+        # CharacterManagerの初期化、GameStateにセット
         self.character_manager: CharacterManager = CharacterManager(self.game_state)
         self.game_state.pacman = self.character_manager.pacman
         self.game_state.ghosts = self.character_manager.ghosts
 
+        # Pauseシーンの初期化
         self.pause_scene: Pause = Pause(config)
-        self.hud: HUD = HUD(config)
+        self.paused: bool = False
 
+        # HUDの初期化
+        # highscoreにどっかからhighscoreを取得する処理いれる
+        # self.hud: HUD = HUD(highscore)
+        self.hud: HUD = HUD(100)  # 仮のハイスコアを設定
+
+        # ゲームの経過時間を管理する変数の初期化
         self.time = time.time()
         self.start_time = time.time()
         self.max_time = self.game_state.config.level_max_time
@@ -56,6 +66,7 @@ class GameManager(Scene):
                 何もなければNoneを返す。
         """
         # debug
+        # debugに実際の処理を追加してます。
         self.game_state.events = events
         for event in events:
             if event.type == pygame.KEYDOWN:
@@ -67,7 +78,16 @@ class GameManager(Scene):
                     self.game_state.game_status = 'READY'
                     self.time = time.time()
                     self.start_time = time.time()
+                # Pキーでポーズの切り替え
                 elif event.key == pygame.K_p:
+                    if self.paused:
+                        # タイマーを再開するために、pause_start_timeを使って経過時間を調整する
+                        self.pause_scene._resume()
+                    else:
+                        self.paused = True
+
+            if self.paused:
+                return self.pause_scene.updata_pause_memu(events)
 
         # ゲーム状態のフラグ管理　3秒間開始しない
         current_time = time.time()
@@ -110,7 +130,8 @@ class GameManager(Scene):
         self.map.update(self.game_state)
         self.item_manager.update(self.game_state)
         self.character_manager.update(self.game_state)
-        self.hud.update(events)
+        # GameStateのマージに合わせて、remining_timeを削除する予定
+        self.hud.update(self.game_state, self.max_time - (current_time - self.start_time))
         return None
 
     def draw(self, screen: pygame.Surface) -> None:
@@ -122,5 +143,8 @@ class GameManager(Scene):
         self.map.draw(screen)
         self.item_manager.draw(screen)
         self.character_manager.draw(screen)
-        self.hud.draw(screen, self.game_state)
+        self.hud.draw(screen)
+        # if self.paused:
+        #     self.screen.blit(self.dither_surface, (0, 0))
+        #     self._draw_pause_menu(screen)
 #    Private functions
