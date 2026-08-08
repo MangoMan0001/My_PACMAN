@@ -1,7 +1,7 @@
 import pygame
 
 from src.model.game_state import GameState
-from src.model.base_model.ghost import Ghost
+from src.model.base_model.ghost import Ghost, GhostMode
 from src.model.base_model.character import Direction
 from src.model.map import Map
 from src.model.character.blinky import Blinky
@@ -13,6 +13,7 @@ class Inky(Ghost):
     Inky、アオスケ、きまぐれ、bashful、恥ずかしがりのキャラクター。
 
     Attributes:
+        direction (Direction): ゴーストの現在の移動方向
         images (dict[str, pygame.Surface]): キャラクターの画像を格納する辞書。
     """
     def __init__(self, x: int, y: int, px: int, py: int, speed: int, color: tuple[int, int, int], points: int) -> None:
@@ -22,7 +23,7 @@ class Inky(Ghost):
         for direction in Direction:
             for freme in [0, 1]:
                 key = f"{direction}_{freme}"
-                self.images[key] = pygame.image.load(f"assets/ghost/ghost_inky_{key}.png")
+                self.images[key] = pygame.image.load(f"data/assets/ghost/ghost_inky_{key}.png")
 
     def level_up(self, game_state: GameState) -> None:
         """クリア後のレベルアップ処理。
@@ -37,6 +38,7 @@ class Inky(Ghost):
         self.x, self.y = self.init_cell
         self.px, self.py = map.cell_center(self.x, self.y)
         self.direction = Direction.RIGHT
+        self.current_mode = GhostMode.CHASE
 
     def _get_target(self, game_state: GameState) -> tuple[int, int]:
         """ゴーストの移動目標座標を取得する。
@@ -53,6 +55,10 @@ class Inky(Ghost):
         map: Map = game_state.map
         pacman = game_state.pacman
         assert pacman is not None
+
+        if self.current_mode != GhostMode.CHASE:
+            return self.init_cell
+
         # blinkyを探し、見つからなければパックマンの位置を目標座標として返す
         blinky: Ghost | None = None
         for ghost in game_state.ghosts:

@@ -52,15 +52,6 @@ class ConfigModel(BaseModel):
     highscore_filename: Path = Field(default=Path("scores.json"),
                                      description="highscore_filename")
 
-    display_width: int = Field(ge=1920,
-                               le=3840,
-                               default=1920,
-                               description='display_width')
-    display_height: int = Field(ge=1080,
-                                le=2160,
-                                default=1080,
-                                description='display_height')
-
     level: list[LevelModel] = Field(default_factory=list,
                                     description='map_levels')
 

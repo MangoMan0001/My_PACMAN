@@ -23,12 +23,13 @@ class Game:
         running (bool): ゲームが実行中かどうかのフラグ
         pre_time (float): 前回のフレームの時間を保持する変数
         black_bg (pygame.Surface): 黒い背景のSurfaceオブジェクト
+        score_manager (ScoreManager): スコア管理を行うScoreManagerオブジェクト
     """
     def __init__(self, config: ConfigModel) -> None:
         pygame.init()
         self.config = config
-        self.width = self.config.display_width
-        self.height = self.config.display_height
+        self.width = 1920
+        self.height = 1080
 
         self.screen = pygame.display.set_mode((self.width, self.height))
 
