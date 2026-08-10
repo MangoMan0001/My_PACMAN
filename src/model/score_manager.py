@@ -54,6 +54,8 @@ class ScoreManager():
             name (str): プレイヤーの名前
             score (int): プレイヤーのスコア
         """
+        if name.strip() == '':
+            name = 'No One'
         self.scores.append({'name': name, 'score': score})
         self._save_file()
 
