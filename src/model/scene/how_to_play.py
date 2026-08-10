@@ -1,30 +1,25 @@
 import pygame
-from typing import Any
 from pathlib import Path
 
-from src.model.base_model.config_model import ConfigModel
-from src.model.base_model.scene import Scene
 from src.model.image_font import ImageFont
 
 
-# --- シーンの基底クラス ---
-class HowToPlay(Scene):
-    """ゲームのシーンの基底クラス.
+class HowToPlay:
+    """MainMenuの「HOW TO PLAY」を選択したときに表示されるシーン。
 
     Attributes:
-        config (ConfigModel): ゲームの設定を保持するオブジェクト
+        howto_image (pygame.Surface): How to Playの画像。
+        info_image (pygame.Surface): インフォメーションの画像。
     """
-    def __init__(self, config: ConfigModel):
-        super().__init__(config)
-
+    def __init__(self):
         asset_root = Path(__file__).resolve().parents[3] / "data" / "assets"
-        image_path = str(asset_root / "how_to_play" / "how_to_play.png")
+        image_path = Path("how_to_play") / "how_to_play.png"
         self.howto_image = pygame.image.load(
             str(asset_root / image_path)
         )
 
         info_font = ImageFont(Path("pacfont_64"))
-        self.info_image = info_font.render_text("PUSH SPACE TO RETURN")
+        self.info_image = info_font.render_text("PUSH ESC TO RETURN")
 
     def update(self, events: list[pygame.event.Event]) -> bool:
         """毎フレーム呼ばれる処理。イベントを処理し、必要に応じて画面遷移を行う。
@@ -37,7 +32,7 @@ class HowToPlay(Scene):
         """
         for event in events:
             if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_SPACE:
+                if event.key == pygame.K_ESCAPE:
                     return False
         return True
 
