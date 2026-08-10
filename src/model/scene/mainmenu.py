@@ -24,7 +24,6 @@ class MainMenu(Scene):
     Attributes:
         BACKGROUND_COLOR (tuple[int, int, int]): 背景色(RGB)
         CURSOR_SPACE (int): カーソルとメニュー項目の間隔
-        ITEM_LINE_SPACE (float): メニュー項目の行間
 
         number_font (ImageFont): 数字用のフォント。
         menu_text (list[str]): メニュー項目の文字列リスト。
@@ -34,7 +33,10 @@ class MainMenu(Scene):
         score_image (pygame.Surface): スコア画像。
         item_images (list[pygame.Surface]): メニュー項目の画像リスト。
         selected_index (int): 選択中のメニュー項目のインデックス。
-        scores (dict[str, int]): ハイスコアの辞書。キーはプレイヤー名、値はスコア。
+        scores (list[dict[str, int]]): ハイスコアのリスト。各要素はプレイヤー名とスコアの辞書。
+
+        how_to_play_scene (HowToPlay): How to Playのシーン。
+        showing_how_to_play (bool): How to Playのシーンが表示中かどうかのフラグ。
     """
 
     BACKGROUND_COLOR = (0, 0, 0)  # 黒
@@ -72,7 +74,7 @@ class MainMenu(Scene):
 
         # 選択中のメニュー項目のインデックスを初期化
         self.selected_index = 0
-        self.how_to_play_scene = HowToPlay(config)
+        self.how_to_play_scene = HowToPlay()
         self.showing_how_to_play = False
 
     def update(
@@ -95,6 +97,7 @@ class MainMenu(Scene):
         if self.showing_how_to_play:
             self.showing_how_to_play = self.how_to_play_scene.update(events)
             return None
+
         for event in events:
             if event.type == pygame.KEYDOWN:
                 # 上、wキーでメニュー項目の選択
