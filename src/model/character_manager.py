@@ -18,6 +18,7 @@ class CharacterManager:
         ghosts (list[Ghost]): ゴーストのインスタンスのリスト
         pacman_blinking_time (float): Pacmanが点滅している時間
         is_pacman_drawable (bool): Pacmanが描画可能かどうかのフラグ
+        is_frozen (bool): ゴーストが凍結しているかどうかのフラグ
     """
     def __init__(self, game_state: GameState):
         assert game_state.map is not None
@@ -43,6 +44,9 @@ class CharacterManager:
         self.pacman_blinking_time: float = 0
         self.is_pacman_drawable: bool = True
 
+        # チートフラグ
+        self.is_frozen: bool = False
+
     def update(self, game_state: GameState) -> None:
         """自分が持っている全キャラクターを更新する。
 
@@ -59,13 +63,14 @@ class CharacterManager:
             if self.pacman_blinking_time <= 0:
                 self.is_pacman_drawable = True
 
+        # ゲーム待機時はキャラクターの更新を止める
         if game_state.game_status in ('READY', 'HIT'):
             return
 
         self.pacman.update(game_state)
 
         # チート ゴースト凍結 「マヒャド！」 「ブリザガ！」
-        if game_state.is_cheat_frozen:
+        if self.is_frozen:
             return
 
         for ghost in self.ghosts:
@@ -119,12 +124,9 @@ class CharacterManager:
         Returns:
             Optional[Ghost]: 当たったゴーストを返す。衝突していない場合はNoneを返す。
         """
-        assert game_state.map is not None
-        map: Map = game_state.map
         pacman: Pacman = self.pacman
 
         px, py = pacman.px, pacman.py
-        x, y = map.get_cell(px, py)
 
         pacman_coords = [
             (px - pacman.size // 3, py),
@@ -140,9 +142,9 @@ class CharacterManager:
             bottom = gy + ghost.size // 3
             left = gx - ghost.size // 3
             for px, py in pacman_coords:
-                if py == gy and left < px < right:
+                if py == gy and left <= px <= right:
                     return ghost
-                if px == gx and top < py < bottom:
+                if px == gx and top <= py <= bottom:
                     return ghost
         return None
 
@@ -168,7 +170,8 @@ class CharacterManager:
     def be_scared(self) -> None:
         """ゴーストをいじけ状態にする関数。"""
         for ghost in self.ghosts:
-            ghost.be_scared()
+            if ghost.current_mode not in (GhostMode.EATEN, GhostMode.READY):
+                ghost.be_scared()
 
     def is_eaten(self) -> bool:
         """ゴーストが全て捕食後状態か判定する。

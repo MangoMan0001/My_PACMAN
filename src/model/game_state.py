@@ -51,6 +51,7 @@ class GameState:
         self.game_timer: float = 0.0                # 進行中ゲームの経過時間
 
         # === CHEAT PRAMETER ===
+        self.is_cheating: bool = False              # チートフラグ
         self.is_cheat_star: bool = False            # チートフラグ 無敵化
         self.is_cheat_skip: bool = False            # チートフラグ ステージスキップ
         self.is_cheat_frozen: bool = False          # チートフラグ ゴースト凍結

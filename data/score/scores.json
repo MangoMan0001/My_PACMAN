@@ -22,5 +22,17 @@
     {
         "name": "test",
         "score": 30
+    },
+    {
+        "name": " ",
+        "score": 2030
+    },
+    {
+        "name": "",
+        "score": 440
+    },
+    {
+        "name": "No One",
+        "score": 880
     }
 ]

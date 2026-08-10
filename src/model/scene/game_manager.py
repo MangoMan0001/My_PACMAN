@@ -28,6 +28,12 @@ class GameManager(Scene):
         item_mageer (ItemManager): アイテムの管理を行うItemManagerオブジェクト
         character_manager (CharacterManager): キャラクターの管理を行うCharacterManagerオブジェクト
         pre_time (float): 前回のフレームの時間を保持する変数
+        max_time (float): ゲームの最大時間を保持する変数
+        pause_scene (Pause): ポーズシーンを管理するPauseオブジェクト
+        paused (bool): ゲームがポーズ中かどうかを示すフラグ
+        pause_start_time (float): ポーズ開始時刻を保持する変数
+        hud (HUD): ヘッドアップディスプレイを管理するHUDオブジェクト
+        is_invincible (bool): 無敵状態かどうかを示すフラグ
     """
     def __init__(self, config: ConfigModel, screen: pygame.Surface, score_manager: ScoreManager) -> None:
         super().__init__(config)
@@ -59,6 +65,9 @@ class GameManager(Scene):
         # ゲームの経過時間を管理する変数の初期化
         self.pre_time = time.time()
         self.max_time = self.game_state.config.level_max_time
+
+        # チートフラグ
+        self.is_invincible: bool = False
 
     def update(self, events: list[pygame.event.Event]) -> None | tuple[str, Any]:
         """ゲームの状態を更新する関数。
@@ -102,16 +111,29 @@ class GameManager(Scene):
             scene_request = self._update_pause(self.game_state)
             return scene_request
 
-        # debug
+        # -------- key event --------
         for event in events:
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_RETURN:
-                    self.game_state.current_level += 1
-                    self.map.level_up(self.game_state)
-                    self.item_manager.level_up(self.game_state)
-                    self.character_manager.level_up(self.game_state)
-                    self.game_state.game_status = 'READY'
-                    self.game_state.game_timer = 0.0
+                    self.game_state.is_cheating = True
+                    print('cheating')
+                if self.game_state.is_cheating:
+                    if event.key == pygame.K_1:
+                        print('star')
+                        self.game_state.is_cheat_star = not self.game_state.is_cheat_star
+                    if event.key == pygame.K_2:
+                        print('skip')
+                        self.game_state.is_cheat_skip = True
+                    if event.key == pygame.K_3:
+                        print('froze')
+                        self.game_state.is_cheat_frozen = not self.game_state.is_cheat_frozen
+                    if event.key == pygame.K_4:
+                        print('1up')
+                        self.game_state.is_cheat_1up = True
+                    if event.key == pygame.K_5:
+                        print('dash')
+                        self.game_state.is_cheat_dash = not self.game_state.is_cheat_dash
+
                 # Escapeが押された時PLAYING<->PAUSEを切り替える
                 if event.key == pygame.K_ESCAPE:
                     if self.game_state.game_status == 'PAUSE':
@@ -119,8 +141,11 @@ class GameManager(Scene):
                     elif self.game_state.game_status == 'PLAYING':
                         self.game_state.game_status = 'PAUSE'
 
-        # -------- all object update --------
+        # -------- cheating --------
+        if self.game_state.is_cheating:
+            self._cheating()
 
+        # -------- all object update --------
         # 各オブジェクトのUpdate実行
         self.map.update(self.game_state)
         self.item_manager.update(self.game_state)
@@ -155,6 +180,8 @@ class GameManager(Scene):
         """
         # ゲームオーバー処理 残ライフ
         if self.game_state.lives < 0:
+            if game_state.is_cheating:
+                return ("GAME_OVER", 0)
             return ("GAME_OVER", self.game_state.score)
 
         # ゲーム状態の時間管理　3秒間開始しない
@@ -178,10 +205,14 @@ class GameManager(Scene):
         """
         # 時間制限処理
         if self.game_state.config.level_max_time < self.game_state.game_timer:
-            return ("GAME_OVER", None)
+            self.game_state.lives -= 1
+            self.game_state.game_status = 'HIT'
+            self.character_manager.hit(self.game_state)
 
         # ゲームオーバー処理 残ライフ
         if self.game_state.lives < 0:
+            if game_state.is_cheating:
+                return ("GAME_OVER", 0)
             return ("GAME_OVER", self.game_state.score)
 
         # パックガムの取得処理
@@ -197,7 +228,7 @@ class GameManager(Scene):
         if ghost is not None:
             # 通常時
             if ghost.current_mode in (GhostMode.CHASE, GhostMode.SCATTER):
-                if not game_state.is_cheat_star:
+                if not self.is_invincible:
                     self.game_state.lives -= 1
                     self.game_state.game_status = 'HIT'
                     self.character_manager.hit(self.game_state)
@@ -209,12 +240,7 @@ class GameManager(Scene):
 
         # level_up条件処理
         if self.item_manager.is_get_all_items():
-            self.game_state.current_level += 1
-            self.map.level_up(self.game_state)
-            self.item_manager.level_up(self.game_state)
-            self.character_manager.level_up(self.game_state)
-            self.game_state.game_status = 'READY'
-            self.game_state.game_timer = 0.0
+            self._level_up()
 
         return None
 
@@ -262,3 +288,37 @@ class GameManager(Scene):
         elif action == "QUIT":
             return ("MAIN_MENU", None)
         return None
+
+    def _cheating(self) -> None:
+        """チートモードの処理を行う関数。"""
+        # 無敵
+        self.is_invincible = self.game_state.is_cheat_star
+
+        # ステージスキップ
+        if self.game_state.is_cheat_skip:
+            self._level_up()
+            self.game_state.is_cheat_skip = False
+
+        # ゴーストの凍結
+        self.character_manager.is_frozen = self.game_state.is_cheat_frozen
+
+        # 追加ライフ
+        if self.game_state.is_cheat_1up:
+            if self.game_state.lives < 5:
+                self.game_state.lives += 1
+            self.game_state.is_cheat_1up = False
+
+        # スピードアップ
+        if self.game_state.is_cheat_dash:
+            self.character_manager.pacman.dash()
+        elif not self.game_state.is_cheat_dash:
+            self.character_manager.pacman.walk()
+
+    def _level_up(self) -> None:
+        """レベルアップ処理を行う関数。"""
+        self.game_state.current_level += 1
+        self.map.level_up(self.game_state)
+        self.item_manager.level_up(self.game_state)
+        self.character_manager.level_up(self.game_state)
+        self.game_state.game_status = 'READY'
+        self.game_state.game_timer = 0.0

@@ -22,6 +22,7 @@ class GhostMode(Enum):
     SCATTER = auto()
     SCARED = auto()
     EATEN = auto()
+    READY = auto()
 
 
 # --- ゴーストの基底クラス ---
@@ -47,6 +48,9 @@ class Ghost(Character):
         skip_move (bool): いじけ状態で移動をスキップするかどうかを示すフラグ
         target (tuple[int, int]): ゴーストの移動目標座標（セル単位）
         route (list[Direction]): ゴーストが移動するルート（方向）のリスト
+        cooltimer (float): 待機状態の経過時間
+        blinking_time (float): 点滅状態の経過時間
+        is_drawable (bool): ゴーストが描画可能かどうかを示すフラグ
     """
 
     def __init__(self, x: int, y: int, px: int, py: int, speed: int, color: tuple[int, int, int], points: int) -> None:
@@ -55,6 +59,7 @@ class Ghost(Character):
         self.points: int = points
         self.current_mode: GhostMode = GhostMode.CHASE
         self.mode_time: dict[GhostMode, int] = {
+            GhostMode.READY: 0,
             GhostMode.CHASE: 20,
             GhostMode.SCATTER: 8,
             GhostMode.SCARED: 8,
@@ -82,10 +87,15 @@ class Ghost(Character):
         self.frame: int = 1
         self.anim_timer: float = 0.0
         self.anim_interval: float = 0.15
+
         self.skip_move: bool = False
 
         self.target: tuple[int, int] = (0, 0)
         self.route: list[Direction] = []
+
+        self.cooltimer: float = 0.0
+        self.blinking_time: float = 0.0
+        self.is_drawable: bool = True
 
     def update(self, game_state: GameState) -> None:
         """Blinkyの状態を更新する関数。
@@ -99,16 +109,6 @@ class Ghost(Character):
         assert game_state.map is not None
         map: Map = game_state.map
 
-        # Mode Swich
-        self.mode_timer += game_state.dt
-        if self.mode_time[self.current_mode] <= self.mode_timer:
-            self._mode_change()
-            self.mode_timer = 0.0
-
-        # 捕食後 or 縄張り時、初期座標に戻ったら追跡へ
-        if self.current_mode in (GhostMode.EATEN, GhostMode.SCATTER) and (self.x, self.y) == self.target:
-            self.current_mode = GhostMode.CHASE
-
         # セルの中心に到達したら、現在の座標を確定
         # ターゲットとルートを更新し、次の方向を決定する
         coord = map.is_center(self.px, self.py)
@@ -119,11 +119,25 @@ class Ghost(Character):
             if self.route:
                 self.direction = self.route[0]
 
+        # Mode Swich
+        self.mode_timer += game_state.dt
+        self._mode_change(game_state)
+
         # Animation
+        # 足元
         self.anim_timer += game_state.dt
         if self.anim_interval < self.anim_timer:
             self.frame = 1 - self.frame
             self.anim_timer = 0.0
+        # 点滅
+        if 0 < self.blinking_time:
+            self.blinking_time -= game_state.dt
+            if int(self.blinking_time * 10) % 2 == 0:
+                self.is_drawable = False
+            else:
+                self.is_drawable = True
+            if self.blinking_time <= 0:
+                self.is_drawable = True
 
         # いじけ時　Frame skip
         if self.current_mode == GhostMode.SCARED:
@@ -131,8 +145,12 @@ class Ghost(Character):
             if self.skip_move:
                 return
 
+        # 待機時は移動しない
+        if self.current_mode == GhostMode.READY:
+            return
+
         # Movement
-        move_step = 5 if self.current_mode == GhostMode.EATEN else 1
+        move_step = 3 if self.current_mode == GhostMode.EATEN else 1
         for _ in range(move_step):
             if self.direction == Direction.UP:
                 self.py -= self.speed
@@ -151,6 +169,9 @@ class Ghost(Character):
         Args:
             screen (pygame.Surface): 描画対象のSurfaceオブジェクト
         """
+        if not self.is_drawable:
+            return
+
         if self.current_mode == GhostMode.EATEN:
             key = f"eye_{self.direction}"
         elif self.current_mode == GhostMode.SCARED:
@@ -299,15 +320,41 @@ class Ghost(Character):
 
         return route
 
-    def _mode_change(self) -> None:
+    def _mode_change(self, game_state: GameState) -> None:
         """ゴーストの状態を切り替える関数。
 
         CHASE <-> SCATTER
-        SCARED -> CHASE
+        CHASE <-> SCARED -> EATEN -> READY -> CHASE
+
+        Args:
+            game_state (GameState): ゲームの状態を保持するGameStateオブジェクト。
         """
-        if self.current_mode == GhostMode.CHASE:
-            self.current_mode = GhostMode.SCATTER
-        elif self.current_mode == GhostMode.SCATTER:
+        assert game_state.map is not None
+        map: Map = game_state.map
+        # 縄張り時、初期座標に戻ったら追跡へ
+        if self.current_mode == GhostMode.SCATTER and (self.x, self.y) == self.init_cell:
             self.current_mode = GhostMode.CHASE
-        elif self.current_mode == GhostMode.SCARED:
-            self.current_mode = GhostMode.CHASE
+
+        # 捕食後、初期座標に戻ったら待機へ
+        # fix:初期座標セル内にいる状態で捕食された場合、現在座標を初期座標に
+        if self.current_mode == GhostMode.EATEN and (self.x, self.y) == self.init_cell:
+            self.px, self.py = map.cell_center(self.x, self.y)
+            self.current_mode = GhostMode.READY
+            self.blinking_time += 3
+
+        # 待機時、3秒経過したら追跡へ
+        if self.current_mode == GhostMode.READY:
+            self.cooltimer += game_state.dt
+            if 3 <= self.cooltimer:
+                self.current_mode = GhostMode.CHASE
+                self.cooltimer = 0.0
+
+        # Mode Switcher
+        if self.mode_time[self.current_mode] <= self.mode_timer:
+            self.mode_timer = 0.0
+            if self.current_mode == GhostMode.CHASE:
+                self.current_mode = GhostMode.SCATTER
+            elif self.current_mode == GhostMode.SCATTER:
+                self.current_mode = GhostMode.CHASE
+            elif self.current_mode == GhostMode.SCARED:
+                self.current_mode = GhostMode.CHASE

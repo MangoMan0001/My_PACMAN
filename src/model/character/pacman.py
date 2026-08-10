@@ -23,6 +23,7 @@ class Pacman(Character):
         anim_interval (float): アニメーションの更新間隔（秒）
         key_status (dict[int, bool]): キー入力の状態を保持する辞書
         is_moving (bool): パックマンが移動中かどうかのフラグ
+        is_dash (bool): パックマンがダッシュ状態かどうかのフラグ
     """
     def __init__(self, x: int, y: int, px: int,  py: int,  speed: int):
         super().__init__(x, y, speed)
@@ -52,7 +53,10 @@ class Pacman(Character):
             pygame.K_s: False,
             pygame.K_d: False,
             }
+
+        # チートフラグ
         self.is_moving = False
+        self.is_dash = False
 
     def update(self, game_state: GameState) -> None:
         """パックマンの状態を更新する関数。
@@ -94,7 +98,7 @@ class Pacman(Character):
             self.direction = self.next_direction
 
         # 実際の移動
-        move_step = 3 if game_state.is_cheat_dash else 1
+        move_step = 3 if self.is_dash else 1
         for _ in range(move_step):
             if not self.is_moving:
                 return
@@ -150,3 +154,11 @@ class Pacman(Character):
             tuple[int, int]: Pacmanの現在のピクセル座標 (px, py)
         """
         return (self.px, self.py)
+
+    def dash(self) -> None:
+        """パックマンのダッシュ状態を有効にする関数。"""
+        self.is_dash = True
+
+    def walk(self) -> None:
+        """パックマンのダッシュ状態を無効にする関数。"""
+        self.is_dash = False

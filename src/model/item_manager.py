@@ -102,14 +102,16 @@ class ItemManager:
         if item is None:
             return None
 
-        coords = [
-            (px - pacman.size // 3, py),
-            (px + pacman.size // 3, py),
-            (px, py - pacman.size // 3),
-            (px, py + pacman.size // 3),
-            ]
+        top = py - pacman.size // 3
+        right = px + pacman.size // 3
+        bottom = py + pacman.size // 3
+        left = px - pacman.size // 3
 
-        if (item.px, item.py) in coords:
+        if py == item.py and left <= item.px <= right:
+            item.is_eaten = True
+            self.item_map[y][x] = None
+            return item
+        if px == item.px and top <= item.py <= bottom:
             item.is_eaten = True
             self.item_map[y][x] = None
             return item
