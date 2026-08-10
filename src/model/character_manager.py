@@ -18,6 +18,7 @@ class CharacterManager:
         ghosts (list[Ghost]): ゴーストのインスタンスのリスト
         pacman_blinking_time (float): Pacmanが点滅している時間
         is_pacman_drawable (bool): Pacmanが描画可能かどうかのフラグ
+        is_frozen (bool): ゴーストが凍結しているかどうかのフラグ
     """
     def __init__(self, game_state: GameState):
         assert game_state.map is not None
@@ -123,12 +124,9 @@ class CharacterManager:
         Returns:
             Optional[Ghost]: 当たったゴーストを返す。衝突していない場合はNoneを返す。
         """
-        assert game_state.map is not None
-        map: Map = game_state.map
         pacman: Pacman = self.pacman
 
         px, py = pacman.px, pacman.py
-        x, y = map.get_cell(px, py)
 
         pacman_coords = [
             (px - pacman.size // 3, py),
