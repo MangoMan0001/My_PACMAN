@@ -46,7 +46,7 @@ class Game:
 
         ゲームのメインループを実行し、シーンの更新と描画を行う。
         """
-        self.current_scene = MainMenu(self.config)
+        self.current_scene = MainMenu(self.config, self.score_manager)
 
         while self.running:
             dt = time.time() - self.pre_time
@@ -67,7 +67,7 @@ class Game:
 
                 if scene_name == "MAIN_MENU":
                     # メインメニュー
-                    self.current_scene = MainMenu(self.config)
+                    self.current_scene = MainMenu(self.config, self.score_manager)
 
                 elif scene_name == "PLAY":
                     # メニュー → プレイ画面
