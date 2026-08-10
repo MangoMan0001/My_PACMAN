@@ -117,14 +117,43 @@ def create_font_none_images(output_dir: str) -> None:
     text_surface = font.render(".", True, (255, 255, 255))
     pygame.image.save(text_surface, os.path.join(output_dir, "none-FONT_..png"))
 
+def create_dither_images(output_dir: str) -> pygame.Surface:
+    """画面全体を覆う半透明のSurfaceを作成する。
+
+        Args:
+            width (int): Surfaceの幅。
+            height (int): Surfaceの高さ。
+    """
+    black = (0, 0, 0, 255)  # 半透明の黒
+    width, height = 1920, 1080  # 画面サイズを指定
+
+    row_even = pygame.Surface((width, 1), pygame.SRCALPHA)
+    row_odd = pygame.Surface((width, 1), pygame.SRCALPHA)
+    for x in range(0, width, 2):
+        row_even.set_at((x, 0), black)
+    for x in range(1, width, 2):
+        row_odd.set_at((x, 0), black)
+
+    dither_surface = pygame.Surface((width, height), pygame.SRCALPHA)
+    for y in range(height):
+        if y % 2 == 0:
+            dither_surface.blit(row_even, (0, y))
+        else:
+            dither_surface.blit(row_odd, (0, y))
+
+    pygame.image.save(dither_surface, os.path.join(output_dir, "dither_surface.png"))
+    return dither_surface
+
 if __name__ == "__main__":
     # os.makedirs("data/assets/Pacman", exist_ok=True)
     # os.makedirs("data/assets/upper_256", exist_ok=True)
     # os.makedirs("data/assets/lower_128", exist_ok=True)
-    os.makedirs("data/assets/nonefont_128", exist_ok=True)
+    # os.makedirs("data/assets/nonefont_32", exist_ok=True)
+    os.makedirs("data/assets/dither_images", exist_ok=True)
 
     # create_pacman_images("data/assets/Pacman")
     # create_font_upper_images("data/assets/upper_256")
     # create_font_lower_images("data/assets/lower_128")
-    create_font_none_images("data/assets/nonefont_128")
+    # create_font_none_images("data/assets/nonefont_32")
+    create_dither_images("data/assets/dither_images")
     print("画像の自動生成が完了しました！")

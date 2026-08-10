@@ -1,3 +1,7 @@
+"""
+- [ ] 現在updateのfor event in events:の中と、Pauseシーンのupdateの両方でPause/Resumeの処理を行っている
+Pause中のEnterがデバッグのEnterに吸われてしまうので、削除したらfor event ループの中でPause/Resumeの処理を行うようにする
+"""
 import pygame
 import time
 from typing import Any
@@ -8,8 +12,11 @@ from src.model.map import Map
 from src.model.item_manager import ItemManager
 from src.model.character_manager import CharacterManager
 from src.model.game_state import GameState
+from src.model.scene.pause import Pause
+from src.model.scene.hud import HUD
 from src.model.item.super_pacgum import SuperPacgum
 from src.model.base_model.ghost import GhostMode
+from src.model.score_manager import ScoreManager
 
 
 class GameManager(Scene):
@@ -22,21 +29,36 @@ class GameManager(Scene):
         character_manager (CharacterManager): キャラクターの管理を行うCharacterManagerオブジェクト
         pre_time (float): 前回のフレームの時間を保持する変数
     """
-    def __init__(self, config: ConfigModel, screen: pygame.Surface) -> None:
+    def __init__(self, config: ConfigModel, screen: pygame.Surface, score_manager: ScoreManager) -> None:
         super().__init__(config)
         self.game_state: GameState = GameState(config)
 
+        # Mapの初期化、GameStateにセット
         self.map: Map = Map(self.game_state, screen)
         self.game_state.map = self.map
 
-        self.item_mageer: ItemManager = ItemManager(self.game_state)
-        self.game_state.item = self.item_mageer
+        # ItemManagerの初期化、GameStateにセット
+        self.item_manager: ItemManager = ItemManager(self.game_state)
+        self.game_state.item = self.item_manager
 
+        # CharacterManagerの初期化、GameStateにセット
         self.character_manager: CharacterManager = CharacterManager(self.game_state)
         self.game_state.pacman = self.character_manager.pacman
         self.game_state.ghosts = self.character_manager.ghosts
 
+        # Pauseシーンの初期化
+        self.pause_scene: Pause = Pause(config)
+        self.paused: bool = False
+        self.pause_start_time: float = 0.0  # ポーズ開始時刻を保持する変数
+
+        # HUDの初期化
+        # highscoreにどっかからhighscoreを取得する処理いれる
+        # self.hud: HUD = HUD(config, highscore)
+        self.hud: HUD = HUD(config, score_manager.get_highscore())
+
+        # ゲームの経過時間を管理する変数の初期化
         self.pre_time = time.time()
+        self.max_time = self.game_state.config.level_max_time
 
     def update(self, events: list[pygame.event.Event]) -> None | tuple[str, Any]:
         """ゲームの状態を更新する関数。
@@ -53,6 +75,7 @@ class GameManager(Scene):
         """
         # -------- init --------
         self.game_state.events = events
+
         current_time = time.time()
         self.game_state.dt = current_time - self.pre_time
         self.pre_time = current_time
@@ -61,23 +84,6 @@ class GameManager(Scene):
         # pause時は時間経過を止める
         if not self.game_state.game_status == 'PAUSE':
             self.game_state.game_timer += self.game_state.dt
-
-        # debug
-        for event in events:
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_RETURN:
-                    self.game_state.current_level += 1
-                    self.map.level_up(self.game_state)
-                    self.item_mageer.level_up(self.game_state)
-                    self.character_manager.level_up(self.game_state)
-                    self.game_state.game_status = 'READY'
-                    self.game_state.game_timer = 0.0
-                if event.key == pygame.K_ESCAPE:
-                    self.game_state.game_status = 'PAUSE'
-
-        # ======== PAUSE ========
-        if self.game_state.game_status == 'PAUSE':
-            scene_request = self._update_pause(self.game_state)
 
         # ======== READY ========
         if self.game_state.game_status == 'READY':
@@ -91,12 +97,35 @@ class GameManager(Scene):
         if self.game_state.game_status == 'HIT':
             scene_request = self._update_hit(self.game_state)
 
+        # ======== PAUSE ========
+        if self.game_state.game_status == 'PAUSE':
+            scene_request = self._update_pause(self.game_state)
+            return scene_request
+
+        # debug
+        for event in events:
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_RETURN:
+                    self.game_state.current_level += 1
+                    self.map.level_up(self.game_state)
+                    self.item_manager.level_up(self.game_state)
+                    self.character_manager.level_up(self.game_state)
+                    self.game_state.game_status = 'READY'
+                    self.game_state.game_timer = 0.0
+                # Escapeが押された時PLAYING<->PAUSEを切り替える
+                if event.key == pygame.K_ESCAPE:
+                    if self.game_state.game_status == 'PAUSE':
+                        self.game_state.game_status = 'PLAYING'
+                    elif self.game_state.game_status == 'PLAYING':
+                        self.game_state.game_status = 'PAUSE'
+
         # -------- all object update --------
 
         # 各オブジェクトのUpdate実行
         self.map.update(self.game_state)
-        self.item_mageer.update(self.game_state)
+        self.item_manager.update(self.game_state)
         self.character_manager.update(self.game_state)
+        self.hud.update(self.game_state)
         return scene_request
 
     def draw(self, screen: pygame.Surface) -> None:
@@ -106,10 +135,11 @@ class GameManager(Scene):
             screen (pygame.Surface): 描画先のpygame.Surfaceオブジェクト。
         """
         self.map.draw(screen)
-        self.item_mageer.draw(screen)
+        self.item_manager.draw(screen)
         self.character_manager.draw(screen)
-
-#    Private functions
+        self.hud.draw(screen)
+        if self.game_state.game_status == 'PAUSE':
+            self.pause_scene.draw(screen)
 
     def _update_ready(self, game_state: GameState) -> None | tuple[str, Any]:
         """READY状態のゲーム進行を管理する関数。
@@ -155,7 +185,7 @@ class GameManager(Scene):
             return ("GAME_OVER", self.game_state.score)
 
         # パックガムの取得処理
-        item = self.item_mageer.try_eat(self.game_state)
+        item = self.item_manager.try_eat(self.game_state)
         if item is not None:
             self.game_state.score += item.points
             # SuperPacgum取得時　ゴーストをいじけモードへ
@@ -178,10 +208,10 @@ class GameManager(Scene):
                 ghost.be_eaten()
 
         # level_up条件処理
-        if self.item_mageer.is_get_all_items():
+        if self.item_manager.is_get_all_items():
             self.game_state.current_level += 1
             self.map.level_up(self.game_state)
-            self.item_mageer.level_up(self.game_state)
+            self.item_manager.level_up(self.game_state)
             self.character_manager.level_up(self.game_state)
             self.game_state.game_status = 'READY'
             self.game_state.game_timer = 0.0
@@ -217,4 +247,18 @@ class GameManager(Scene):
             None | tuple[str, Any]: ゲームオーバーやゲームクリアなどの状態変化があれば、シーン名と受け渡すデータをタプルで返す。
                 何もなければNoneを返す。
         """
+        action = self.pause_scene.update(game_state.events)
+        if action == "RESUME":
+            self.game_state.game_status = 'PLAYING'
+            return None
+        elif action == "RETRY":
+            return ("PLAY", None)
+        elif action == "HOW_TO_PLAY":
+            # How to Playのシーンに遷移する処理をここに追加する
+            pass
+        elif action == "CHEAT_MODE":
+            # Cheat ModeのフラグをここでON？HUDの表示も変える
+            pass
+        elif action == "QUIT":
+            return ("MAIN_MENU", None)
         return None
