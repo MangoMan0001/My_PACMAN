@@ -4,7 +4,6 @@ Todo:
     - [ ] 隠しコマンドの実装。
 """
 import pygame
-import json
 from typing import Any
 from pathlib import Path
 
@@ -12,6 +11,7 @@ from src.model.base_model.scene import Scene
 from src.model.base_model.config_model import ConfigModel
 from src.model.image_font import ImageFont
 from src.model.score_manager import ScoreManager
+from src.model.scene.how_to_play import HowToPlay
 
 
 class MainMenu(Scene):
@@ -42,8 +42,8 @@ class MainMenu(Scene):
 
     def __init__(self, config: ConfigModel, score_manager: ScoreManager) -> None:
         super().__init__(config)
-        self.score_maneger = score_manager
-        self.scores = self.score_maneger.get_sorted_score()
+        self.score_manager = score_manager
+        self.scores = self.score_manager.get_sorted_score()
 
         title_font = ImageFont(Path("pacfont_256"))
         info_font = ImageFont(Path("pacfont_128"))
@@ -72,6 +72,8 @@ class MainMenu(Scene):
 
         # 選択中のメニュー項目のインデックスを初期化
         self.selected_index = 0
+        self.how_to_play_scene = HowToPlay(config)
+        self.showing_how_to_play = False
 
     def update(
         self, events: list[pygame.event.Event]
@@ -90,6 +92,9 @@ class MainMenu(Scene):
                 画面遷移が必要な場合はシーン名と受け渡すデータをタプルで返す。
                 何もなければNoneを返す
         """
+        if self.showing_how_to_play:
+            self.showing_how_to_play = self.how_to_play_scene.update(events)
+            return None
         for event in events:
             if event.type == pygame.KEYDOWN:
                 # 上、wキーでメニュー項目の選択
@@ -107,9 +112,10 @@ class MainMenu(Scene):
                 elif event.key == pygame.K_RETURN:
                     label = self.menu_text[self.selected_index]
                     if label == "HOW TO PLAY":
-                        return ("PLAY", None)
+                        self.showing_how_to_play = True
                     elif label == "QUIT":
                         pygame.event.post(pygame.event.Event(pygame.QUIT))
+
         return None
 
     def _draw_score(
@@ -195,3 +201,5 @@ class MainMenu(Scene):
         self._draw_score(screen, screen_x, screen_y)
         # 選択できるメニュー項目の描画
         self._menu_item_draw(screen, screen_x, screen_y)
+        if self.showing_how_to_play:
+            self.how_to_play_scene.draw(screen)
