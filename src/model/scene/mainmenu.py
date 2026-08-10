@@ -1,20 +1,7 @@
 """ゲーム開始後、ゲーム中の特定の動作で表示するタイトル画面のシーン。
 
 Todo:
-    - [x] 文字列を画像に置き換える。
-    - [ ] 文字の大きさ等要調整。
     - [ ] 隠しコマンドの実装。
-    - [ ] カーソルの移動、決定を実装したい。 -> 何を選択したいか考えとく。
-        - [ ] カーソルの点滅をさせる。
-    - [ ] タイトルとインフォの文字列を可能なら点滅させたい。 -> 後回し
-    - [ ] 毎回ハイスコアを読み込むのは重いのでハイスコアの更新があったときだけ読み込むようにしたい。
-    - [ ] 名前の文字数制限15文字。
-    - [ ] docstring書く。
-    _draw_score:
-        - [x] スコアを取得してハイスコア上位n件をループで描画するようにする。
-        - [x] ハイスコアファイルを受け取ってtmp_scoresと入れ替える。
-    draw:
-        - [x] spaceを押すとゲームが始まるようにする。
 """
 import pygame
 import json
@@ -24,6 +11,7 @@ from pathlib import Path
 from src.model.base_model.scene import Scene
 from src.model.base_model.config_model import ConfigModel
 from src.model.image_font import ImageFont
+from src.model.score_manager import ScoreManager
 
 
 class MainMenu(Scene):
@@ -31,6 +19,7 @@ class MainMenu(Scene):
 
     Args:
         config (ConfigModel): 設定モデル。
+        score_manager (ScoreManager): スコア管理を行うオブジェクト。
 
     Attributes:
         BACKGROUND_COLOR (tuple[int, int, int]): 背景色(RGB)
@@ -50,10 +39,11 @@ class MainMenu(Scene):
 
     BACKGROUND_COLOR = (0, 0, 0)  # 黒
     CURSOR_SPACE = 30  # カーソルとメニュー項目の間隔
-    ITEM_LINE_SPACE = 0.5  # メニュー項目の行間
 
-    def __init__(self, config: ConfigModel) -> None:
+    def __init__(self, config: ConfigModel, score_manager: ScoreManager) -> None:
         super().__init__(config)
+        self.score_maneger = score_manager
+        self.scores = self.score_maneger.get_sorted_score()
 
         title_font = ImageFont(Path("pacfont_256"))
         info_font = ImageFont(Path("pacfont_128"))
@@ -65,7 +55,7 @@ class MainMenu(Scene):
         title_text = "PAC-MAN"
         info_text = "PUSH SPACE TO PLAY"
         score_text = "HIGH SCORE RANKING"
-        self.menu_text = ["PLAY", "QUIT"]
+        self.menu_text = ["HOW TO PLAY", "QUIT"]
 
         # cursor用に使用。
         asset_root = Path(__file__).resolve().parents[3] / "data" / "assets"
@@ -82,9 +72,6 @@ class MainMenu(Scene):
 
         # 選択中のメニュー項目のインデックスを初期化
         self.selected_index = 0
-
-        # のちのちハイスコアの表示に使う。 -> 必要なくなったかも
-        self.scores: dict[str, int] = self._set_highscore()
 
     def update(
         self, events: list[pygame.event.Event]
@@ -119,26 +106,11 @@ class MainMenu(Scene):
                 # エンターキーで選択中のメニュー項目をアクティブにする。
                 elif event.key == pygame.K_RETURN:
                     label = self.menu_text[self.selected_index]
-                    if label == "PLAY":
+                    if label == "HOW TO PLAY":
                         return ("PLAY", None)
                     elif label == "QUIT":
                         pygame.event.post(pygame.event.Event(pygame.QUIT))
         return None
-
-    def _set_highscore(self) -> dict[str, int]:
-        """
-        コンフィグからハイスコアの辞書を取得。
-        ランキング順にソートして返す。
-
-        Returns:
-            dict[str, int]: ハイスコアの辞書。キーはプレイヤー名、値はスコア。
-        """
-        try:
-            with open(self.config.highscore_filename, "r", encoding="utf-8") as f:
-                scores = json.load(f)
-        except (FileNotFoundError, json.JSONDecodeError):
-            scores = {}
-        return dict(sorted(scores.items(), key=lambda x: x[1], reverse=True))
 
     def _draw_score(
         self, screen: pygame.Surface, x: int, y: int
@@ -151,24 +123,24 @@ class MainMenu(Scene):
             y (int): 画面の高さ
         """
         score_x = (x - self.score_image.get_width()) // 2
-        score_y = (y // 30) * 8
+        score_y = (y // 30) * 9
         screen.blit(self.score_image, (score_x, score_y))
 
-        base_x = score_x
+        base_x = score_x + 50
         name_offset = 100
-        score_offset = 500
-        pts_offset = 800
+        score_offset = 400
+        pts_offset = 650
 
-        for i, (name, score) in enumerate(self.scores.items()):
+        for i, data in enumerate(self.scores):
             ranking = i + 1
             # 上位10位まで表示する
             if ranking > 10:
                 break
-            row_y = (y // 30) * (i + 11)
+            row_y = (y // 32) * (i + 13)
 
             ranking_images = self.number_font.render_text(f"{ranking}.")
-            name_images = self.number_font.render_text(name)
-            score_images = self.number_font.render_text(f" - {score}")
+            name_images = self.number_font.render_text(str(data['name']))
+            score_images = self.number_font.render_text(f" - {str(data['score'])}")
             pts_images = self.number_font.render_text(" pts")
 
             screen.blit(ranking_images, (base_x, row_y))
@@ -182,12 +154,11 @@ class MainMenu(Scene):
         """メニュー項目の描画
         """
         item_height = max(item.get_height() for item in self.item_images)
-        line_step = item_height + int(item_height * self.ITEM_LINE_SPACE)
-        start_y = (screen_y // 30) * 20
+        start_y = (screen_y // 30) * 21
 
         for index, image in enumerate(self.item_images):
             item_x = (screen_x - image.get_width()) // 2
-            item_y = start_y + index * line_step
+            item_y = start_y + index * item_height
             screen.blit(image, (item_x, item_y))
 
             if index == self.selected_index:
@@ -210,19 +181,17 @@ class MainMenu(Scene):
 
         screen_x, screen_y = screen.get_size()
 
-        # ======== テキスト、x座標、y座標を計算して描画する一連の流れ ========
-        # -> 関数に分離する？
+        # タイトルは画面の中央かつ一番上に表示する
         title_x = (screen_x - self.title_image.get_width()) // 2
-        title_y = (screen_y // 30) * 1
+        title_y = 0
         screen.blit(self.title_image, (title_x, title_y))
 
-        # ======== テキスト、x座標、y座標を計算して描画する一連の流れ ========
-        # -> 関数に分離する？
+        # Push SPACE TO PLAYのインフォは画面の中央かつ下に表示する
         info_x = (screen_x - self.info_image.get_width()) // 2
         info_y = (screen_y // 30) * 25
         screen.blit(self.info_image, (info_x, info_y))
 
-        # ハイスコアの描画
+        # 上位10件のスコアを描画
         self._draw_score(screen, screen_x, screen_y)
         # 選択できるメニュー項目の描画
         self._menu_item_draw(screen, screen_x, screen_y)
