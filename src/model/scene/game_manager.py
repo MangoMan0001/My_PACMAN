@@ -60,6 +60,10 @@ class GameManager(Scene):
         self.pre_time = time.time()
         self.max_time = self.game_state.config.level_max_time
 
+        # チートフラグ
+        self.is_invincible: bool = False
+
+
     def update(self, events: list[pygame.event.Event]) -> None | tuple[str, Any]:
         """ゲームの状態を更新する関数。
 
@@ -106,18 +110,30 @@ class GameManager(Scene):
         for event in events:
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_RETURN:
-                    self.game_state.current_level += 1
-                    self.map.level_up(self.game_state)
-                    self.item_manager.level_up(self.game_state)
-                    self.character_manager.level_up(self.game_state)
-                    self.game_state.game_status = 'READY'
-                    self.game_state.game_timer = 0.0
+                    # self._level_up()
+                    self.game_state.is_cheating = True
+                if self.game_state.is_cheating:
+                    if event.key == pygame.K_1:
+                        self.game_state.is_cheat_star = True
+                    if event.key == pygame.K_2:
+                    if event.key == pygame.K_3:
+                    if event.key == pygame.K_4:
+                    if event.key == pygame.K_5:
+
+                    if self.game_state.is_cheat_skip:
+                    if self.game_state.is_cheat_frozen:
+                    if self.game_state.is_cheat_1up:
+                    if self.game_state.is_cheat_dash:
                 # Escapeが押された時PLAYING<->PAUSEを切り替える
                 if event.key == pygame.K_ESCAPE:
                     if self.game_state.game_status == 'PAUSE':
                         self.game_state.game_status = 'PLAYING'
                     elif self.game_state.game_status == 'PLAYING':
                         self.game_state.game_status = 'PAUSE'
+
+        # -------- cheating -------- (仮おき)
+        if self.game_state.is_cheating:
+            self._cheating()
 
         # -------- all object update --------
 
@@ -155,6 +171,8 @@ class GameManager(Scene):
         """
         # ゲームオーバー処理 残ライフ
         if self.game_state.lives < 0:
+            if game_state.is_cheating:
+                return ("GAME_OVER", 0)
             return ("GAME_OVER", self.game_state.score)
 
         # ゲーム状態の時間管理　3秒間開始しない
@@ -182,6 +200,8 @@ class GameManager(Scene):
 
         # ゲームオーバー処理 残ライフ
         if self.game_state.lives < 0:
+            if game_state.is_cheating:
+                return ("GAME_OVER", 0)
             return ("GAME_OVER", self.game_state.score)
 
         # パックガムの取得処理
@@ -197,7 +217,7 @@ class GameManager(Scene):
         if ghost is not None:
             # 通常時
             if ghost.current_mode in (GhostMode.CHASE, GhostMode.SCATTER):
-                if not game_state.is_cheat_star:
+                if not self.is_invincible:
                     self.game_state.lives -= 1
                     self.game_state.game_status = 'HIT'
                     self.character_manager.hit(self.game_state)
@@ -209,12 +229,7 @@ class GameManager(Scene):
 
         # level_up条件処理
         if self.item_manager.is_get_all_items():
-            self.game_state.current_level += 1
-            self.map.level_up(self.game_state)
-            self.item_manager.level_up(self.game_state)
-            self.character_manager.level_up(self.game_state)
-            self.game_state.game_status = 'READY'
-            self.game_state.game_timer = 0.0
+            self._level_up()
 
         return None
 
@@ -262,3 +277,33 @@ class GameManager(Scene):
         elif action == "QUIT":
             return ("MAIN_MENU", None)
         return None
+
+    def _cheating(self) -> None:
+        # 無敵
+        self.is_invincible = self.game_state.is_cheat_star
+
+        # ステージスキップ
+        self._level_up()
+
+        # ゴーストの凍結
+        self.character_manager.is_frozen = self.game_state.is_cheat_frozen
+
+        # 追加ライフ
+        if self.game_state.is_cheat_1up:
+            if self.game_state.lives <= 5:
+                self.game_state.lives += 1
+            self.game_state.is_cheat_1up = False
+
+        # スピードアップ
+        if self.game_state.is_cheat_dash:
+            self.character_manager.pacman.dash()
+        elif not self.game_state.is_cheat_dash:
+            self.character_manager.pacman.walk()
+
+    def _level_up(self) -> None:
+        self.game_state.current_level += 1
+        self.map.level_up(self.game_state)
+        self.item_manager.level_up(self.game_state)
+        self.character_manager.level_up(self.game_state)
+        self.game_state.game_status = 'READY'
+        self.game_state.game_timer = 0.0

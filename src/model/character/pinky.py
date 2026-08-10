@@ -38,6 +38,9 @@ class Pinky(Ghost):
         self.px, self.py = map.cell_center(self.x, self.y)
         self.direction = Direction.LEFT
         self.current_mode = GhostMode.CHASE
+        self.cooltimer = 0.0
+        self.blinking_time = 0.0
+        self.is_drawable = True
 
     def _get_target(self, game_state: GameState) -> tuple[int, int]:
         """ゴーストの移動目標座標を取得する。

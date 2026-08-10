@@ -52,7 +52,10 @@ class Pacman(Character):
             pygame.K_s: False,
             pygame.K_d: False,
             }
+
+        # cheat flag
         self.is_moving = False
+        self.is_dash = False
 
     def update(self, game_state: GameState) -> None:
         """パックマンの状態を更新する関数。
@@ -94,7 +97,7 @@ class Pacman(Character):
             self.direction = self.next_direction
 
         # 実際の移動
-        move_step = 3 if game_state.is_cheat_dash else 1
+        move_step = 3 if self.is_dash else 1
         for _ in range(move_step):
             if not self.is_moving:
                 return
@@ -150,3 +153,9 @@ class Pacman(Character):
             tuple[int, int]: Pacmanの現在のピクセル座標 (px, py)
         """
         return (self.px, self.py)
+
+    def dash(self) -> None:
+        self.is_dash = True
+
+    def walk(self) -> None:
+        self.is_dash = False

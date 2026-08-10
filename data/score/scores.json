@@ -22,5 +22,9 @@
     {
         "name": "test",
         "score": 30
+    },
+    {
+        "name": " ",
+        "score": 2030
     }
 ]
