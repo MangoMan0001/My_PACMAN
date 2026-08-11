@@ -20,16 +20,16 @@ class LevelModel(BaseModel):
 
 
 DEFAULT_LEVELS = [
-    LevelModel(width=5, height=5),   # レベル1
+    LevelModel(width=7, height=7),   # レベル1
     LevelModel(width=11, height=11),   # レベル2
-    LevelModel(width=15, height=15),   # レベル3
-    LevelModel(width=21, height=21),   # レベル4
-    LevelModel(width=25, height=25),   # レベル5
-    # LevelModel(width=35, height=35),   # レベル6
-    # LevelModel(width=41, height=41),   # レベル7
-    # LevelModel(width=45, height=45),   # レベル8
-    # LevelModel(width=51, height=51),   # レベル9
-    # LevelModel(width=55, height=55),   # レベル10
+    LevelModel(width=11, height=7),   # レベル3
+    LevelModel(width=7, height=15),   # レベル4
+    LevelModel(width=5, height=5),   # レベル5
+    LevelModel(width=15, height=15),   # レベル6
+    LevelModel(width=5, height=7),   # レベル7
+    LevelModel(width=7, height=5),   # レベル8
+    LevelModel(width=25, height=5),   # レベル9
+    LevelModel(width=25, height=25)   # レベル10
 ]
 
 

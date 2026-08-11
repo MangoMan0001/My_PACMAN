@@ -29,7 +29,7 @@ class GameOver(Scene):
         self.score: int = score
         self.score_manager: ScoreManager = score_manager
 
-        self.max_name_len: int = 8
+        self.max_name_len: int = 10
         self.name_str: str = ""
 
         self.is_shift: bool = False
