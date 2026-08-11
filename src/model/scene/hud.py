@@ -112,7 +112,7 @@ class HUD:
         screen.blit(time_image, (time_x, hud_text_y + 20))
 
         # レベルを描画
-        level_image = self.hud_font.render_text(f"{self.level}")
+        level_image = self.hud_font.render_text(f"{self.level + 1}")
         level_x = (screen.get_width() // 30) * 21
         level_y = screen.get_height() - level_image.get_height() - 30
         screen.blit(level_image, (level_x, level_y))
