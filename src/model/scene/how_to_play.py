@@ -1,3 +1,4 @@
+"""MainMenu、Pauseで「HOW TO PLAY」を選択したときに表示されるシーン。"""
 import pygame
 from pathlib import Path
 
@@ -5,19 +6,21 @@ from src.model.image_font import ImageFont
 
 
 class HowToPlay:
-    """MainMenuの「HOW TO PLAY」を選択したときに表示されるシーン。
+    """MainMenu、Pauseの「HOW TO PLAY」を選択したときに表示されるシーン。
 
     Attributes:
         howto_image (pygame.Surface): How to Playの画像。
         info_image (pygame.Surface): インフォメーションの画像。
     """
     def __init__(self):
+        # How to Playの画像を読み込む
         asset_root = Path(__file__).resolve().parents[3] / "data" / "assets"
         image_path = Path("how_to_play") / "how_to_play.png"
         self.howto_image = pygame.image.load(
             str(asset_root / image_path)
         )
 
+        # 画面下部に表示するインフォメーションの画像
         info_font = ImageFont(Path("pacfont_64"))
         self.info_image = info_font.render_text("PUSH ESC TO RETURN")
 
