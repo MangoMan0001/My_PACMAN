@@ -116,7 +116,7 @@ class GameManager(Scene):
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_RETURN:
                     self.game_state.is_cheating = True
-                if self.game_state.is_cheatingtat
+                if self.game_state.is_cheating:
                     if event.key == pygame.K_1:
                         self.game_state.is_cheat_star = (
                             not self.game_state.is_cheat_star
