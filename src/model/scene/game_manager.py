@@ -116,26 +116,20 @@ class GameManager(Scene):
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_RETURN:
                     self.game_state.is_cheating = True
-                    print("cheating")
-                if self.game_state.is_cheating:
+                if self.game_state.is_cheatingtat
                     if event.key == pygame.K_1:
-                        print("star")
                         self.game_state.is_cheat_star = (
                             not self.game_state.is_cheat_star
                         )
                     if event.key == pygame.K_2:
-                        print("skip")
                         self.game_state.is_cheat_skip = True
                     if event.key == pygame.K_3:
-                        print("froze")
                         self.game_state.is_cheat_frozen = (
                             not self.game_state.is_cheat_frozen
                         )
                     if event.key == pygame.K_4:
-                        print("1up")
                         self.game_state.is_cheat_1up = True
                     if event.key == pygame.K_5:
-                        print("dash")
                         self.game_state.is_cheat_dash = (
                             not self.game_state.is_cheat_dash
                         )
