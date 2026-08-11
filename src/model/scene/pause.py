@@ -103,7 +103,7 @@ class Pause:
                         return "RETRY"
                     elif label == "How to Play":
                         self.showing_how_to_play = True
-                        return "HOW_TO_PLAY"
+                        return None
                     elif label == "Quit":
                         return "QUIT"
         return None
