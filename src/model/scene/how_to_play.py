@@ -12,7 +12,7 @@ class HowToPlay:
         howto_image (pygame.Surface): How to Playの画像。
         info_image (pygame.Surface): インフォメーションの画像。
     """
-    def __init__(self):
+    def __init__(self) -> None:
         # How to Playの画像を読み込む
         asset_root = Path(__file__).resolve().parents[3] / "data" / "assets"
         image_path = Path("how_to_play") / "how_to_play.png"
