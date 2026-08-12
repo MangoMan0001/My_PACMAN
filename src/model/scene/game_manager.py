@@ -238,6 +238,10 @@ class GameManager(Scene):
 
         # level_up条件処理
         if self.item_manager.is_get_all_items():
+            if 9 == self.game_state.current_level:
+                if game_state.is_cheating:
+                    return ("GAME_OVER", 0)
+                return ("GAME_CLEAR", self.game_state.score)
             self._level_up()
 
         return None
