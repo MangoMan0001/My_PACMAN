@@ -97,9 +97,9 @@ class Map(Entity):
         self.x = game_state.config.level[game_state.current_level].width
         self.y = game_state.config.level[game_state.current_level].height
 
-        self.generate = MazeGenerator((self.x, self.y), perfect=False, seed=game_state.config.seed)
+        self.generater = MazeGenerator((self.x, self.y), perfect=False, seed=game_state.config.seed)
 
-        self.wall_map = self.generate.maze
+        self.wall_map = self.generater.maze
 
         self.map_len_x = self.x * (self.cell_size + self.wall_size) + self.wall_size
         self.map_len_y = self.y * (self.cell_size + self.wall_size) + self.wall_size
