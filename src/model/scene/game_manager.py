@@ -308,7 +308,9 @@ class GameManager(Scene):
 
     def _level_up(self) -> None:
         """レベルアップ処理を行う関数。"""
-        self.game_state.current_level += 1
+        print(self.game_state.current_level)
+        if self.game_state.current_level < 9:
+            self.game_state.current_level += 1
         self.map.level_up(self.game_state)
         self.item_manager.level_up(self.game_state)
         self.character_manager.level_up(self.game_state)
