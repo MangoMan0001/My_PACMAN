@@ -142,5 +142,7 @@ class ConfigModel(BaseModel):
         if len(v) < target_length:
             # vが3つなら、DEFAULT_LEVELS[3:10] (レベル4〜10) が補充される
             v.extend(DEFAULT_LEVELS[len(v):target_length])
+        elif target_length < len(v):
+            print('Warning: More than 10 levels provided. Only the first 10 levels will be used.')
 
         return v[:10]
