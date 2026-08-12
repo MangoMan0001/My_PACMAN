@@ -240,7 +240,7 @@ class GameManager(Scene):
         if self.item_manager.is_get_all_items():
             if 9 == self.game_state.current_level:
                 if game_state.is_cheating:
-                    return ("GAME_OVER", 0)
+                    return ("GAME_CLEAR", 0)
                 return ("GAME_CLEAR", self.game_state.score)
             self._level_up()
 
@@ -312,7 +312,6 @@ class GameManager(Scene):
 
     def _level_up(self) -> None:
         """レベルアップ処理を行う関数。"""
-        print(self.game_state.current_level)
         if self.game_state.current_level < 9:
             self.game_state.current_level += 1
         self.map.level_up(self.game_state)
