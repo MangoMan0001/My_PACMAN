@@ -17,6 +17,7 @@ def load_config(filepath: str) -> ConfigModel:
         ConfigModel: 読み込んだconfig.jsonをConfigModelに変換したオブジェクト
     """
     lines = []
+    data = {}
     try:
         with open(filepath, "r", encoding="utf-8") as f:
             for line in f:

@@ -52,7 +52,7 @@ class ConfigModel(BaseModel):
     highscore_filename: Path = Field(default=Path("scores.json"),
                                      description="highscore_filename")
 
-    level: list[LevelModel] = Field(default_factory=list,
+    level: list[LevelModel] = Field(default_factory=lambda: list(DEFAULT_LEVELS),
                                     description='map_levels')
 
     lives: int = Field(ge=0,
@@ -143,4 +143,4 @@ class ConfigModel(BaseModel):
             # vが3つなら、DEFAULT_LEVELS[3:10] (レベル4〜10) が補充される
             v.extend(DEFAULT_LEVELS[len(v):target_length])
 
-        return v
+        return v[:10]
