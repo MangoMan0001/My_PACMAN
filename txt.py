@@ -1,6 +1,7 @@
 # generate_assets.py (画像生成専用スクリプト)
-import pygame
 import os
+
+import pygame
 
 
 def create_pacman_images(output_dir: str) -> None:
@@ -16,32 +17,18 @@ def create_pacman_images(output_dir: str) -> None:
     pygame.image.save(surface, os.path.join(output_dir, "PACMAN_right_32.png"))
 
 
-def create_font_upper_images(output_dir: str) -> None:
+def create_font_pac_images(output_dir: str) -> None:
     pygame.font.init()
     # フォントを使用指定
-    font = pygame.font.Font("data/font/pacmania/Pacmania.otf", 256)  # フォントサイズ256
+    font = pygame.font.Font("data/font/pacmania/Pacmania.otf", 32)  # フォントサイズ256
 
-    for char_code in range(ord('A'), ord('Z') + 1):
+    for char_code in range(ord("A"), ord("Z") + 1):
         char = chr(char_code)
         # 文字を画像化（黄色）
         text_surface = font.render(char, True, (255, 255, 0))
-        pygame.image.save(text_surface, os.path.join(output_dir, f"PAC-FONT_{char}.png"))
-
-    # ハイフンの文字画像を生成
-    text_surface = font.render(chr(45), True, (255, 255, 0))
-    pygame.image.save(text_surface, os.path.join(output_dir, "PAC-FONT_-.png"))
-
-
-def create_font_lower_images(output_dir: str) -> None:
-    pygame.font.init()
-    # フォントを使用
-    font = pygame.font.Font("data/font/pacmania/Pacmania.otf", 128)  # フォントサイズ128
-
-    for char_code in range(ord('a'), ord('z') + 1):
-        char = chr(char_code)
-        # 文字を画像化（黄色）
-        text_surface = font.render(char, True, (255, 255, 0))
-        pygame.image.save(text_surface, os.path.join(output_dir, f"PAC-FONT_{char}.png"))
+        pygame.image.save(
+            text_surface, os.path.join(output_dir, f"PAC-FONT_{char}.png")
+        )
 
     # ハイフンの文字画像を生成
     text_surface = font.render(chr(45), True, (255, 255, 0))
@@ -54,25 +41,31 @@ def create_font_misaki_images(output_dir: str) -> None:
     font = pygame.font.Font("data/font/misaki/misaki_gothic_2nd.ttf", 24)
 
     # A〜Zまでの文字画像をループで一気に生成
-    for char_code in range(ord('A'), ord('Z') + 1):
+    for char_code in range(ord("A"), ord("Z") + 1):
         char = chr(char_code)
         # 文字を画像化（黄色）
         text_surface = font.render(char, True, (255, 255, 255))
-        pygame.image.save(text_surface, os.path.join(output_dir, f"misaki-FONT_{char}.png"))
+        pygame.image.save(
+            text_surface, os.path.join(output_dir, f"misaki-FONT_{char}.png")
+        )
 
     # a〜zまでの文字画像をループで一気に生成
-    for char_code in range(ord('a'), ord('z') + 1):
+    for char_code in range(ord("a"), ord("z") + 1):
         char = chr(char_code)
         # 文字を画像化（黄色）
         text_surface = font.render(char, True, (255, 255, 255))
-        pygame.image.save(text_surface, os.path.join(output_dir, f"misaki-FONT_{char}.png"))
+        pygame.image.save(
+            text_surface, os.path.join(output_dir, f"misaki-FONT_{char}.png")
+        )
 
     # 0~9までの文字画像をループで一気に生成
-    for char_code in range(ord('0'), ord('9') + 1):
+    for char_code in range(ord("0"), ord("9") + 1):
         char = chr(char_code)
         # 文字を画像化（白色）
         text_surface = font.render(char, True, (255, 255, 255))
-        pygame.image.save(text_surface, os.path.join(output_dir, f"misaki-FONT_{char}.png"))
+        pygame.image.save(
+            text_surface, os.path.join(output_dir, f"misaki-FONT_{char}.png")
+        )
 
     # ハイフンの文字画像を生成
     text_surface = font.render(chr(45), True, (255, 255, 255))
@@ -89,25 +82,31 @@ def create_font_none_images(output_dir: str) -> None:
     font = pygame.font.Font(None, 128)
 
     # A〜Zまでの文字画像をループで一気に生成
-    for char_code in range(ord('A'), ord('Z') + 1):
+    for char_code in range(ord("A"), ord("Z") + 1):
         char = chr(char_code)
         # 文字を画像化（黄色）
         text_surface = font.render(char, True, (255, 255, 255))
-        pygame.image.save(text_surface, os.path.join(output_dir, f"none-FONT_{char}.png"))
+        pygame.image.save(
+            text_surface, os.path.join(output_dir, f"none-FONT_{char}.png")
+        )
 
     # a〜zまでの文字画像をループで一気に生成
-    for char_code in range(ord('a'), ord('z') + 1):
+    for char_code in range(ord("a"), ord("z") + 1):
         char = chr(char_code)
         # 文字を画像化（黄色）
         text_surface = font.render(char, True, (255, 255, 255))
-        pygame.image.save(text_surface, os.path.join(output_dir, f"none-FONT_{char}.png"))
+        pygame.image.save(
+            text_surface, os.path.join(output_dir, f"none-FONT_{char}.png")
+        )
 
     # 0~9までの文字画像をループで一気に生成
-    for char_code in range(ord('0'), ord('9') + 1):
+    for char_code in range(ord("0"), ord("9") + 1):
         char = chr(char_code)
         # 文字を画像化（白色）
         text_surface = font.render(char, True, (255, 255, 255))
-        pygame.image.save(text_surface, os.path.join(output_dir, f"none-FONT_{char}.png"))
+        pygame.image.save(
+            text_surface, os.path.join(output_dir, f"none-FONT_{char}.png")
+        )
 
     # ハイフンの文字画像を生成
     text_surface = font.render(chr(45), True, (255, 255, 255))
@@ -121,9 +120,9 @@ def create_font_none_images(output_dir: str) -> None:
 def create_dither_images(output_dir: str) -> pygame.Surface:
     """画面全体を覆う半透明のSurfaceを作成する。
 
-        Args:
-            width (int): Surfaceの幅。
-            height (int): Surfaceの高さ。
+    Args:
+        width (int): Surfaceの幅。
+        height (int): Surfaceの高さ。
     """
     black = (0, 0, 0, 255)  # 半透明の黒
     width, height = 1920, 1080  # 画面サイズを指定
@@ -183,10 +182,10 @@ def create_how_to_play_image(output_dir: str) -> None:
     body_color = (30, 30, 30)
     bottom_color = (255, 255, 0)
     ghost_colors = {
-        "blinky": (208, 0, 0),      # 赤
-        "pinky": (222, 90, 160),    # ピンク
-        "inky": (0, 160, 185),      # 水色
-        "clyde": (225, 135, 0),     # オレンジ
+        "blinky": (208, 0, 0),  # 赤
+        "pinky": (222, 90, 160),  # ピンク
+        "inky": (0, 160, 185),  # 水色
+        "clyde": (225, 135, 0),  # オレンジ
     }
 
     # ---- 画面と角丸ボックス ----
@@ -201,8 +200,8 @@ def create_how_to_play_image(output_dir: str) -> None:
     pygame.draw.rect(screen, white, box_rect, border_radius=40)
     pygame.draw.rect(screen, gray, box_rect, width=6, border_radius=40)
 
-    center_x = box_x + box_w // 2   # 画面中央(=960)
-    inner_x = box_x + 90            # 本文の左端
+    center_x = box_x + box_w // 2  # 画面中央(=960)
+    inner_x = box_x + 90  # 本文の左端
 
     # ---- フォント(タイトルはPac風、本文は既定の読みやすいフォント) ----
     title_font = _safe_font("data/font/pacmania/Pacmania.otf", 90)
@@ -215,8 +214,13 @@ def create_how_to_play_image(output_dir: str) -> None:
         """画像をボックス中央に横中央寄せで貼る。"""
         screen.blit(image, (center_x - image.get_width() // 2, top_y))
 
-    def blit_text(text: str, font: pygame.font.Font,
-                  color: tuple[int, int, int], x: int, top_y: int) -> int:
+    def blit_text(
+        text: str,
+        font: pygame.font.Font,
+        color: tuple[int, int, int],
+        x: int,
+        top_y: int,
+    ) -> int:
         """左寄せで文字列を描画し、描画した画像の幅を返す。"""
         image = font.render(text, True, color)
         screen.blit(image, (x, top_y))
@@ -225,23 +229,28 @@ def create_how_to_play_image(output_dir: str) -> None:
     # ---- タイトル ----
     title_image = title_font.render("HOW TO PLAY", True, title_color)
     blit_center(title_image, box_y + 45)
-    y = box_y + 45 + title_image.get_height() + 30
+    y = box_y + 45 + title_image.get_height() + 20
 
     # ---- CONTROLS ----
     blit_text("CONTROLS", heading_font, heading_color, inner_x, y)
     y += 68
-    blit_text("Move : Arrow Keys  or  W / A / S / D",
-              body_font, body_color, inner_x + 20, y)
+    blit_text("Move : W / A / S / D", body_font, body_color, inner_x + 20, y)
     y += 80
 
     # ---- RULES ----
     blit_text("RULES", heading_font, heading_color, inner_x, y)
     y += 68
-    blit_text("Eat all Pac-Gum to clear the stage.",
-              body_font, body_color, inner_x + 20, y)
+    blit_text(
+        "Eat all Pac-Gum to clear the stage.", body_font, body_color, inner_x + 20, y
+    )
     y += 56
-    blit_text("Grab a Super Pac-Gum to eat ghosts for a short time!",
-              body_font, body_color, inner_x + 20, y)
+    blit_text(
+        "Grab a Super Pac-Gum to eat ghosts for a short time!",
+        body_font,
+        body_color,
+        inner_x + 20,
+        y,
+    )
     y += 80
 
     # ---- GHOSTS ----
@@ -258,16 +267,14 @@ def create_how_to_play_image(output_dir: str) -> None:
     for key, name, desc in ghost_lines:
         text_x = inner_x + 20
         # ゴーストのスプライトをアイコンとして左に貼る(無ければ文字だけ)
-        icon_path = os.path.join(
-            "data", "assets", "ghost", f"ghost_{key}_right_0.png")
+        icon_path = os.path.join("data", "assets", "ghost", f"ghost_{key}_right_0.png")
         if os.path.exists(icon_path):
             icon = pygame.image.load(icon_path)
             icon = pygame.transform.scale(icon, (icon_size, icon_size))
             screen.blit(icon, (inner_x + 20, y - 8))
             text_x = inner_x + 20 + icon_size + 24
         # 「名前(ゴースト色)」＋「説明(黒)」を横に並べる
-        name_width = blit_text(
-            f"{name} : ", ghost_font, ghost_colors[key], text_x, y)
+        name_width = blit_text(f"{name} : ", ghost_font, ghost_colors[key], text_x, y)
         blit_text(desc, ghost_font, body_color, text_x + name_width, y)
         y += icon_size + 10
 
@@ -277,16 +284,16 @@ def create_how_to_play_image(output_dir: str) -> None:
 
 if __name__ == "__main__":
     # os.makedirs("data/assets/Pacman", exist_ok=True)
-    # os.makedirs("data/assets/upper_256", exist_ok=True)
+    os.makedirs("data/assets/pacfont_32", exist_ok=True)
     # os.makedirs("data/assets/lower_128", exist_ok=True)
     # os.makedirs("data/assets/nonefont_32", exist_ok=True)
-    os.makedirs("data/assets/dither_images", exist_ok=True)
+    # os.makedirs("data/assets/dither_images", exist_ok=True)
     os.makedirs("data/assets/how_to_play", exist_ok=True)
 
     # create_pacman_images("data/assets/Pacman")
-    # create_font_upper_images("data/assets/upper_256")
+    create_font_pac_images("data/assets/pacfont_32")
     # create_font_lower_images("data/assets/lower_128")
     # create_font_none_images("data/assets/nonefont_32")
-    create_dither_images("data/assets/dither_images")
+    # create_dither_images("data/assets/dither_images")
     create_how_to_play_image("data/assets/how_to_play")
     print("画像の自動生成が完了しました！")

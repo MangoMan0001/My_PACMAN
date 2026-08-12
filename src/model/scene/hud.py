@@ -1,3 +1,4 @@
+"""ゲーム中、画面に情報を表示するHUDを描画するモジュール。"""
 import pygame
 from typing import Any
 from pathlib import Path
@@ -14,6 +15,7 @@ class HUD:
         hud_font (ImageFont): HUD描画用のフォント。
         life_image (pygame.Surface): 残機描画用の画像。
     """
+
     def __init__(self, config: ConfigModel, highscore: int) -> None:
         """HUDの初期化。
 
@@ -23,7 +25,9 @@ class HUD:
         """
         self.config = config
         self.highscore = highscore
-        self.hud_font = ImageFont(Path("nonefont_32"), filename_pattern="none-FONT_{char}.png")
+        self.hud_font = ImageFont(
+            Path("nonefont_32"), filename_pattern="none-FONT_{char}.png"
+        )
 
         # 残機表示用
         asset_root = Path(__file__).resolve().parents[3] / "data" / "assets"
@@ -31,23 +35,48 @@ class HUD:
         self.life_image = pygame.image.load(life_path).convert_alpha()
 
         self.score = 0
+        self.level = 1
         self.lives = self.config.lives
-        self.remaining_time = config.level_max_time
+        self.remaining_time = self.config.level_max_time
+
+        # チートフラグ
+        self.is_cheating: bool = False
+        # チートフラグ描画用テキスト画像
+        cheat_font = ImageFont(Path("pacfont_64"))
+        self.cheat_image = cheat_font.render_text("CHEAT")
+
+        # 各チートの状態
+        self.cheat_dict = {
+            "star": False,
+            "skip": False,
+            "frozen": False,
+            "1up": False,
+            "dash": False,
+        }
+        # 各チートの状態表示用フォント
+        self.cheat_on_font = ImageFont(Path("pacfont_32"))
+        self.cheat_off_font = ImageFont(Path("pacfont_32_gray"))
 
     def update(self, game_state: Any) -> None:
         """
         イベントを処理する。画面遷移が必要な場合はシーン名と受け渡すデータをタプルで返す。
         何もなければNoneを返す
         """
+        if game_state.is_cheating:
+            self.is_cheating = True
+            for cheat in self.cheat_dict.keys():
+                self.cheat_dict[cheat] = getattr(game_state, f"is_cheat_{cheat}")
+        # 過去のハイスコアを現在プレイ中のスコアが上回った場合、ハイスコアを更新
+        self.highscore = max(self.highscore, game_state.score)
         self.score = game_state.score
+        self.level = game_state.current_level
         self.lives = game_state.lives
         if game_state.game_status == "PLAYING":
-            self.remaining_time = game_state.config.level_max_time - game_state.game_timer
+            self.remaining_time = (
+                game_state.config.level_max_time - game_state.game_timer
+            )
         elif game_state.game_status == "READY":
             self.remaining_time = game_state.config.level_max_time
-        # 過去のハイスコアを現在プレイ中のスコアが上回った場合、ハイスコアを更新
-        if self.highscore < game_state.score:
-            self.highscore = game_state.score
 
     def draw(self, screen: pygame.Surface) -> None:
         """HUDを描画する。
@@ -65,9 +94,7 @@ class HUD:
         hud_text_y = (screen.get_height() // 30) * 2
 
         # 現在のスコアを描画
-        # score_text_image = self.hud_font.render_text("SCORE")
         score_x = (screen.get_width() // 30) * 10
-        # screen.blit(score_text_image, (score_x, hud_text_y))
         score_image = self.hud_font.render_text(f"{self.score}")
         screen.blit(score_image, (score_x, hud_text_y + 20))
 
@@ -80,14 +107,33 @@ class HUD:
         screen.blit(highscore_image, (highscore_x, hud_text_y + 20))
 
         # 残り時間を描画
-        # time_text_image = self.hud_font.render_text("TIME")
         time_x = (screen.get_width() // 30) * 20
-        # screen.blit(time_text_image, (time_x, hud_text_y))
         time_image = self.hud_font.render_text(f"{int(self.remaining_time)}")
         screen.blit(time_image, (time_x, hud_text_y + 20))
 
+        # レベルを描画
+        level_image = self.hud_font.render_text(f"{self.level + 1}")
+        level_x = (screen.get_width() // 30) * 21
+        level_y = screen.get_height() - level_image.get_height() - 30
+        screen.blit(level_image, (level_x, level_y))
+
         # 残機を描画
         for i in range(self.lives):
-            life_x = (screen.get_width() // 30) * (i + 10)
-            life_y = screen.get_height() - self.life_image.get_height() - 10
+            life_x = (screen.get_width() // 30) * (i + 9)
+            life_y = screen.get_height() - self.life_image.get_height() - 30
             screen.blit(self.life_image, (life_x, life_y))
+
+        # チートフラグが有効な場合、画面右上にCHEATと各チートの状態を描画
+        if self.is_cheating:
+            cheat_x = (screen.get_width() - self.cheat_image.get_width()) - 100
+            cheat_y = (screen.get_height() // 30) * 2
+            screen.blit(self.cheat_image, (cheat_x, cheat_y))
+            for i, (cheat_name, flag) in enumerate(self.cheat_dict.items()):
+                cheat_name = cheat_name.upper()
+                if flag:
+                    cheat_name_image = self.cheat_on_font.render_text(cheat_name)
+                else:
+                    cheat_name_image = self.cheat_off_font.render_text(cheat_name)
+                cheat_name_x = (screen.get_width() - cheat_name_image.get_width()) - 100
+                cheat_name_y = (screen.get_height() // 30) * (5 + i)
+                screen.blit(cheat_name_image, (cheat_name_x, cheat_name_y))

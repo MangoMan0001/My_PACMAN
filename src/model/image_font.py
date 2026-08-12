@@ -25,12 +25,13 @@ class ImageFont:
         letter_spacing (int): 文字間のスペース幅
         _cache (dict[str, pygame.Surface | None]): 文字画像のキャッシュ
     """
+
     def __init__(
         self,
         image_dir: Path,
         filename_pattern: str = "PAC-FONT_{char}.png",
-        space_width: int = 64,
-        letter_spacing: int = 10
+        space_width: int = 16,
+        letter_spacing: int = 10,
     ) -> None:
         asset_root = Path(__file__).resolve().parents[2] / "data" / "assets"
         self.image_dir = asset_root / image_dir

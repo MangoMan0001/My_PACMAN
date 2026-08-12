@@ -2,6 +2,7 @@
 - [ ] 現在updateのfor event in events:の中と、Pauseシーンのupdateの両方でPause/Resumeの処理を行っている
 Pause中のEnterがデバッグのEnterに吸われてしまうので、削除したらfor event ループの中でPause/Resumeの処理を行うようにする
 """
+
 import pygame
 import time
 from typing import Any
@@ -35,7 +36,10 @@ class GameManager(Scene):
         hud (HUD): ヘッドアップディスプレイを管理するHUDオブジェクト
         is_invincible (bool): 無敵状態かどうかを示すフラグ
     """
-    def __init__(self, config: ConfigModel, screen: pygame.Surface, score_manager: ScoreManager) -> None:
+
+    def __init__(
+        self, config: ConfigModel, screen: pygame.Surface, score_manager: ScoreManager
+    ) -> None:
         super().__init__(config)
         self.game_state: GameState = GameState(config)
 
@@ -53,13 +57,9 @@ class GameManager(Scene):
         self.game_state.ghosts = self.character_manager.ghosts
 
         # Pauseシーンの初期化
-        self.pause_scene: Pause = Pause(config)
-        self.paused: bool = False
-        self.pause_start_time: float = 0.0  # ポーズ開始時刻を保持する変数
+        self.pause_scene: Pause = Pause()
 
         # HUDの初期化
-        # highscoreにどっかからhighscoreを取得する処理いれる
-        # self.hud: HUD = HUD(config, highscore)
         self.hud: HUD = HUD(config, score_manager.get_highscore())
 
         # ゲームの経過時間を管理する変数の初期化
@@ -91,23 +91,23 @@ class GameManager(Scene):
         scene_request = None
 
         # pause時は時間経過を止める
-        if not self.game_state.game_status == 'PAUSE':
+        if self.game_state.game_status != "PAUSE":
             self.game_state.game_timer += self.game_state.dt
 
         # ======== READY ========
-        if self.game_state.game_status == 'READY':
+        if self.game_state.game_status == "READY":
             scene_request = self._update_ready(self.game_state)
 
         # ======== PLAYING ========
-        if self.game_state.game_status == 'PLAYING':
+        if self.game_state.game_status == "PLAYING":
             scene_request = self._update_playing(self.game_state)
 
         # ======== HIT ========
-        if self.game_state.game_status == 'HIT':
+        if self.game_state.game_status == "HIT":
             scene_request = self._update_hit(self.game_state)
 
         # ======== PAUSE ========
-        if self.game_state.game_status == 'PAUSE':
+        if self.game_state.game_status == "PAUSE":
             scene_request = self._update_pause(self.game_state)
             return scene_request
 
@@ -116,30 +116,28 @@ class GameManager(Scene):
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_RETURN:
                     self.game_state.is_cheating = True
-                    print('cheating')
                 if self.game_state.is_cheating:
                     if event.key == pygame.K_1:
-                        print('star')
-                        self.game_state.is_cheat_star = not self.game_state.is_cheat_star
+                        self.game_state.is_cheat_star = (
+                            not self.game_state.is_cheat_star
+                        )
                     if event.key == pygame.K_2:
-                        print('skip')
                         self.game_state.is_cheat_skip = True
                     if event.key == pygame.K_3:
-                        print('froze')
-                        self.game_state.is_cheat_frozen = not self.game_state.is_cheat_frozen
+                        self.game_state.is_cheat_frozen = (
+                            not self.game_state.is_cheat_frozen
+                        )
                     if event.key == pygame.K_4:
-                        print('1up')
                         self.game_state.is_cheat_1up = True
                     if event.key == pygame.K_5:
-                        print('dash')
-                        self.game_state.is_cheat_dash = not self.game_state.is_cheat_dash
+                        self.game_state.is_cheat_dash = (
+                            not self.game_state.is_cheat_dash
+                        )
 
                 # Escapeが押された時PLAYING<->PAUSEを切り替える
                 if event.key == pygame.K_ESCAPE:
-                    if self.game_state.game_status == 'PAUSE':
-                        self.game_state.game_status = 'PLAYING'
-                    elif self.game_state.game_status == 'PLAYING':
-                        self.game_state.game_status = 'PAUSE'
+                    if self.game_state.game_status == "PLAYING":
+                        self.game_state.game_status = "PAUSE"
 
         # -------- cheating --------
         if self.game_state.is_cheating:
@@ -163,7 +161,7 @@ class GameManager(Scene):
         self.item_manager.draw(screen)
         self.character_manager.draw(screen)
         self.hud.draw(screen)
-        if self.game_state.game_status == 'PAUSE':
+        if self.game_state.game_status == "PAUSE":
             self.pause_scene.draw(screen)
 
     def _update_ready(self, game_state: GameState) -> None | tuple[str, Any]:
@@ -186,7 +184,7 @@ class GameManager(Scene):
 
         # ゲーム状態の時間管理　3秒間開始しない
         if 3 < self.game_state.game_timer:
-            self.game_state.game_status = 'PLAYING'
+            self.game_state.game_status = "PLAYING"
             self.game_state.game_timer = 0.0
 
         return None
@@ -206,7 +204,7 @@ class GameManager(Scene):
         # 時間制限処理
         if self.game_state.config.level_max_time < self.game_state.game_timer:
             self.game_state.lives -= 1
-            self.game_state.game_status = 'HIT'
+            self.game_state.game_status = "HIT"
             self.character_manager.hit(self.game_state)
 
         # ゲームオーバー処理 残ライフ
@@ -230,7 +228,7 @@ class GameManager(Scene):
             if ghost.current_mode in (GhostMode.CHASE, GhostMode.SCATTER):
                 if not self.is_invincible:
                     self.game_state.lives -= 1
-                    self.game_state.game_status = 'HIT'
+                    self.game_state.game_status = "HIT"
                     self.character_manager.hit(self.game_state)
             # 捕食時
             elif ghost.current_mode == GhostMode.SCARED:
@@ -258,7 +256,7 @@ class GameManager(Scene):
         # ゲーム状態の時間管理　HIT時の点滅処理
         if self.character_manager.pacman_blinking_time <= 0:
             self.character_manager.reset(self.game_state)
-            self.game_state.game_status = 'READY'
+            self.game_state.game_status = "READY"
             self.game_state.game_timer = 0.0
 
         return None
@@ -275,16 +273,10 @@ class GameManager(Scene):
         """
         action = self.pause_scene.update(game_state.events)
         if action == "RESUME":
-            self.game_state.game_status = 'PLAYING'
+            self.game_state.game_status = "PLAYING"
             return None
         elif action == "RETRY":
             return ("PLAY", None)
-        elif action == "HOW_TO_PLAY":
-            # How to Playのシーンに遷移する処理をここに追加する
-            pass
-        elif action == "CHEAT_MODE":
-            # Cheat ModeのフラグをここでON？HUDの表示も変える
-            pass
         elif action == "QUIT":
             return ("MAIN_MENU", None)
         return None
@@ -320,5 +312,5 @@ class GameManager(Scene):
         self.map.level_up(self.game_state)
         self.item_manager.level_up(self.game_state)
         self.character_manager.level_up(self.game_state)
-        self.game_state.game_status = 'READY'
+        self.game_state.game_status = "READY"
         self.game_state.game_timer = 0.0
