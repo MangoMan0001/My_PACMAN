@@ -31,7 +31,7 @@ class HUD:
 
         # 残機表示用
         asset_root = Path(__file__).resolve().parents[3] / "data" / "assets"
-        life_path = str(asset_root / "Pacman" / "PACMAN_right_32.png")
+        life_path = str(asset_root / "pacman" / "PACMAN_right_32.png")
         self.life_image = pygame.image.load(life_path).convert_alpha()
 
         self.score = 0

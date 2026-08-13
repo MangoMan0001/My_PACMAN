@@ -1,0 +1,29 @@
+=======================================
+          Pac-Man: The Game
+=======================================
+
+[ Objective ]
+Eat all the Pacgums in the maze to advance to the next level.
+Avoid the ghosts! If a ghost catches you, you lose a life.
+Eat a Super-Pacgum (in the corners) to turn the ghosts blue.
+While they are blue, you can eat them for extra points!
+
+[ Controls ]
+- W / A / S / D  : Move Pac-Man
+- ESC            : Pause / Resume / Access Menu
+- ENTER          : Confirm (in menus)
+
+[ Configuration ]
+You can modify the game settings by editing the "config.json"
+file located in the same directory as the executable.
+(e.g., lives, points, max time, level size)
+
+[ Cheat Mode ]
+(For peer-review and testing purposes)
+Press ENTER during gameplay to enable cheat mode.
+Then use the following keys:
+- 1 : Toggle Invincibility (Star mode)
+- 2 : Skip Current Level
+- 3 : Freeze Ghosts
+- 4 : Add 1 Extra Life
+- 5 : Toggle Speed Dash

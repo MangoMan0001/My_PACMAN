@@ -6,3 +6,5 @@ __pycache__
 *.egg-info/
 .mypy_cache
 settings.json
+dist/
+bulid/
