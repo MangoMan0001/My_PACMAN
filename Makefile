@@ -4,11 +4,9 @@
 
 # プロジェクト名とメインスクリプト
 NAME        = pacman
-
 MAIN_DERECTRY = src
 
 # 追加ソース
-
 CONFIG_FILE = config.json
 
 # ==========================================

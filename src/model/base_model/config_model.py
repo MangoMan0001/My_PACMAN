@@ -20,16 +20,16 @@ class LevelModel(BaseModel):
 
 
 DEFAULT_LEVELS = [
-    LevelModel(width=5, height=5),   # レベル1
+    LevelModel(width=7, height=7),   # レベル1
     LevelModel(width=11, height=11),   # レベル2
-    LevelModel(width=15, height=15),   # レベル3
-    LevelModel(width=21, height=21),   # レベル4
-    LevelModel(width=25, height=25),   # レベル5
-    # LevelModel(width=35, height=35),   # レベル6
-    # LevelModel(width=41, height=41),   # レベル7
-    # LevelModel(width=45, height=45),   # レベル8
-    # LevelModel(width=51, height=51),   # レベル9
-    # LevelModel(width=55, height=55),   # レベル10
+    LevelModel(width=11, height=7),   # レベル3
+    LevelModel(width=7, height=15),   # レベル4
+    LevelModel(width=5, height=5),   # レベル5
+    LevelModel(width=15, height=15),   # レベル6
+    LevelModel(width=5, height=7),   # レベル7
+    LevelModel(width=7, height=5),   # レベル8
+    LevelModel(width=25, height=5),   # レベル9
+    LevelModel(width=25, height=25)   # レベル10
 ]
 
 
@@ -52,7 +52,7 @@ class ConfigModel(BaseModel):
     highscore_filename: Path = Field(default=Path("scores.json"),
                                      description="highscore_filename")
 
-    level: list[LevelModel] = Field(default_factory=list,
+    level: list[LevelModel] = Field(default_factory=lambda: list(DEFAULT_LEVELS),
                                     description='map_levels')
 
     lives: int = Field(ge=0,
@@ -142,5 +142,7 @@ class ConfigModel(BaseModel):
         if len(v) < target_length:
             # vが3つなら、DEFAULT_LEVELS[3:10] (レベル4〜10) が補充される
             v.extend(DEFAULT_LEVELS[len(v):target_length])
+        elif target_length < len(v):
+            print('Warning: More than 10 levels provided. Only the first 10 levels will be used.')
 
-        return v
+        return v[:10]
