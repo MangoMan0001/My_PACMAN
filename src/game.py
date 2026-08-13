@@ -79,7 +79,7 @@ class Game:
 
                 elif scene_name == "GAME_CLEAR":
                     # プレイ画面 → ゲームクリア（スコアを渡す）
-                    self.current_scene = GameClear(self.config)
+                    self.current_scene = GameClear(self.config, data, self.score_manager)
             self.screen.blit(self.black_bg, (0, 0))
             self.current_scene.draw(self.screen)
             pygame.display.flip()

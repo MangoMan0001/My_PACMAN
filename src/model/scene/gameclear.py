@@ -1,20 +1,15 @@
-import pygame
-from typing import Any
-
-from src.model.base_model.scene import Scene
 from src.model.base_model.config_model import ConfigModel
+from src.model.base_model.result_scene import ResultScene
+from src.model.score_manager import ScoreManager
 
 
-class GameClear(Scene):
-    def __init__(self, config: ConfigModel):
-        super().__init__(config)
+class GameClear(ResultScene):
+    """ゲームクリア画面のクラス。
 
-    def update(self, events: list[pygame.event.Event]) -> None | tuple[str, Any]:
-        """
-        イベントを処理する。画面遷移が必要な場合はシーン名と受け渡すデータをタプルで返す。
-        何もなければNoneを返す
-        """
-        pass
-
-    def draw(self, screen: pygame.Surface) -> None:
+    Attributes:
+        score (int): プレイヤーのスコア
+        score_manager (ScoreManager): スコアの管理を行うScoreManagerオブジェクト
+    """
+    def __init__(self, config: ConfigModel, score: int, score_manager: ScoreManager):
+        super().__init__(config, score, score_manager, title="GAME_CLEAR")
         pass
