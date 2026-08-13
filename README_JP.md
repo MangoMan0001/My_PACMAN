@@ -1,5 +1,3 @@
-- ディレクトリ構成、最終的な構成に合わせて変更する。  
-
 *This project has been created as part of the 42 curriculum by ayhirose, nsato.*
 
 <table>
@@ -15,7 +13,7 @@
 	Pac-Man
 </h1> <H2>
     Ghosts! More ghosts!
-</H2
+</H2>
 
 ## 📖*目次*
 
@@ -24,7 +22,7 @@
 	2. [操作方法](#1-2-操作方法)
     3. [使用したパッケージ](#1-3-使用したパッケージ)
     4. [📁ディレクトリ構成](#1-4-ディレクトリ構成)
-2. [✅手順](#2-Instructions)
+2. [✅手順](#2-手順)
 	1. [事前準備](#2-1-事前準備)
 	2. [実行方法](#2-2-実行方法)
 	3. [Makefile内各コマンドの使い方](#2-3-makefile内各コマンドの使い方)
@@ -265,7 +263,7 @@ uv run python -m src config.json
 - 例えば1番目のセルは上と左に必ず壁ができるため、9以上の整数になります。  
 - `15`(=四方すべて壁)のセルは不可侵ブロックとして扱い、アイテム配置・経路探索から除外しました。Mapクラスのメソッド、`Map.is_wall()` / `Map.is_moveable()`がこのビットを解釈して壁判定を行います。  
 - 1面は固定シードで生成し、2面以降はランダムに生成されます。  
-- `If the generator fails, you must handle the error cleanly.`という項目があるため、迷路生成失敗時にも安全に処理を終了できるようになっています(なってるよね…?)  
+- `If the generator fails, you must handle the error cleanly.`という項目があるため、迷路生成失敗時にも安全に処理を終了できるようになっています。  
 
 ### 3-4. 実装
 
