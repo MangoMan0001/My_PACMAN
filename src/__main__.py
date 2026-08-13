@@ -84,7 +84,7 @@ def main(config_path: str = 'config.json') -> None:
 
 
 if __name__ == "__main__":
-    try:
+    # try:
         fire.Fire(main)
-    except Exception as e:
-        print(f"error:{e}")
+    # except Exception as e:
+        # print(f"error:{e}")
