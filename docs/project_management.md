@@ -2,254 +2,246 @@
 
 # Project Management — Pac-Man
 
-- **期間**
-    2026-07-16~2026-08-14(W29〜W33、約4.5週間)  
-- **チーム**
-    - ayhirose(GitHub `MangoMan0001`・リポジトリオーナー)  
+- **Period**
+    2026-07-16~2026-08-14(W29–W33, about 4.5 weeks)  
+- **Team**
+    - ayhirose(GitHub `MangoMan0001`, repository owner)  
     - nsato(GitHub `iroha1608`)  
-- **使用ツール**  
+- **Tools used**  
     - GitHub  
-        **Issues**: タスク管理  
-        **Milestones**: バージョン計画  
-        **Pull Request**: レビュー付きマージ  
-        **Projects**: カンバンボード  
-- **実績サマリ**
-    - Issue 35件(Closed 30 / Open 5)  
-    - PR 20件(Merged 19 / Closed-unmerged 1)  
-    - コミット 146(ayhirose 58 / nsato 88)  
+        **Issues**: task management  
+        **Milestones**: version planning  
+        **Pull Request**: reviewed merges  
+        **Projects**: Kanban board  
+- **Actuals summary**
+    - 35 issues(30 closed / 5 open)  
+    - 20 PRs(19 merged / 1 closed-unmerged)  
+    - 146 commits(ayhirose 58 / nsato 88)  
 ---
 
-## 📖*目次*
-1. [タイムライン(ロードマップ・ガント・カンバン)](#1-タイムラインロードマップガントカンバン)
-    1. [マイルストーン](#1-1-マイルストーン)
-    2. [ガント(開発ロードマップ)](#1-2-ガント開発ロードマップ)
-    3. [カンバン(GitHub Projects)](#1-3-カンバンgithub-projects)
-    4. [マージPRの時系列(実績)](#1-4-マージprの時系列実績)
-2. [進捗トラッキング(計画対比)](#2-進捗トラッキング計画対比)
-    1. [マイルストーン計画 対 実績](#2-1-マイルストーン計画-対-実績)
-    2. [作業量の推移(週別コミット)](#2-2-作業量の推移週別コミット)
-    3. [スコープ調整・未完](#2-3-スコープ調整未完)
-3. [プロジェクト分析と選択(技術的意思決定)](#3-プロジェクト分析と選択技術的意思決定)
-4. [リスク分析と軽減策](#4-リスク分析と軽減策)
-5. [チーム体制(担当・意思決定・問題対応)](#5-チーム体制担当意思決定問題対応)
-    1. [メンバーと主担当](#5-1-メンバーと主担当)
-    2. [意思決定プロセス](#5-2-意思決定プロセス)
-    3. [問題対応](#5-3-問題対応)
-6. [受入テスト計画(テスト項目・発見バグ・修正)](#6-受入テスト計画テスト項目発見バグ修正)
-    1. [要件別の受入確認](#6-1-要件別の受入確認)
-    2. [発見・修正したバグ(抜粋)](#6-2-発見修正した-バグ抜粋)
-7. [ブロッカー / 対立の要約](#7-ブロッカー--対立の要約)
+## 📖*Table of Contents*
+1. [Project Timeline (Gantt, Kanban)](#1-project-timeline-gantt-kanban)
+    1. [Milestones](#1-1-milestones)
+    2. [Gantt (Development Roadmap)](#1-2-gantt-development-roadmap)
+    3. [Kanban (GitHub Projects)](#1-3-kanban-github-projects)
+    4. [Merged PR Timeline (Actuals)](#1-4-merged-pr-timeline-actuals)
+2. [Actual Progress Tracking (Compared to the Timeline)](#2-actual-progress-tracking-compared-to-the-timeline)
+    1. [Milestone Plan vs Actual](#2-1-milestone-plan-vs-actual)
+    2. [Workload Trend (Weekly Commits)](#2-2-workload-trend-weekly-commits)
+3. [Project Analysis and Associated Choices (Technical Decisions)](#3-project-analysis-and-associated-choices-technical-decisions)
+4. [Risk Analysis and Possible Mitigation](#4-risk-analysis-and-possible-mitigation)
+5. [Team Organization (Roles, Decision-making, Problem Handling)](#5-team-organization-roles-decision-making-problem-handling)
+    1. [Members and Main Responsibilities](#5-1-members-and-main-responsibilities)
+    2. [Decision-making Process](#5-2-decision-making-process)
+    3. [Problem Handling](#5-3-problem-handling)
+6. [Acceptance Test Plan (Features Tested, Bugs Found and Fixed)](#6-acceptance-test-plan-features-tested-bugs-found-and-fixed)
+    1. [Acceptance Check by Requirement](#6-1-acceptance-check-by-requirement)
+    2. [Bugs Found and Fixed (Excerpt)](#6-2-bugs-found-and-fixed-excerpt)
+7. [Summary of Blocking Points and Conflicts](#7-summary-of-blocking-points-and-conflicts)
 
 
+## 1. Project Timeline (Gantt, Kanban)
 
-## 1. タイムライン(ロードマップ・ガント・カンバン)
+### 1-1. Milestones
 
-### 1-1. マイルストーン
+We staged the work with milestones and linked each issue to one.  
 
-マイルストーンで段階化し各Issueを紐づけて進めました。  
-
-|マイルストーン|ゴール|Issue数|状態|
+|Milestone|Goal|Issues|Status|
 |-|-|-|-|
-|**v0.1 基礎プロトタイプと描画**|画面が立ち上がり、マップとキャラクターが(動かず)表示される|7|完了|
-|**v0.5 ゲームロジックと当たり判定**|キャラクターが動き、ゲームとして機能する|4|完了|
-|**v0.8 AI実装とゲームサイクル**|敵AI実装、スタート~ゲームオーバー/クリアの遷移が繋がる|8|完了|
-|**v1.0 仕上げと提出準備**|提出できる状態にする|5|進行中(3/5)|
+|**v0.1 Prototype and Rendering**|The window comes up and the map and characters are displayed (not yet moving)|7|Done|
+|**v0.5 Game Logic and Collision**|Characters move and it works as a game|4|Done|
+|**v0.8 AI and Game Cycle**|Enemy AI implemented; start~game-over/clear transitions connected|8|Done|
+|**v1.0 Polish and Submission Prep**|Get it into a submittable state|5|Done|
 
-### 1-2. ガント(開発ロードマップ)
+### 1-2. Gantt (Development Roadmap)
 
 ```mermaid
 gantt
-    title Pac-Man 開発ロードマップ (2026-07-16~)
+    title Pac-Man Development Roadmap (2026-07-16~)
     dateFormat YYYY-MM-DD
     axisFormat %m/%d
-    section v0.1 基礎プロトタイプと描画
+    section v0.1 Prototype and Rendering
 
-    環境構築・A-Maze-ing統合 (#4 #6 #21) :done, 2026-07-16, 2026-07-24
-    クラス設計・Map描画 (#5 #7 #27) :done, 2026-07-24, 2026-07-30
-    メインメニュー・キャラ配置 (#14 #26 #8) :done, 2026-07-30, 2026-08-04
-    section v0.5 ゲームロジックと当たり判定
-    Pacman移動・アイテム取得 (#9 #10) :done, 2026-08-04, 2026-08-05
-    Ghost移動・衝突・残機 (#11 #12 #33) :done, 2026-08-04, 2026-08-06
-    section v0.8 AI実装とゲームサイクル
-    ゴースト個別AI・イジケ (#13 #35 #36) :done, 2026-08-06, 2026-08-08
-    ハイスコア (#17 #38) :done, 2026-08-06, 2026-08-07
-    チートモード (#18 #43 #46) :done, 2026-08-08, 2026-08-10
-    HUD・ポーズ・遷移 (#14 #15 #41) :done, 2026-08-08, 2026-08-11
-    難易度・GameClear (#37 #52 #54) :done, 2026-08-11, 2026-08-13
-    section v1.0 仕上げと提出準備
-    バリデーション (#39 #51) :done, 2026-08-11, 2026-08-13
-    パッケージ化・リリーステスト (#20 #55) :done, 2026-08-12, 2026-08-13
-    例外処理 (#47) :active, 2026-08-11, 2026-08-14
-    README・PM文書 (#19) :active, 2026-08-13, 2026-08-15
+    Setup / A-Maze-ing integration (#4 #6 #21) :done, 2026-07-16, 2026-07-24
+    Class design / Map rendering (#5 #7 #27) :done, 2026-07-24, 2026-07-30
+    Main menu / character placement (#14 #26 #8) :done, 2026-07-30, 2026-08-04
+    section v0.5 Game Logic and Collision
+    Pacman movement / item pickup (#9 #10) :done, 2026-08-04, 2026-08-05
+    Ghost movement / collision / lives (#11 #12 #33) :done, 2026-08-04, 2026-08-06
+    section v0.8 AI and Game Cycle
+    Ghost individual AI / frightened (#13 #35 #36) :done, 2026-08-06, 2026-08-08
+    Highscore (#17 #38) :done, 2026-08-06, 2026-08-07
+    Cheat mode (#18 #43 #46) :done, 2026-08-08, 2026-08-10
+    HUD / pause / transitions (#14 #15 #41) :done, 2026-08-08, 2026-08-11
+    Difficulty / GameClear (#37 #52 #54) :done, 2026-08-11, 2026-08-13
+    section v1.0 Polish and Submission Prep
+    Validation (#39 #51) :done, 2026-08-11, 2026-08-13
+    Packaging / release test (#20 #55) :done, 2026-08-12, 2026-08-13
+    Exception handling (#47) :done, 2026-08-11, 2026-08-14
+    README / PM docs (#19) :done, 2026-08-13, 2026-08-15
 ```
 
 ![gantt](./.images/gantt.png)
 
-### 1-3. カンバン(GitHub Projects)
+### 1-3. Kanban (GitHub Projects)
 
-GitHub**Projects**のボードでTodo / In Progress / Doneを運用(Issue #2「管理ボードを作成」で構築)。  
+We ran Todo / In Progress / Done on a GitHub **Projects** board (built in issue #2 "Create the management board").  
 
 ![kanban](./.images/kanban.png)
 
-### 1-4. マージPRの時系列(実績)
+### 1-4. Merged PR Timeline (Actuals)
 
-|PR|マージ日|著者|内容|
+|PR|Merged|Author|Content|
 |-|-|-|-|
-|#1|07-16|nsato|リポジトリ初期設定(.github)|
-|#21|07-24|ayhirose|A-Maze-ing統合・pygame空ウィンドウ|
-|#27|07-30|ayhirose|クラス設計・Map描画|
-|#28/#30|07-30/31|nsato|メインメニュー|
-|#29|07-30|ayhirose|画面サイズ固定化|
-|#31|08-04|ayhirose|キャラ・アイテム配置|
-|#32|08-04|nsato|メインメニュー修正|
-|#33|08-05|ayhirose|ゴースト移動|
-|#36|08-06|nsato|ゴースト個別AI|
-|#38|08-06|ayhirose|ハイスコアシステム|
-|#40|08-08|ayhirose|ゴーストモード管理・チート|
-|#41|08-10|nsato|HUD・ポーズ|
-|#45|08-10|nsato|メインメニュー調整|
-|#46|08-10|ayhirose|チート・ゴースト修正|
-|#50|08-12|nsato|HUD表示調整|
-|#51|08-13|ayhirose|バリデーション・難易度|
-|#54|08-13|ayhirose|GameClear画面|
-|#55|08-13|ayhirose|パッケージ化・リリーステスト|
+|#1|07-16|nsato|Repository initial setup (.github)|
+|#21|07-24|ayhirose|A-Maze-ing integration, empty pygame window|
+|#27|07-30|ayhirose|Class design, Map rendering|
+|#28/#30|07-30/31|nsato|Main menu|
+|#29|07-30|ayhirose|Fixed window size|
+|#31|08-04|ayhirose|Character and item placement|
+|#32|08-04|nsato|Main menu fixes|
+|#33|08-05|ayhirose|Ghost movement|
+|#36|08-06|nsato|Ghost individual AI|
+|#38|08-06|ayhirose|Highscore system|
+|#40|08-08|ayhirose|Ghost mode management, cheat|
+|#41|08-10|nsato|HUD, pause|
+|#45|08-10|nsato|Main menu adjustments|
+|#46|08-10|ayhirose|Cheat, ghost fixes|
+|#50|08-12|nsato|HUD display adjustments|
+|#51|08-13|ayhirose|Validation, difficulty|
+|#54|08-13|ayhirose|GameClear screen|
+|#55|08-13|ayhirose|Packaging, release test|
 
 
-## 2. 進捗トラッキング(計画対比)
+## 2. Actual Progress Tracking (Compared to the Timeline)
 
-### 2-1. マイルストーン計画 対 実績
+### 2-1. Milestone Plan vs Actual
 
-|マイルストーン|計画|実績|差異|
+|Milestone|Plan|Actual|Variance|
 |-|-|-|-|
-|v0.1 基礎プロトタイプ|序盤|07-16~08-04 完了|ほぼ計画通り|
-|v0.5 ゲームロジック|中盤前半|08-04~08-06 完了|計画通り|
-|v0.8 AI・ゲームサイクル|中盤後半|08-06~08-13 完了|機能多く最長フェーズ|
-|v1.0 仕上げ・提出|終盤|08-10~(進行中)|**残 Open: #19 README / #47 例外処理**|
+|v0.1 Prototype|Early|Done 07-16~08-04|Mostly on plan|
+|v0.5 Game Logic|Early-mid|Done 08-04~08-06|On plan|
+|v0.8 AI / Game Cycle|Late-mid|Done 08-06~08-13|Most features; longest phase|
+|v1.0 Polish / Submission|Late|Done 08-10~08-15|On plan|
 
-### 2-2. 作業量の推移(週別コミット)
+### 2-2. Workload Trend (Weekly Commits)
 
-|週|コミット|局面|
+|Week|Commits|Phase|
 |-|-|-|
-|W29(07/13-19)|3|セットアップ|
-|W30(07/20-26)|2|設計中心|
-|W31(07/27-08/02)|32|実装立ち上がり|
-|W32(08/03-09)|**72(ピーク)**|機能実装が集中|
-|W33(08/10-16)|37|調整・仕上げ・文書化|
-
-### 2-3. スコープ調整・未完
-
-- **未着手/保留**
-    #22「maze.txtの読み込み」(方針変更で不要化)、#56「整理整頓」、#57「提出前最終チェック」。
-- **やり直し**
-    PR #49「map resize と name length 修正」は**マージせずClose**(別実装 #51 に統合)。→ §7参照。
-- **残タスク**
-    #19(README・PM文書)、#47(例外処理の実装)。
+|W29(07/13-19)|3|Setup|
+|W30(07/20-26)|2|Design-focused|
+|W31(07/27-08/02)|32|Implementation ramp-up|
+|W32(08/03-09)|**72 (peak)**|Feature implementation concentrated|
+|W33(08/10-16)|37|Adjustment, polish, documentation|
 
 
-## 3. プロジェクト分析と選択(技術的意思決定)
+## 3. Project Analysis and Associated Choices (Technical Decisions)
 
-|論点(課題の制約)|選んだ手段|理由・代替案|
+|Consideration (subject constraint)|Chosen approach|Reason / alternatives|
 |-|-|-|
-|グラフィックは**MLX相当**のみ|`pygame`を**画像貼付`blit`/ピクセル`set_at`/画像ロード/イベント**に限定。文字は`ImageFont`で画像連結|`pygame.draw.*`やAAフォントはMLX非対応で使用不可。|
-|迷路は**自作禁止・割り当てパッケージを使用**|`A-Maze-ing`(`mazegenerator`)を改変せず利用。`.maze`のビットマスク解釈、`perfect=False`|ローダー(`Map`)側が相手I/Fに適合。|
-|**クラッシュ禁止・config更新耐性**|設定/スコアを`pydantic`で検証、不正値はデフォルトへクランプ＋ログ＋続行|未知キー無視・欠落補完が要件。例外はtry/except＋コンテキストマネージャ|
-|ハイスコアの永続化(方式自由)|プロジェクト内**JSON 1ファイル**|依存最小・可読・復旧容易・pydantic相性。外部DBは過剰|
-|ゴーストの追跡(挙動自由)|**BFS最短経路**＋4体の個別性格(Blinky/Pinky/Inky/Clyde)|原作性格を再現しつつ実装単純|
-|再利用可能なアーキテクチャ|`Scene`抽象基底＋`GameManager`中枢＋`GameState`集約|画面追加・状態管理を疎結合に。|
+|Packages to adopt|`Pydantic`|We needed file loading, so we introduced it first.|
+|Graphics limited to **MLX-equivalent**|Limited `pygame` to **image blit `blit` / pixel `set_at` / image loading / events**; text is concatenated glyph images via `ImageFont`|`pygame.draw.*` and AA fonts are not MLX-supported, so they cannot be used.|
+||`Pygame`|We initially planned to use Arcade, which allows modern development, but a PDF update added the requirement that only MiniLibX-equivalent features may be used, so Pygame, which builds more basic drawing logic, was adopted.|
+|Maze must not be self-made; use the assigned package|Use `A-Maze-ing`(`mazegenerator`) without modification; interpret the `.maze` bitmask; `perfect=False`|The loader (`Map`) adapts to the package's interface.|
+|**No crashes; resilient to config edits**|Validate config/score with `pydantic`, clamp invalid values to defaults + log + continue|Ignoring unknown keys and filling missing ones are requirements. Exceptions handled with try/except + context managers.|
+|Highscore persistence (method is free)|A single **JSON file** inside the project|Minimal dependencies, readable, easy to recover, good `pydantic` fit. An external DB is overkill.|
+|Ghost chasing (behavior is free)|**BFS shortest path** + 4 individual personalities (Blinky/Pinky/Inky/Clyde)|Reproduces the original personalities while keeping the implementation simple.|
+|Reusable architecture|`Scene` abstract base + `GameManager` core + `GameState` aggregation|Keeps screen additions and state management loosely coupled.|
 
+**Model design**
+- Because almost all classes share the same methods and arguments, we could prepare a common data class. When designing and adding a new class, the need to feed in and format data from scratch decreased, and the work to divide became clear.
 
-## 4. リスク分析と軽減策
+## 4. Risk Analysis and Possible Mitigation
 
-|リスク|影響|可能性|軽減策|結果/状態|
+|Risk|Impact|Likelihood|Mitigation|Result/Status|
 |-|-|-|-|-|
-|MLX相当制約からの逸脱|要件不適合|中|使用API対応表で事前検証、`draw.*`禁止を徹底|回避|
-|**レビュー時に割り当てA-Maze-ingが再インストール**|迷路が想定と変わる/破綻|中|I/F互換を確認、開発を2.0.2へ寄せMakefileとpyprojectのVersion不一致を解消|対応中|
-|config更新(未知キー/範囲外/欠落)|クラッシュ/挙動不良|高|pydanticクランプ＋ログ＋続行|回避|
-|クラッシュ源(アセット欠落/生成失敗/空スコア)|提出不合格級|中|例外処理・コンテキストマネージャ。**Issue #47 で継続対応**|一部残|
-|デプロイ(Steam/Itch)未了|提出物欠落|中|PyInstaller spec・非公開ビルド(#20/#55で対応)|完了|
-|2人チームのバス係数|属人化|中|PR相互レビューで知識共有|緩和|
+|Deviation from the MLX-equivalent constraint|Non-compliance|Medium|Verify in advance with an API mapping table; strictly forbid `draw.*`|Avoided|
+|Config edits (unknown keys / out of range / missing)|Crash / misbehavior|High|pydantic clamp + log + continue|Avoided|
+|Crash sources (missing assets / generation failure / empty score)|Submission-failing level|Medium|Exception handling, context managers.|Partially remaining|
+|Deployment (Steam/Itch) not done|Missing deliverable|Medium|PyInstaller spec, private build (handled in #20/#55)|Done|
+|Bus factor of a 2-person team|Knowledge silos|Medium|Share knowledge via mutual PR review|Mitigated|
+
+>Asset loading error caused by the difference between Windows (case-insensitive) and Linux/WSL (case-sensitive) (the Pacman vs pacman integration bug) -> unified the naming to eliminate the conflict
 
 
-## 5. チーム体制(担当・意思決定・問題対応)
+## 5. Team Organization (Roles, Decision-making, Problem Handling)
 
-### 5-1. メンバーと主担当
+- Members split a working branch per issue -> review with the other member -> merge into main; work was divided this way.  
+- At review time, the two of us discussed which issue to do next. We each chose a nearby issue derived from the feature we first implemented.  
+- We tentatively set the issues up to release that became visible during model design. Because tasks separated by area at the issue level (floating tasks that don't conflict at merge) were easy to find, there was never a moment where one person's work stalled waiting on the other's, which raised work efficiency.
 
-- **ayhirose(`MangoMan0001`)** — PR 12件 / Issue担当 19件。**基盤・ゲームロジック・仕上げ**が中心
-    - プロジェクト管理ボードの作成
-    - 環境構築/A-Maze-ing統合(#4 #6 #21)
-    - クラス設計/Map描画(#5 #7 #27)
-    - キャラ配置(#8 #31)
-    - ゴースト移動/AI(#12 #33 #13 #36 #40)
-    - ハイスコア(#17 #38)
-    - チート/イジケ(#18 #35 #43 #46)
-    - GameClear(#52 #54)
-    - バリデーション/難易度調整(#37 #39 #51)
-    - バグ修正(#42 #53)
-    - パッケージ化(#20 #55)
+### 5-1. Members and Main Responsibilities
 
-- **nsato(`iroha1608`)** — PR 8件 / Issue担当 7件。**UI・画面系**が中心
-    - メインメニュー(#14 #26 #28 #30 #32 #34 #45)
-    - 文字描画クラス作成
-    - ゲーム進行・UI遷移(#14)
-    - HUD・ポーズ(#15 #41 #50)
-    - How to Play(#44)
-    - ゴースト個別AI(#13 #36)
-    - ドキュメントの作成(#19)
+- **ayhirose(`MangoMan0001`)** — 12 PRs / 19 issues assigned. Centered on **foundation, game logic, polish**
+    - Created the project management board
+    - Setup / A-Maze-ing integration (#4 #6 #21)
+    - Class design / Map rendering (#5 #7 #27)
+    - Character placement (#8 #31)
+    - Ghost movement / AI (#12 #33 #13 #36 #40)
+    - Highscore (#17 #38)
+    - Cheat / frightened (#18 #35 #43 #46)
+    - GameClear (#52 #54)
+    - Validation / difficulty tuning (#37 #39 #51)
+    - Bug fixes (#42 #53)
+    - Packaging (#20 #55)
 
-### 5-2. 意思決定プロセス
+- **nsato(`iroha1608`)** — 8 PRs / 7 issues assigned. Centered on **UI and screens**
+    - Main menu (#14 #26 #28 #30 #32 #34 #45)
+    - Created the text-rendering class
+    - Game progression / UI transitions (#14)
+    - HUD / pause (#15 #41 #50)
+    - How to Play (#44)
+    - Ghost individual AI (#13 #36)
+    - Documentation (#19)
 
-- 立ち上げ時にプロジェクト管理、クラス設計を最優先で実施。  
-- バージョン計画(v0.1〜v1.0 Milestone)でゴールを合意 → 機能を**Issue**化。  
-- 実装は**Issue → `feature/#…`ブランチ → Pull Request → セルフ＋相互レビュー → マージ**のサイクルを回す。  
-- 実装の区切り(PR前後)でメンバー間で相談し、次タスクを分担。  
+### 5-2. Decision-making Process
 
-### 5-3. 問題対応
+- At kickoff, we prioritized project management and class design.  
+- Agreed on goals via version planning (v0.1–v1.0 milestones) -> turned features into **Issues**.  
+- Implementation cycles through **Issue -> `feature/#…` branch -> Pull Request -> self + mutual review -> merge**.  
+- At implementation breakpoints (around PRs), members consulted and divided the next tasks.  
 
-- 不具合は**Issue化して追跡**(例: #42 ゴースト当たり判定/速度、#48 HUD表示、#53 Typo/Level_up上限) → PRで修正。  
-- 方針転換はPRを**Close**(#49)して別実装に統合。  
-- minilibx相当の関数がどこまで含まれるか分からなかったため、色、サイズ、フォント、透明度を変えられるpygameのテキスト描画を使用せずに、あらかじめ用意した文字アセットを使用して画像を貼り付ける方式に転換。  
+### 5-3. Problem Handling
+
+- Defects are **tracked as issues** (e.g. #42 ghost collision/speed, #48 HUD display, #53 typo/Level_up cap) -> fixed via PR.  
+- A change of direction **Closes** the PR (#49) and integrates it into another implementation.  
+- Because we weren't sure how far the minilibx-equivalent functions extend, we switched away from pygame text rendering (which can change color, size, font, and transparency) to a method of pasting images using pre-made character assets.  
 
 
-## 6. 受入テスト計画(テスト項目・発見バグ・修正)
+## 6. Acceptance Test Plan (Features Tested, Bugs Found and Fixed)
 
-### 6-1. 要件別の受入確認
-|PDF要件|テスト観点|結果|根拠|
+- We had a habit of running an AI review before member review. It wasn't intended from the start, but it helped enumerate the items worked on in a branch and analyze the risk of the impact scope.  
+
+### 6-1. Acceptance Check by Requirement
+
+|PDF requirement|Test viewpoint|Result|Evidence|
 |-|-|-|-|
-|config範囲外/欠落値|デフォルトへクランプ＋ログ＋続行|OK|#39 #51|
-|未処理例外でクラッシュしない|主要経路で確認|一部継続(#47)|[[Logs/08-13/04_メイン実装_全体レビュー]]|
-|迷路生成(perfect=False)|1面固定シード、以降ランダム|OK(版整合は要対応)|#6|
-|プレイヤー移動・衝突・残機|壁不可侵・接触で減・中央リスポーン|OK|#9 #11 #12|
-|ゴーストAI(4体・イジケ・逃走)|追跡/逃走/リスポーン|OK|#13 #35 #36 #40|
-|ハイスコア(上位10・名前入力・永続)|起動ロード/終了保存/表示|OK|#17 #38|
-|チートモード(全機能提示)|5種トグル|OK|#18 #43 #46|
-|進行(10レベル・引き継ぎ・ポーズ)|一周プレイ|OK|#14 #15 #52 #54|
-|UI(メニュー/HUD/ポーズ/結果)|各画面|OK|#26 #34 #41 #48|
+|Config out-of-range/missing values|Clamp to default + log + continue|OK|#39 #51|
+|No crash on unhandled exceptions|Checked on main paths|OK|#47|
+|Maze generation (perfect=False)|Fixed seed on level 1, random afterward|OK|#6|
+|Player movement / collision / lives|Walls impassable, decrement on contact, center respawn|OK|#9 #11 #12|
+|Ghost AI (4 ghosts / frightened / flee)|Chase / flee / respawn|OK|#13 #35 #36 #40|
+|Highscore (top 10 / name entry / persistence)|Load on startup / save on end / display|OK|#17 #38|
+|Cheat mode (all features presented)|5 toggles|OK|#18 #43 #46|
+|Progression (10 levels / carry-over / pause)|One full playthrough|OK|#14 #15 #52 #54|
+|UI (menu/HUD/pause/result)|Each screen|OK|#26 #34 #41 #48|
 
-### 6-2. 発見・修正したバグ(抜粋)
-|内容|起票|修正|
+### 6-2. Bugs Found and Fixed (Excerpt)
+
+|Content|Reported|Fixed|
 |-|-|-|
-|Level欠落でクラッシュ / Map Typo / Level_up上限|#53|PR #51・#54系|
-|ゴーストの当たり判定・速度|#42|PR #46|
-|HUD表示の不整合|#48|PR #50|
-|map resize と 名前長(別案)|—|PR #49(Close→#51へ統合)|
-|**例外処理の未整備(残)**|#47|対応中|
+|Crash on missing Level|#53|PR #51, #54 series|
+|Ghost collision / speed|#42|PR #46|
+|Found a bug where the HUD implementation caused infinite level-up and time was not displayed accurately|#48|PR #50|
+|Items could not be picked up when speeding up in cheat mode||Changed the collision condition from an exact match of the character outline's pixel coordinates to whether it lies between the character's center and its outline|
 
-> レビュー記録(詳細な発見バグ・充足マトリクス): [[Logs/08-13/04_メイン実装_全体レビュー]]・[[Logs/08-13/01_PR51_バリデーション難易度_再レビュー]]・[[Logs/08-13/02_PR54_GameClear画面レビュー]]。
 
----
+## 7. Summary of Blocking Points and Conflicts
 
-## 7. ブロッカー / 対立の要約
+- **PR rework (#49)**  
+    We once turned "map resize and name length fix" into a PR, but revisited the approach and **closed it, integrating into #51 (validation/difficulty)**. This avoided double management.
 
-- **PRの手戻り(#49)**  
-    「map resize と name length 修正」を一度PR化したが、方針を見直して**Closeし #51(バリデーション/難易度)に統合**。二重管理を避けた。
+- **Merge-order hazard**  
+    The #51 -> #54 merge order conflicted and was resolved with `fix: post merge main`.
 
-- **マージ順ハザード**  
-    #51 → #54 のマージ順で競合し、`fix: post merge main`(`6943b5d`)で解消。
-
-- **A-Maze-ing のバージョン不一致**  
-    リポジトリ 2.1.0 開発 / レビュー再インストールは 2.0.2。I/Fは同一だが出力差の懸念 → 2.0.2 へ寄せる方針。
-
-- **lint 完全通過が未達**  
-    `src/`に`__init__.py`不足で`mypy`が完走せず、既存エラーが残存(チーム調整中)。
-- **提出前の残タスク**  
-    #19(README・PM文書)、#47(例外処理)、#56(整理整頓)、#57(最終チェック)。
+- Because we basically divided work by feature, conflicts almost never occurred. Once, by mistake, running git stash pop outside the working branch wiped the working branch's changes and caused a conflict, but we handled it with the IDE's features.  
