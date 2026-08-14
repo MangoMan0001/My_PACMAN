@@ -1,4 +1,5 @@
 import pygame
+from pathlib import Path
 
 from src.model.game_state import GameState
 from src.model.base_model.ghost import Ghost, GhostMode
@@ -19,10 +20,11 @@ class Pinky(Ghost):
         super().__init__(x, y, px, py, speed, color, points)
         self.direction = Direction.LEFT
 
+        asset_root = Path(__file__).resolve().parents[3] / "data" / "assets"
         for direction in Direction:
             for freme in [0, 1]:
                 key = f"{direction}_{freme}"
-                self.images[key] = pygame.image.load(f"data/assets/ghost/ghost_pinky_{key}.png")
+                self.images[key] = pygame.image.load(f"{asset_root}/ghost/ghost_pinky_{key}.png")
 
     def level_up(self, game_state: GameState) -> None:
         """クリア後のレベルアップ処理。

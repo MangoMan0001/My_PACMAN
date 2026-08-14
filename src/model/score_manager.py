@@ -26,7 +26,8 @@ class ScoreManager():
         scores (list[dict[str, str | int]]): スコアのリスト
     """
     def __init__(self, config: ConfigModel):
-        self.file_path: Path = Path('data/score') / config.highscore_filename.name
+        self.score_root = Path(__file__).resolve().parents[3] / "data" / "score"
+        self.file_path: Path = Path(self.score_root) / config.highscore_filename.name
         self.scores: list[dict[str, str | int]] = [{'name': 'No One', 'score': 0}]
 
         # 既にファイルがある場合読み込む
@@ -85,7 +86,7 @@ class ScoreManager():
         """
         try:
             # data/scoreフォルダを生成
-            os.makedirs("data/score", exist_ok=True)
+            os.makedirs(self.score_root, exist_ok=True)
             with open(self.file_path, 'w', encoding='utf-8') as f:
                 json.dump(self.scores, f, indent=4)
         except OSError as e:

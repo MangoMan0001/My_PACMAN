@@ -24,9 +24,9 @@ install: ## 仮想環境を作成し、依存関係をインストールする
 	@echo "Creating virtual environment..."
 	@echo "Installing dependencies..."
 	@uv sync
-	@mkdir -p data/map
-	@wget https://cdn.intra.42.fr/document/document/54483/mazegenerator-00001-py3-none-any.whl
-	@mv mazegenerator-00001-py3-none-any.whl data/map
+# 	@mkdir -p data/map
+# 	@wget https://cdn.intra.42.fr/document/document/54483/mazegenerator-00001-py3-none-any.whl
+# 	@mv mazegenerator-00001-py3-none-any.whl data/map
 	@echo "Setup complete! Run 'make run' to start."
 
 # ------------------------------------------
@@ -72,7 +72,6 @@ fclean: clean ## cleanに加えて仮想環境も削除
 	@echo "Full Cleaning up..."
 	@rm -rf .venv
 	@rm -rf ~/.cache/huggingface/hub/
-	@rm -rf data
 	@echo "Full Clean complete."
 
 re: fclean all
