@@ -2,6 +2,7 @@ import pygame
 from collections import deque
 from abc import abstractmethod
 from enum import Enum, auto
+from pathlib import Path
 
 from .character import Character
 from src.model.game_state import GameState
@@ -76,13 +77,14 @@ class Ghost(Character):
 
         self.space: int = self.size // 2
 
+        asset_root = Path(__file__).resolve().parents[3] / "data" / "assets"
         self.images: dict[str, pygame.Surface] = {}
         for direction in Direction:
             for freme in [0, 1]:
                 key = f"eye_{direction}"
-                self.images[key] = pygame.image.load(f"data/assets/ghost/eyes/{key}.png")
+                self.images[key] = pygame.image.load(f"{asset_root}/ghost/eyes/{key}.png")
                 key = f"scared_{freme}"
-                self.images[key] = pygame.image.load(f"data/assets/ghost/ghost_{key}.png")
+                self.images[key] = pygame.image.load(f"{asset_root}/ghost/ghost_{key}.png")
 
         self.frame: int = 1
         self.anim_timer: float = 0.0

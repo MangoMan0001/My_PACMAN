@@ -1,4 +1,5 @@
 import pygame
+from pathlib import Path
 
 from src.model.game_state import GameState
 from src.model.map import Map
@@ -35,12 +36,13 @@ class Pacman(Character):
 
         self.space: int = self.size // 2
 
-        self.img_closed = pygame.image.load('data/assets/pacman/pacman_closed.png').convert_alpha()
+        asset_root = Path(__file__).resolve().parents[3] / "data" / "assets"
+        self.img_closed = pygame.image.load(str(asset_root / "pacman" / "pacman_closed.png")).convert_alpha()
         self.img_open = {
-            Direction.UP: pygame.image.load('data/assets/pacman/pacman_open_up.png').convert_alpha(),
-            Direction.RIGHT: pygame.image.load('data/assets/pacman/pacman_open_right.png').convert_alpha(),
-            Direction.DOWN: pygame.image.load('data/assets/pacman/pacman_open_down.png').convert_alpha(),
-            Direction.LEFT: pygame.image.load('data/assets/pacman/pacman_open_left.png').convert_alpha()
+            Direction.UP: pygame.image.load(str(asset_root / "pacman" / "pacman_open_up.png")).convert_alpha(),
+            Direction.RIGHT: pygame.image.load(str(asset_root / "pacman" / "pacman_open_right.png")).convert_alpha(),
+            Direction.DOWN: pygame.image.load(str(asset_root / "pacman" / "pacman_open_down.png")).convert_alpha(),
+            Direction.LEFT: pygame.image.load(str(asset_root / "pacman" / "pacman_open_left.png")).convert_alpha()
         }
 
         self.is_mouth_opne: bool = False
