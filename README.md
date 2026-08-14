@@ -430,7 +430,7 @@ sequenceDiagram
 This is a team project, developed by splitting tasks per feature and reviewing them using GitHub `Issue` / `Pull Request` / `Projects`.  
 Before merging, we did self-review and peer review among members.  
 We also discussed among members at appropriate times — such as before/after opening pull requests, or when a piece of work reached a milestone — to decide each person's next task.  
-Detailed documents such as timeline, risk analysis, team roles, and acceptance tests are collected in **[`docs/`](docs/)**(the project management directory).
+Detailed documents such as timeline, risk analysis, team roles, and acceptance tests are collected in [`docs/`](docs/project_management.md)(the project management directory).
 
 
 ## 4. Resources
