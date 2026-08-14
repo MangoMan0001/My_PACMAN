@@ -33,6 +33,7 @@
 	4. [Implementation](#3-4-implementation)
 	5. [General Software Architecture](#3-5-general-software-architecture)
 	6. [Project Management](#3-6-project-management)
+	7. [Retrospective (What Went Well / What to Improve)](#3-7-retrospective-what-went-well-and-what-to-improve-next-time)
 4. [🌈Resources](#4-resources)
 	1. [References](#4-1-references)
 	2. [AI Usage](#4-2-ai-usage)
@@ -431,6 +432,42 @@ This is a team project, developed by splitting tasks per feature and reviewing t
 Before merging, we did self-review and peer review among members.  
 We also discussed among members at appropriate times — such as before/after opening pull requests, or when a piece of work reached a milestone — to decide each person's next task.  
 Detailed documents such as timeline, risk analysis, team roles, and acceptance tests are collected in [`docs/`](docs/project_management.md)(the project management directory).
+
+### 3-7. Retrospective: What Went Well and What to Improve Next Time
+
+#### ayhirose
+
+**What went well**
+- I'm no longer afraid of Git, which I'm really grateful for. Experiencing issues, pull requests, and merges greatly sharpened my sense of how to run a team project.  
+- There were no major reworks after the model design. There were a few argument changes, but the basic OOP design of inheriting objects never wavered.  
+
+**What to improve next time**
+- Build the habit of splitting commits. It makes reviewing easier, so I want to keep it in mind.  
+- I want to find a lightweight way to divide work within the same class.  
+
+#### nsato
+
+**What went well**
+- Being able to work as a team while properly using Git, GitHub issues, pull requests, Projects, Wiki, and so on for the first time was a great learning experience. I want to bring it into my solo work too.  
+- Because my teammate did a thorough class design at the start, it was easy to divide work by feature and very easy to make progress. I'm grateful.  
+- Thanks to the two points above, I could work on the whole project without stress.  
+- Producing a game as the final deliverable, and working on it as a team rather than alone, was itself a very good experience.  
+- I got to learn approaches different from my own, which was a good reference, pydantic in particular.  
+
+**What to improve next time**
+- On the team  
+    - I was worried I leaned on my teammate too much and that the task load became unbalanced. Apart from the team's implementation schedule, I should have set my own personal implementation target dates and done project management on myself. I want to apply this next time.  
+- On design  
+    - I learned that, depending on the design, a project becomes much easier to run: you can gauge the amount of tasks and plan a schedule, it's clear where to start, the code and directory structure stay clean, and work is easy to divide in a team. I want to learn this deliberately.  
+- On the project  
+    - In implementing Pac-Man there was a lot of room to go deeper, such as how faithfully to follow the original in spec and features, whether to keep it minimal, hidden commands, and elaborate rendering. I'd like to implement those too if there is time. That said, this time I think completing a deliverable as part of the assignment is what matters, so I'm glad there was a clear stopping point.  
+- On Git / GitHub features  
+    - I want to master issues, pull requests, Projects, Wiki, and the like. There is apparently something called Worktree, and I want to use that too.  
+- On reviewing  
+    - I want to organize my review method and flow. I will create a template for AI-assisted review.  
+- On things beyond coding skills  
+    - Gantt charts, schedule management, task management, design, architecture, requirements definition, functional and non-functional requirements, and frameworks too: there is a lot in the pre-implementation knowledge area where I can't tell the differences or how to proceed. I don't know what to study and acquire, or where to start and how to practice. It was a good experience to see how much there is to learn beyond coding skills, and how much I still lack.  
+    - I want to make more use of Obsidian and Anki for the learning and work above.  
 
 
 ## 4. Resources
