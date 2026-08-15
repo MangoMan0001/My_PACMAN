@@ -1,3 +1,5 @@
+"""Pacmanゲームを起動するためのスクリプト."""
+
 import fire
 from pathlib import Path
 
@@ -5,8 +7,8 @@ from src.game import Game
 from src.model.base_model.config_model import ConfigModel
 
 
-def load_config(filepath: str) -> ConfigModel:
-    """config.jsonを読み込む関数。
+def load_config(filepath: str) -> ConfigModel | None:
+    """config.jsonを読み込む関数.
 
     Args:
         filepath (str): config.jsonのパス
@@ -26,10 +28,11 @@ def load_config(filepath: str) -> ConfigModel:
         return ConfigModel.model_validate_json(clean_json_str)
     except Exception as e:
         print(e)
+        return None
 
 
 def main(config_path: str = 'config.json') -> None:
-    """ゲームを起動する関数。
+    """ゲームを起動する関数.
 
     Args:
         config_path (str, optional): config.jsonのパス. デフォルト値は 'config.json'.
@@ -40,6 +43,8 @@ def main(config_path: str = 'config.json') -> None:
         print('cannot find config.json')
 
     config_json = load_config(config_path)
+    if config_json is None:
+        return
 
     Game(config_json).run()
 

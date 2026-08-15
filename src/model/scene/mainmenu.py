@@ -1,4 +1,4 @@
-"""ゲーム開始後、ゲーム中の特定の動作で表示するタイトル画面のシーン。
+"""ゲーム開始後、ゲーム中の特定の動作で表示するタイトル画面のシーン.
 
 Todo:
     - [ ] 隠しコマンドの実装。
@@ -16,7 +16,7 @@ from src.model.scene.how_to_play import HowToPlay
 
 
 class MainMenu(Scene):
-    """タイトル画面のシーン。
+    """タイトル画面のシーン.
 
     Args:
         config (ConfigModel): 設定モデル。
@@ -44,6 +44,7 @@ class MainMenu(Scene):
     CURSOR_SPACE = 30  # カーソルとメニュー項目の間隔
 
     def __init__(self, config: ConfigModel, score_manager: ScoreManager) -> None:
+        """MainMenuクラスのコンストラクタ."""
         super().__init__(config)
         self.score_manager = score_manager
         self.scores = self.score_manager.get_sorted_score()
@@ -83,7 +84,7 @@ class MainMenu(Scene):
         self.showing_how_to_play = False
 
     def update(self, events: list[pygame.event.Event]) -> None | tuple[str, Any]:
-        """選択されたメニュー項目をアクティブにする。
+        """選択されたメニュー項目をアクティブにする.
 
         - SPACEキーでゲーム開始
         - 上下(w, s)キーでメニュー項目の選択
@@ -128,19 +129,19 @@ class MainMenu(Scene):
         return None
 
     def _draw_title(self, screen: pygame.Surface, screen_x: int) -> None:
-        """タイトルは画面の中央かつ一番上に表示する"""
+        """タイトルは画面の中央かつ一番上に表示する."""
         title_x = (screen_x - self.title_image.get_width()) // 2
         title_y = 0
         screen.blit(self.title_image, (title_x, title_y))
 
     def _draw_info(self, screen: pygame.Surface, screen_x: int, screen_y: int) -> None:
-        """Push SPACE TO PLAYのインフォは画面の中央かつ下に表示する"""
+        """Push SPACE TO PLAYのインフォは画面の中央かつ下に表示する."""
         info_x = (screen_x - self.info_image.get_width()) // 2
         info_y = (screen_y // 30) * 25
         screen.blit(self.info_image, (info_x, info_y))
 
     def _draw_score(self, screen: pygame.Surface, x: int, y: int) -> None:
-        """スコアの描画
+        """スコアの描画.
 
         Args:
             screen (pygame.Surface): 描画先のSurface。
@@ -176,7 +177,7 @@ class MainMenu(Scene):
     def _draw_menu_item(
         self, screen: pygame.Surface, screen_x: int, screen_y: int
     ) -> None:
-        """メニュー項目の描画。
+        """メニュー項目の描画.
 
         画面の中央にメニュー項目を描画し、選択中の項目にはカーソルを表示する。
 
@@ -202,7 +203,7 @@ class MainMenu(Scene):
                 screen.blit(self.cursor_image, (cursor_x, cursor_y))
 
     def draw(self, screen: pygame.Surface) -> None:
-        """タイトル画面の描画。
+        """タイトル画面の描画.
 
         タイトル、インフォ、スコアを描画する。
         スペースキーが押されたらゲームを開始する。

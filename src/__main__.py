@@ -1,3 +1,4 @@
+"""Pacmanゲームを起動するためのスクリプト."""
 import fire
 import json
 from pathlib import Path
@@ -8,7 +9,7 @@ from src.model.base_model.config_model import ConfigModel
 
 
 def load_config(filepath: str) -> ConfigModel:
-    """config.jsonを読み込む関数。
+    """config.jsonを読み込む関数.
 
     Args:
         filepath (str): config.jsonのパス
@@ -68,7 +69,7 @@ def load_config(filepath: str) -> ConfigModel:
 
 
 def main(config_path: str = 'config.json') -> None:
-    """ゲームを起動する関数。
+    """ゲームを起動する関数.
 
     Args:
         config_path (str, optional): config.jsonのパス. デフォルト値は 'config.json'.

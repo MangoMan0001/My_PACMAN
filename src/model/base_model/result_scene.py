@@ -1,3 +1,4 @@
+"""リザルトシーン基底クラス."""
 import pygame
 from typing import Any
 from pathlib import Path
@@ -9,7 +10,7 @@ from src.model.score_manager import ScoreManager
 
 
 class ResultScene(Scene):
-    """リザルト画面の基底クラス。
+    """リザルト画面の基底クラス.
 
     Attributes:
         score (int): プレイヤーのスコア
@@ -25,6 +26,7 @@ class ResultScene(Scene):
         name_img (pygame.Surface): プレイヤー名のテキスト画像
     """
     def __init__(self, config: ConfigModel, score: int, score_manager: ScoreManager, title: str):
+        """ResultSceneクラスのコンストラクタ."""
         super().__init__(config)
         self.score: int = score
         self.score_manager: ScoreManager = score_manager
@@ -49,7 +51,7 @@ class ResultScene(Scene):
         self.main_menu_img = self.sub_title_font.render_text(main_menu_text)
 
     def update(self, events: list[pygame.event.Event]) -> None | tuple[str, Any]:
-        """リザルト画面の更新を行う関数。
+        """リザルト画面の更新を行う関数.
 
         Args:
             events (list[pygame.event.Event]): pygameのイベントリスト。
@@ -85,7 +87,7 @@ class ResultScene(Scene):
         return None
 
     def draw(self, screen: pygame.Surface) -> None:
-        """リザルト画面の描画を行う関数。
+        """リザルト画面の描画を行う関数.
 
         Args:
             screen (pygame.Surface): 描画対象のSurfaceオブジェクト。
@@ -119,7 +121,7 @@ class ResultScene(Scene):
 #    Private Methods
 
     def _unicode(self, key_code: int, is_shift: bool) -> str:
-        """キーコードを文字に変換する関数。
+        """キーコードを文字に変換する関数.
 
         Args:
             key_code (int): pygameのキーコード。

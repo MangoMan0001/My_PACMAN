@@ -1,3 +1,4 @@
+"""inkyクラス."""
 import pygame
 from pathlib import Path
 
@@ -9,7 +10,7 @@ from src.model.character.blinky import Blinky
 
 
 class Inky(Ghost):
-    """GhostのInkyを表すクラス。
+    """GhostのInkyを表すクラス.
 
     Inky、アオスケ、きまぐれ、bashful、恥ずかしがりのキャラクター。
 
@@ -18,6 +19,7 @@ class Inky(Ghost):
         images (dict[str, pygame.Surface]): キャラクターの画像を格納する辞書。
     """
     def __init__(self, x: int, y: int, px: int, py: int, speed: int, color: tuple[int, int, int], points: int) -> None:
+        """inkyクラスのコンストラクタ."""
         super().__init__(x, y, px, py, speed, color, points)
         self.direction = Direction.RIGHT
 
@@ -28,7 +30,7 @@ class Inky(Ghost):
                 self.images[key] = pygame.image.load(f"{asset_root}/ghost/ghost_inky_{key}.png")
 
     def level_up(self, game_state: GameState) -> None:
-        """クリア後のレベルアップ処理。
+        """クリア後のレベルアップ処理.
 
         Args:
             game_state (GameState): ゲームの状態を保持するGameStateオブジェクト。
@@ -46,7 +48,7 @@ class Inky(Ghost):
         self.is_drawable = True
 
     def _get_target(self, game_state: GameState) -> tuple[int, int]:
-        """ゴーストの移動目標座標を取得する。
+        """ゴーストの移動目標座標を取得する.
 
         パックマンの向きから2個先の位置と、赤ゴースト（Blinky）の位置の両方を使って計算する。
 

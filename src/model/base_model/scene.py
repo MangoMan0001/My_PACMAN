@@ -1,3 +1,4 @@
+"""ゲームのシーンの基底クラスを定義するモジュール."""
 import pygame
 from abc import ABC, abstractmethod
 from typing import Any
@@ -13,11 +14,12 @@ class Scene(ABC):
         config (ConfigModel): ゲームの設定を保持するオブジェクト
     """
     def __init__(self, config: ConfigModel):
+        """Sceneクラスのコンストラクタ."""
         self.config = config
 
     @abstractmethod
     def update(self, events: list[pygame.event.Event]) -> None | tuple[str, Any]:
-        """毎フレーム呼ばれる処理。イベントを処理し、必要に応じて画面遷移を行う。
+        """毎フレーム呼ばれる処理。イベントを処理し、必要に応じて画面遷移を行う.
 
         Args:
             events (list[pygame.event.Event]): pygameのイベントリスト。
@@ -32,7 +34,7 @@ class Scene(ABC):
 
     @abstractmethod
     def draw(self, screen: pygame.Surface) -> None:
-        """毎フレーム呼ばれる描画処理。画面に描画する。
+        """毎フレーム呼ばれる描画処理。画面に描画する.
 
         Args:
             screen (pygame.Surface): 描画対象のSurfaceオブジェクト
