@@ -31,7 +31,8 @@ class Map(Entity):
         self.x: int = game_state.config.level[0].width
         self.y: int = game_state.config.level[0].height
 
-        self.generater: MazeGenerator = MazeGenerator((self.x, self.y), perfect=False, seed=42)
+        self.generater: MazeGenerator = MazeGenerator((self.x, self.y), perfect=False,
+                                                      seed=game_state.config.seed)
 
         self.wall_map: list[list[int]] = self.generater.maze  # 各要素16進数で各方向の壁の有無がリストで記録される
 
@@ -99,7 +100,7 @@ class Map(Entity):
         self.x = game_state.config.level[game_state.current_level].width
         self.y = game_state.config.level[game_state.current_level].height
 
-        self.generater = MazeGenerator((self.x, self.y), perfect=False, seed=game_state.config.seed)
+        self.generater = MazeGenerator((self.x, self.y), perfect=False)
 
         self.wall_map = self.generater.maze
 
