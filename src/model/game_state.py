@@ -33,7 +33,7 @@ class GameState:
         game_timer (float): 進行中ゲームの経過時間
     """
     def __init__(self, config: ConfigModel):
-
+        """GameStateクラスのコンストラクタ."""
         # === OBJECT ===
         self.config: ConfigModel = config           # configオブジェクト
         self.map: Map | None = None                 # Mapオブジェクト

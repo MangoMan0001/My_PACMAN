@@ -21,6 +21,7 @@ class Character(Entity):
         direction (Direction): キャラクターの進行方向
     """
     def __init__(self, x: int, y: int, speed: int):
+        """characterクラスのコンストラクタ."""
         super().__init__(x, y)
         self.speed: int = speed
         self.direction: Direction = Direction.LEFT  # 現在の進行方向

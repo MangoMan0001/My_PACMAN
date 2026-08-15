@@ -27,6 +27,7 @@ class Game:
         score_manager (ScoreManager): スコア管理を行うScoreManagerオブジェクト
     """
     def __init__(self, config: ConfigModel) -> None:
+        """gameクラスのコンストラクタ."""
         pygame.init()
         self.config = config
         self.width = 1920

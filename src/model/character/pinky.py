@@ -18,6 +18,7 @@ class Pinky(Ghost):
         images (dict[str, pygame.Surface]): キャラクターの画像を格納する辞書。
     """
     def __init__(self, x: int, y: int, px: int, py: int, speed: int, color: tuple[int, int, int], points: int) -> None:
+        """pinkyクラスのコンストラクタ."""
         super().__init__(x, y, px, py, speed, color, points)
         self.direction = Direction.LEFT
 

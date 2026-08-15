@@ -28,6 +28,7 @@ class Pacman(Character):
         is_dash (bool): パックマンがダッシュ状態かどうかのフラグ
     """
     def __init__(self, x: int, y: int, px: int,  py: int,  speed: int):
+        """pacgumクラスのコンストラクタ."""
         super().__init__(x, y, speed)
         self.direction: Direction = Direction.LEFT  # 現在の進行方向
         self.next_direction: Direction = Direction.LEFT

@@ -14,6 +14,7 @@ class Entity(ABC):
         y (int): セル単位でのy座標
     """
     def __init__(self, x: int, y: int):
+        """Entityクラスのコンストラクタ."""
         self.x = x
         self.y = y
 

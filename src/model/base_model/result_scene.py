@@ -26,6 +26,7 @@ class ResultScene(Scene):
         name_img (pygame.Surface): プレイヤー名のテキスト画像
     """
     def __init__(self, config: ConfigModel, score: int, score_manager: ScoreManager, title: str):
+        """ResultSceneクラスのコンストラクタ."""
         super().__init__(config)
         self.score: int = score
         self.score_manager: ScoreManager = score_manager

@@ -22,6 +22,7 @@ class CharacterManager:
         is_frozen (bool): ゴーストが凍結しているかどうかのフラグ
     """
     def __init__(self, game_state: GameState):
+        """characer_managerクラスのコンストラクタ."""
         assert game_state.map is not None
         map: Map = game_state.map
         speed = 2

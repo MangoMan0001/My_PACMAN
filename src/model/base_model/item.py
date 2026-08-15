@@ -19,6 +19,7 @@ class Item(Entity):
         is_eaten (bool): アイテムが食べられたかどうかを示すフラグ
     """
     def __init__(self, x: int, y: int, points: int, color: tuple[int, int, int], size: int) -> None:
+        """Itemクラスのコンストラクタ."""
         super().__init__(x, y)
         self.px: int = 0
         self.py: int = 0

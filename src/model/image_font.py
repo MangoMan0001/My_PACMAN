@@ -33,6 +33,7 @@ class ImageFont:
         space_width: int = 16,
         letter_spacing: int = 10,
     ) -> None:
+        """image_fontクラスのコンストラクタ."""
         asset_root = Path(__file__).resolve().parents[2] / "data" / "assets"
         self.image_dir = asset_root / image_dir
         self.filename_pattern = filename_pattern

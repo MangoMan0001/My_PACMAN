@@ -56,6 +56,7 @@ class Ghost(Character):
     """
 
     def __init__(self, x: int, y: int, px: int, py: int, speed: int, color: tuple[int, int, int], points: int) -> None:
+        """Ghostクラスのコンストラクタ."""
         super().__init__(x, y, speed)
 
         self.points: int = points
