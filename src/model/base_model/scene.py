@@ -1,4 +1,4 @@
-"""シーン基底クラス"""
+"""ゲームのシーンの基底クラスを定義するモジュール."""
 import pygame
 from abc import ABC, abstractmethod
 from typing import Any
@@ -14,6 +14,7 @@ class Scene(ABC):
         config (ConfigModel): ゲームの設定を保持するオブジェクト
     """
     def __init__(self, config: ConfigModel):
+        """Sceneクラスのコンストラクタ."""
         self.config = config
 
     @abstractmethod
