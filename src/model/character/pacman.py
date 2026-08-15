@@ -138,7 +138,7 @@ class Pacman(Character):
         self.x, self.y = map.init_area_pacman()
         self.px, self.py = map.cell_center(self.x, self.y)
         self.direction = Direction.LEFT
-        self.next_direction: Direction = Direction.LEFT
+        self.next_direction = Direction.LEFT
         self.is_moving = False
 
     def get_pos_cell(self) -> tuple[int, int]:
