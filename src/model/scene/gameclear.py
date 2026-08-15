@@ -13,5 +13,5 @@ class GameClear(ResultScene):
     """
     def __init__(self, config: ConfigModel, score: int, score_manager: ScoreManager):
         """GameClearクラスのコンストラクタ."""
-        super().__init__(config, score, score_manager, title="GAME_CLEAR")
+        super().__init__(config, score, score_manager, title="GAME-CLEAR")
         pass

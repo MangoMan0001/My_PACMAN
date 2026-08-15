@@ -13,5 +13,5 @@ class GameOver(ResultScene):
     """
     def __init__(self, config: ConfigModel, score: int, score_manager: ScoreManager):
         """GameOverクラスのコンストラクタ."""
-        super().__init__(config, score, score_manager, title="GAME_OVER")
+        super().__init__(config, score, score_manager, title="GAME-OVER")
         pass
