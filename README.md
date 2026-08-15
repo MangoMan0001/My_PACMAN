@@ -483,16 +483,8 @@ Detailed documents such as timeline, risk analysis, team roles, and acceptance t
 
 ### 4-2. AI Usage
 
-#### Team
-
 - Copilot  
     Review when submitting pull requests on GitHub.  
-
-#### ayhirose
-
-#### nsato
-
-- Copilot  
     - Ghost-text suggestions via the VSCode extension.  
 - Claude  
     - Personal review before submitting pull requests during implementation.  
