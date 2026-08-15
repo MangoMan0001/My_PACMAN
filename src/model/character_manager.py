@@ -1,3 +1,4 @@
+"""キャラクターマネージャークラス."""
 import pygame
 
 from src.model.base_model.ghost import Ghost, GhostMode
@@ -11,7 +12,7 @@ from src.model.character.pinky import Pinky
 
 
 class CharacterManager:
-    """ゲーム内のキャラクターを管理するクラス。
+    """ゲーム内のキャラクターを管理するクラス.
 
     Attributes:
         pacman (Pacman): Pacmanのインスタンス
@@ -48,7 +49,7 @@ class CharacterManager:
         self.is_frozen: bool = False
 
     def update(self, game_state: GameState) -> None:
-        """自分が持っている全キャラクターを更新する。
+        """自分が持っている全キャラクターを更新する.
 
         Args:
             game_state (GameState): ゲームの状態を保持するGameStateオブジェクト
@@ -77,7 +78,7 @@ class CharacterManager:
             ghost.update(game_state)
 
     def draw(self, screen: pygame.Surface) -> None:
-        """自分が持っている全キャラクターを描画する。
+        """自分が持っている全キャラクターを描画する.
 
         Args:
             screen (pygame.Surface): 描画対象のSurfaceオブジェクト
@@ -89,7 +90,7 @@ class CharacterManager:
             ghost.draw(screen)
 
     def level_up(self, game_state: GameState) -> None:
-        """クリア後のレベルアップ処理
+        """クリア後のレベルアップ処理.
 
         Args:
             game_state (GameState): ゲームの状態を保持するGameStateオブジェクト
@@ -116,7 +117,7 @@ class CharacterManager:
         return self.pacman.get_pos_pixel()
 
     def is_hit(self, game_state: GameState) -> None | Ghost:
-        """Pacmanがゴーストに当たったか判定する。
+        """Pacmanがゴーストに当たったか判定する.
 
         Args:
             game_state (GameState): ゲームの状態を保持するGameStateオブジェクト
@@ -149,7 +150,7 @@ class CharacterManager:
         return None
 
     def hit(self, game_state: GameState) -> None:
-        """Pacmanがゴーストに当たった場合の処理。
+        """Pacmanがゴーストに当たった場合の処理.
 
         Args:
             game_state (GameState): ゲームの状態を保持するGameStateオブジェクト
@@ -157,7 +158,7 @@ class CharacterManager:
         self.pacman_blinking_time = 1.5
 
     def reset(self, game_state: GameState) -> None:
-        """ゲームの状態をリセットする。
+        """ゲームの状態をリセットする.
 
         Args:
             game_state (GameState): ゲームの状態を保持するGameStateオブジェクト
@@ -168,13 +169,13 @@ class CharacterManager:
             ghost.level_up(game_state)
 
     def be_scared(self) -> None:
-        """ゴーストをいじけ状態にする関数。"""
+        """ゴーストをいじけ状態にする関数."""
         for ghost in self.ghosts:
             if ghost.current_mode not in (GhostMode.EATEN, GhostMode.READY):
                 ghost.be_scared()
 
     def is_eaten(self) -> bool:
-        """ゴーストが全て捕食後状態か判定する。
+        """ゴーストが全て捕食後状態か判定する.
 
         Returns:
             bool: ゴーストが全て捕食後状態の場合はTrue、そうでない場合はFalse

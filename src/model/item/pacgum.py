@@ -1,3 +1,4 @@
+"""パックガムクラス"""
 from src.model.base_model.item import Item
 
 

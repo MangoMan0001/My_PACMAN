@@ -1,4 +1,4 @@
-"""data/assetsから文字画像を読み込んで文字列を描画するためのクラス。
+"""data/assetsから文字画像を読み込んで文字列を描画するためのクラス.
 
 描画する文字のフォントファイル名は"*{char}*.png"である必要がある。
 imagefont(ディレクトリ名、ファイル名のパターン)で初期化し、render_text(文字列)で
@@ -13,7 +13,7 @@ from pathlib import Path
 
 
 class ImageFont:
-    """文字画像を読み込み、文字列を1枚の画像(Surface)として合成するクラス。
+    """文字画像を読み込み、文字列を1枚の画像(Surface)として合成するクラス.
 
     文字画像は、事前に大きさ、色、フォント等を調整しdata/assetsに置いておく必要がある。
     読み込んだ画像はキャッシュし、存在しない文字は空白幅の画像を入れる。
@@ -41,7 +41,7 @@ class ImageFont:
         self._cache: dict[str, pygame.Surface | None] = {}
 
     def _load_char_image(self, char: str) -> pygame.Surface | None:
-        """1文字の画像を読み込み、キャッシュする。
+        """1文字の画像を読み込み、キャッシュする.
 
         mlx_png_file_to_image()相当の処理。
         convert_alphaは事前にset_mode()でディスプレイが初期化されていないとエラーになる。
@@ -70,7 +70,7 @@ class ImageFont:
         return image
 
     def render_text(self, text: str) -> pygame.Surface:
-        """文字列を1枚の画像(Surface)として合成する。
+        """文字列を1枚の画像(Surface)として合成する.
 
         受け取ったテキストの各文字を横に並べる。
         スペースと存在しない文字はspace_width分の空白を入れる。

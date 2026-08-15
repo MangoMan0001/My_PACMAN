@@ -1,3 +1,4 @@
+"""コンフィグファイルのデータ型を定義する."""
 from pydantic import BaseModel, Field, field_validator
 from pathlib import Path
 

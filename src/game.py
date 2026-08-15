@@ -1,3 +1,5 @@
+"""ゲーム全体のシーンを管理するクラス."""
+
 import pygame
 import time
 
@@ -11,7 +13,7 @@ from src.model.score_manager import ScoreManager
 
 
 class Game:
-    """ゲームのメインクラス。
+    """ゲームのメインクラス.
 
     Attributes:
         config (ConfigModel): 設定情報を保持するConfigModelオブジェクト
@@ -42,7 +44,7 @@ class Game:
         self.score_manager = ScoreManager(config)
 
     def run(self) -> None:
-        """ゲームのメインループを実行する関数。
+        """ゲームのメインループを実行する関数.
 
         ゲームのメインループを実行し、シーンの更新と描画を行う。
         """

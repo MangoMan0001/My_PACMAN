@@ -1,3 +1,4 @@
+"""clydeクラス."""
 import pygame
 from pathlib import Path
 
@@ -8,7 +9,7 @@ from src.model.map import Map
 
 
 class Clyde(Ghost):
-    """GhostのClydeを表すクラス。
+    """GhostのClydeを表すクラス.
 
     Clyde、グズタ、おとぼけ、pokey、のろまなキャラクター。
 
@@ -27,7 +28,7 @@ class Clyde(Ghost):
                 self.images[key] = pygame.image.load(f"{asset_root}/ghost/ghost_clyde_{key}.png")
 
     def level_up(self, game_state: GameState) -> None:
-        """クリア後のレベルアップ処理。
+        """クリア後のレベルアップ処理.
 
         Args:
             game_state (GameState): ゲームの状態を保持するGameStateオブジェクト。
@@ -45,7 +46,7 @@ class Clyde(Ghost):
         self.is_drawable = True
 
     def _get_target(self, game_state: GameState) -> tuple[int, int]:
-        """ゴーストの移動目標座標を取得する。
+        """ゴーストの移動目標座標を取得する.
 
         パックマンとの距離によってターゲットが変わる。
         「8マス以上」離れている時はBlinkyと同じくパックマンをターゲットにする。

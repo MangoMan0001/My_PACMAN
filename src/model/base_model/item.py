@@ -1,3 +1,4 @@
+"""アイテムオブジェクト基底クラス."""
 import pygame
 
 from src.model.game_state import GameState
@@ -7,7 +8,7 @@ from src.model.map import Map
 
 # --- アイテムの基底クラス ---
 class Item(Entity):
-    """アイテムの基底クラス
+    """アイテムの基底クラス.
 
     Attributes:
         px (int): アイテムのピクセル単位でのx座標
@@ -28,7 +29,7 @@ class Item(Entity):
         self.is_eaten: bool = False  # 食べられているか
 
     def update(self, game_state: GameState) -> None:
-        """パックガムの状態を更新する関数。
+        """パックガムの状態を更新する関数.
 
         Args:
             game_state (GameState): ゲームの状態を保持するGameStateオブジェクト
@@ -39,7 +40,7 @@ class Item(Entity):
         self.px, self.py = map.cell_center(self.x, self.y)
 
     def draw(self, screen: pygame.Surface) -> None:
-        """パックガムを描画する関数。
+        """パックガムを描画する関数.
 
         Args:
             screen (pygame.Surface): 描画対象のSurfaceオブジェクト
@@ -50,7 +51,7 @@ class Item(Entity):
                                              self.size, self.size))
 
     def level_up(self, game_state: GameState) -> None:
-        """レベルアップ時にパックガムをリセットする関数。
+        """レベルアップ時にパックガムをリセットする関数.
 
         Args:
             game_state (GameState): ゲームの状態を保持するGameStateオブジェクト
@@ -60,7 +61,7 @@ class Item(Entity):
 #    Private functions
 
     def _draw_rect(self, screen: pygame.Surface, color: tuple[int, int, int], rect: tuple[int, int, int, int]) -> None:
-        """指定された矩形領域に色を塗る関数。
+        """指定された矩形領域に色を塗る関数.
 
         Args:
             screen (pygame.Surface): 描画対象のSurfaceオブジェクト

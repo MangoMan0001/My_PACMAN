@@ -1,3 +1,4 @@
+"""pacmanクラス."""
 import pygame
 from pathlib import Path
 
@@ -8,7 +9,7 @@ from src.model.base_model.character import Character, Direction
 
 # --- パックマン ---
 class Pacman(Character):
-    """パックマンのクラス
+    """パックマンのクラス.
 
     Attributes:
         direction (Direction): 現在の進行方向
@@ -61,7 +62,7 @@ class Pacman(Character):
         self.is_dash = False
 
     def update(self, game_state: GameState) -> None:
-        """パックマンの状態を更新する関数。
+        """パックマンの状態を更新する関数.
 
         Args:
             game_state (GameState): ゲームの状態を保持するGameStateオブジェクト
@@ -116,7 +117,7 @@ class Pacman(Character):
                 break
 
     def draw(self, screen: pygame.Surface) -> None:
-        """パックマンを描画する関数。
+        """パックマンを描画する関数.
 
         Args:
             screen (pygame.Surface): 描画対象のSurfaceオブジェクト
@@ -127,7 +128,7 @@ class Pacman(Character):
             screen.blit(self.img_closed, (self.px - self.space, self.py - self.space))
 
     def level_up(self, game_state: GameState) -> None:
-        """クリア後のレベルアップ処理
+        """クリア後のレベルアップ処理.
 
         Args:
             game_state (GameState): ゲームの状態を保持するGameStateオブジェクト
@@ -142,7 +143,7 @@ class Pacman(Character):
         self.is_moving = False
 
     def get_pos_cell(self) -> tuple[int, int]:
-        """Pacmanの現在のセル座標を取得する。
+        """Pacmanの現在のセル座標を取得する.
 
         Returns:
             tuple[int, int]: Pacmanの現在のセル座標 (x, y)
@@ -150,7 +151,7 @@ class Pacman(Character):
         return (self.x, self.y)
 
     def get_pos_pixel(self) -> tuple[int, int]:
-        """Pacmanの現在のピクセル座標を取得する。
+        """Pacmanの現在のピクセル座標を取得する.
 
         Returns:
             tuple[int, int]: Pacmanの現在のピクセル座標 (px, py)
@@ -158,9 +159,9 @@ class Pacman(Character):
         return (self.px, self.py)
 
     def dash(self) -> None:
-        """パックマンのダッシュ状態を有効にする関数。"""
+        """パックマンのダッシュ状態を有効にする関数."""
         self.is_dash = True
 
     def walk(self) -> None:
-        """パックマンのダッシュ状態を無効にする関数。"""
+        """パックマンのダッシュ状態を無効にする関数."""
         self.is_dash = False

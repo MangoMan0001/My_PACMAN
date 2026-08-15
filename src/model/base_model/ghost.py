@@ -1,3 +1,4 @@
+"""ゴーストオブジェクト基底クラス."""
 import pygame
 from collections import deque
 from abc import abstractmethod
@@ -11,7 +12,7 @@ from src.model.base_model.character import Direction
 
 
 class GhostMode(Enum):
-    """ゴーストの状態を表す列挙型。
+    """ゴーストの状態を表す列挙型.
 
     Attributes:
         CHASE (auto): 追跡状態
@@ -28,7 +29,7 @@ class GhostMode(Enum):
 
 # --- ゴーストの基底クラス ---
 class Ghost(Character):
-    """ゴーストの基底クラス
+    """ゴーストの基底クラス.
 
     Attributes:
         points (int): ゴーストを捕食した時のポイント
@@ -100,7 +101,7 @@ class Ghost(Character):
         self.is_drawable: bool = True
 
     def update(self, game_state: GameState) -> None:
-        """Blinkyの状態を更新する関数。
+        """Blinkyの状態を更新する関数.
 
         セルの中心に到達 -> 自分の座標を更新 -> ターゲットとルートを更新
         -> 次の方向を決定 -> 進行方向に応じて座標を更新 -> アニメーションのフレームを更新
@@ -166,7 +167,7 @@ class Ghost(Character):
                 break
 
     def draw(self, screen: pygame.Surface) -> None:
-        """ゴーストを描画する関数。
+        """ゴーストを描画する関数.
 
         Args:
             screen (pygame.Surface): 描画対象のSurfaceオブジェクト
@@ -184,7 +185,7 @@ class Ghost(Character):
 
     @abstractmethod
     def level_up(self, game_state: GameState) -> None:
-        """クリア後のレベルアップ処理
+        """クリア後のレベルアップ処理.
 
         Args:
             game_state (GameState): ゲームの状態を保持するGameStateオブジェクト
@@ -192,12 +193,12 @@ class Ghost(Character):
         pass
 
     def be_scared(self) -> None:
-        """いじけ状態にする関数。"""
+        """いじけ状態にする関数."""
         self.current_mode = GhostMode.SCARED
         self.mode_timer = 0.0
 
     def be_eaten(self) -> None:
-        """捕食後状態にする関数。"""
+        """捕食後状態にする関数."""
         self.current_mode = GhostMode.EATEN
 
 #    Praivate Method
@@ -205,7 +206,7 @@ class Ghost(Character):
     # 各ゴーストの独自アルゴリズム
     @abstractmethod
     def _get_target(self, game_state: GameState) -> tuple[int, int]:
-        """ゴーストの移動目標座標を取得する
+        """ゴーストの移動目標座標を取得する.
 
         Args:
             game_state (GameState): ゲームの状態を保持するオブジェクト
@@ -216,7 +217,7 @@ class Ghost(Character):
         pass
 
     def _get_route(self, game_state: GameState) -> list[Direction]:
-        """ゴーストの移動ルートを取得する。
+        """ゴーストの移動ルートを取得する.
 
         ゴーストの現在位置からターゲットまでの最短経路を探索し、移動ルートを返す。
 
@@ -323,7 +324,7 @@ class Ghost(Character):
         return route
 
     def _mode_change(self, game_state: GameState) -> None:
-        """ゴーストの状態を切り替える関数。
+        """ゴーストの状態を切り替える関数.
 
         CHASE <-> SCATTER
         CHASE <-> SCARED -> EATEN -> READY -> CHASE

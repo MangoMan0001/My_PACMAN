@@ -1,3 +1,4 @@
+"""pinkyクラス."""
 import pygame
 from pathlib import Path
 
@@ -8,7 +9,7 @@ from src.model.map import Map
 
 
 class Pinky(Ghost):
-    """GhostのPinkyを表すクラス。
+    """GhostのPinkyを表すクラス.
 
     Pinky、ピンキー、待ちぶせ、speedy、素早いキャラクター。
 
@@ -27,7 +28,7 @@ class Pinky(Ghost):
                 self.images[key] = pygame.image.load(f"{asset_root}/ghost/ghost_pinky_{key}.png")
 
     def level_up(self, game_state: GameState) -> None:
-        """クリア後のレベルアップ処理。
+        """クリア後のレベルアップ処理.
 
         Args:
             game_state (GameState): ゲームの状態を保持するGameStateオブジェクト。
@@ -45,7 +46,7 @@ class Pinky(Ghost):
         self.is_drawable = True
 
     def _get_target(self, game_state: GameState) -> tuple[int, int]:
-        """ゴーストの移動目標座標を取得する。
+        """ゴーストの移動目標座標を取得する.
 
         パックマンが今向いている方向の、4マス先の座標を狙って移動する。
 

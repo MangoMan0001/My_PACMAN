@@ -1,3 +1,4 @@
+"""blinkyクラス."""
 import pygame
 from pathlib import Path
 
@@ -8,7 +9,7 @@ from src.model.map import Map
 
 
 class Blinky(Ghost):
-    """GhostのBlinkyを表すクラス。
+    """GhostのBlinkyを表すクラス.
 
     Blinky、アカベエ、追いかけ、shadow、つきまとうキャラクター。
 
@@ -27,7 +28,7 @@ class Blinky(Ghost):
                 self.images[key] = pygame.image.load(f"{asset_root}/ghost/ghost_blinky_{key}.png")
 
     def level_up(self, game_state: GameState) -> None:
-        """クリア後のレベルアップ処理。
+        """クリア後のレベルアップ処理.
 
         Args:
             game_state (GameState): ゲームの状態を保持するGameStateオブジェクト。
@@ -45,7 +46,7 @@ class Blinky(Ghost):
         self.is_drawable = True
 
     def _get_target(self, game_state: GameState) -> tuple[int, int]:
-        """ゴーストの移動目標座標を取得する。
+        """ゴーストの移動目標座標を取得する.
 
         現在のパックマンがいるマスの座標を目指して移動する。
 
