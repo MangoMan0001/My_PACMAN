@@ -267,7 +267,15 @@ class Map(Entity):
         """
         x = self.x // 2
         y = self.y // 2
-
+        if self.wall_map[y][x] == 15:
+            if self.wall_map[y][x - 1] != 15:
+                return (x - 1, y)
+            elif self.wall_map[y - 1][1] != 15:
+                return (x, y - 1)
+            elif self.wall_map[y][x + 1] != 15:
+                return (x + 1, y)
+            elif self.wall_map[y + 1][x] != 15:
+                return (x, y + 1)
         return (x, y)
 
 #    Private functions
