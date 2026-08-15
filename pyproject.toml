@@ -54,7 +54,9 @@ exclude = [
     ".venv",
     "test.py",
     "__init__.py",
-	"data"
+	"data",
+	"dist",
+	"build"
 ]
 max-line-length = 130
 

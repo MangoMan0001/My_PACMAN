@@ -28,7 +28,7 @@ class ScoreManager():
     """
     def __init__(self, config: ConfigModel):
         """ScoreManagerのコンストラクタ."""
-        self.score_root = Path(__file__).resolve().parents[3] / "data" / "score"
+        self.score_root = Path(__file__).resolve().parents[2] / "data" / "score"
         self.file_path: Path = Path(self.score_root) / config.highscore_filename.name
         self.scores: list[dict[str, str | int]] = [{'name': 'No One', 'score': 0}]
 
@@ -37,7 +37,9 @@ class ScoreManager():
             try:
                 with open(self.file_path, 'r', encoding='utf-8') as f:
                     temp_score = json.load(f)
-                    if self._validate_score(temp_score):
+                    if temp_score == []:
+                        pass
+                    elif self._validate_score(temp_score):
                         self.scores = temp_score
                     self._save_file()
 
