@@ -189,14 +189,6 @@ wheels = [
 ]
 
 [[package]]
-name = "mlx"
-version = "2.2"
-source = { path = "data/mlx/mlx-2.2-py3-none-any.whl" }
-wheels = [
-    { filename = "mlx-2.2-py3-none-any.whl", hash = "sha256:7a1a44b50b6295f574522ba1a1e589632c6299d193dec57c951e8fdfb3337195" },
-]
-
-[[package]]
 name = "mypy"
 version = "2.3.0"
 source = { registry = "https://pypi.org/simple" }
@@ -255,7 +247,6 @@ dependencies = [
     { name = "flake8-bugbear" },
     { name = "flake8-pyproject" },
     { name = "mazegenerator" },
-    { name = "mlx" },
     { name = "mypy" },
     { name = "pep8-naming" },
     { name = "pydantic" },
@@ -270,7 +261,6 @@ requires-dist = [
     { name = "flake8-bugbear", specifier = ">=25.11.29" },
     { name = "flake8-pyproject" },
     { name = "mazegenerator", path = "data/map/mazegenerator-2.1.0-py3-none-any.whl" },
-    { name = "mlx", path = "data/mlx/mlx-2.2-py3-none-any.whl" },
     { name = "mypy", specifier = ">=1.19.1" },
     { name = "pep8-naming", specifier = ">=0.15.1" },
     { name = "pydantic", specifier = ">=2.12.5" },

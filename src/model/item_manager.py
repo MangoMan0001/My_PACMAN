@@ -53,11 +53,11 @@ class ItemManager:
         Args:
             game_state (GameState): ゲームの状態を保持するGameStateオブジェクト
         """
-        for item in self.pacgums:
-            item.update(game_state)
+        for gum in self.pacgums:
+            gum.update(game_state)
 
-        for item in self.super_pacgums:
-            item.update(game_state)
+        for sgum in self.super_pacgums:
+            sgum.update(game_state)
         pass
 
     def draw(self, screen: pygame.Surface) -> None:
@@ -66,11 +66,11 @@ class ItemManager:
         Args:
             screen (pygame.Surface): 描画対象のSurfaceオブジェクト
         """
-        for item in self.pacgums:
-            item.draw(screen)
+        for gum in self.pacgums:
+            gum.draw(screen)
 
-        for item in self.super_pacgums:
-            item.draw(screen)
+        for sgum in self.super_pacgums:
+            sgum.draw(screen)
 
     def level_up(self, game_state: GameState) -> None:
         """レベルアップ時にアイテムをリセットする
@@ -78,9 +78,9 @@ class ItemManager:
         Args:
             game_state (GameState): ゲームの状態を保持するGameStateオブジェクト
         """
-        self.item_map: list[list[Optional[Item]]] = self._generate_map(game_state)
-        self.pacgums: list[Pacgum] = self._generate_pacgum()
-        self.super_pacgums: list[SuperPacgum] = self._generate_super_pacgum()
+        self.item_map = self._generate_map(game_state)
+        self.pacgums = self._generate_pacgum()
+        self.super_pacgums = self._generate_super_pacgum()
 
     def try_eat(self, game_state: GameState) -> None | Item:
         """Pacmanがアイテムを取得できるか判定し、取得できる場合はアイテムを取得する。
@@ -148,7 +148,7 @@ class ItemManager:
         map: Map = game_state.map
 
         # 各オブジェクトの座標リストを初期化
-        temp_map = [[CellType.PATH] * map.x for _ in range(map.y)]
+        temp_map: list[list[int]] = [[CellType.PATH] * map.x for _ in range(map.y)]
         item_map: list[list[Optional[Item]]] = [[None] * map.x for _ in range(map.y)]
 
         # SuperPacgumのみ四隅に配置
