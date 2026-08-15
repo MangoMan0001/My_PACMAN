@@ -1,4 +1,4 @@
-"""ゲーム中、画面に情報を表示するHUDを描画するモジュール。"""
+"""ゲーム中、画面に情報を表示するHUDを描画するモジュール."""
 import pygame
 from typing import Any
 from pathlib import Path
@@ -8,7 +8,7 @@ from src.model.image_font import ImageFont
 
 
 class HUD:
-    """ゲーム中のHUD(スコア、ハイスコア、残機、レベル、残り時間)を描画するシーン。
+    """ゲーム中のHUD(スコア、ハイスコア、残機、レベル、残り時間)を描画するシーン.
 
     Attributes:
         highscore (int): ハイスコア。
@@ -17,7 +17,7 @@ class HUD:
     """
 
     def __init__(self, config: ConfigModel, highscore: int) -> None:
-        """HUDの初期化。
+        """HUDの初期化.
 
         Args:
             config (ConfigModel): 設定モデル。
@@ -58,9 +58,12 @@ class HUD:
         self.cheat_off_font = ImageFont(Path("pacfont_32_gray"))
 
     def update(self, game_state: Any) -> None:
-        """
-        イベントを処理する。画面遷移が必要な場合はシーン名と受け渡すデータをタプルで返す。
+        """イベントを処理する。画面遷移が必要な場合はシーン名と受け渡すデータをタプルで返す.
+
         何もなければNoneを返す
+
+        Args:
+            game_state (GameState): ゲームの状態を保持するGameStateオブジェクト。
         """
         if game_state.is_cheating:
             self.is_cheating = True
@@ -79,7 +82,7 @@ class HUD:
             self.remaining_time = game_state.config.level_max_time
 
     def draw(self, screen: pygame.Surface) -> None:
-        """HUDを描画する。
+        """HUDを描画する.
 
         画面の上部にSCORE、HIGHSCORE、TIMEを描画し、画面の下部に残機を描画する。
         現在画面サイズから描画位置を計算しているが、get_width()/get_height()の使用は確認。

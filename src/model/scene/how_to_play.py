@@ -1,4 +1,4 @@
-"""MainMenu、Pauseで「HOW TO PLAY」を選択したときに表示されるシーン。"""
+"""MainMenu、Pauseで「HOW TO PLAY」を選択したときに表示されるシーン."""
 import pygame
 from pathlib import Path
 
@@ -6,13 +6,14 @@ from src.model.image_font import ImageFont
 
 
 class HowToPlay:
-    """MainMenu、Pauseの「HOW TO PLAY」を選択したときに表示されるシーン。
+    """MainMenu、Pauseの「HOW TO PLAY」を選択したときに表示されるシーン.
 
     Attributes:
         howto_image (pygame.Surface): How to Playの画像。
         info_image (pygame.Surface): インフォメーションの画像。
     """
     def __init__(self) -> None:
+        """HowToPlayクラスのコンストラクタ."""
         # How to Playの画像を読み込む
         asset_root = Path(__file__).resolve().parents[3] / "data" / "assets"
         image_path = Path("how_to_play") / "how_to_play.png"
@@ -25,7 +26,7 @@ class HowToPlay:
         self.info_image = info_font.render_text("PUSH ESC TO RETURN")
 
     def update(self, events: list[pygame.event.Event]) -> bool:
-        """毎フレーム呼ばれる処理。イベントを処理し、必要に応じて画面遷移を行う。
+        """毎フレーム呼ばれる処理。イベントを処理し、必要に応じて画面遷移を行う.
 
         Args:
             events (list[pygame.event.Event]): pygameのイベントリスト。
@@ -40,7 +41,7 @@ class HowToPlay:
         return True
 
     def draw(self, screen: pygame.Surface) -> None:
-        """毎フレーム呼ばれる描画処理。画面に描画する。
+        """毎フレーム呼ばれる描画処理。画面に描画する.
 
         Args:
             screen (pygame.Surface): 描画対象のSurfaceオブジェクト

@@ -1,7 +1,4 @@
-"""
-- [ ] 現在updateのfor event in events:の中と、Pauseシーンのupdateの両方でPause/Resumeの処理を行っている
-Pause中のEnterがデバッグのEnterに吸われてしまうので、削除したらfor event ループの中でPause/Resumeの処理を行うようにする
-"""
+"""ゲームの進行を管理するクラス."""
 
 import pygame
 import time
@@ -21,7 +18,7 @@ from src.model.score_manager import ScoreManager
 
 
 class GameManager(Scene):
-    """ゲームの進行を管理するクラス。
+    """ゲームの進行を管理するクラス.
 
     Attributes:
         game_state (GameState): ゲームの状態を保持するGameStateオブジェクト
@@ -40,6 +37,7 @@ class GameManager(Scene):
     def __init__(
         self, config: ConfigModel, screen: pygame.Surface, score_manager: ScoreManager
     ) -> None:
+        """GameManagerクラスのコンストラクタ."""
         super().__init__(config)
         self.game_state: GameState = GameState(config)
 
@@ -70,7 +68,7 @@ class GameManager(Scene):
         self.is_invincible: bool = False
 
     def update(self, events: list[pygame.event.Event]) -> None | tuple[str, Any]:
-        """ゲームの状態を更新する関数。
+        """ゲームの状態を更新する関数.
 
         各状態（READY、PLAYING、HIT、PAUSE）に応じてゲームの進行を管理し、必要に応じてシーンの変更を要求する。
 
@@ -152,7 +150,7 @@ class GameManager(Scene):
         return scene_request
 
     def draw(self, screen: pygame.Surface) -> None:
-        """ゲームの状態を描画する関数。
+        """ゲームの状態を描画する関数.
 
         Args:
             screen (pygame.Surface): 描画先のpygame.Surfaceオブジェクト。
@@ -165,7 +163,7 @@ class GameManager(Scene):
             self.pause_scene.draw(screen)
 
     def _update_ready(self, game_state: GameState) -> None | tuple[str, Any]:
-        """READY状態のゲーム進行を管理する関数。
+        """READY状態のゲーム進行を管理する関数.
 
         3秒間の待機後、PLAYING状態に遷移する。
 
@@ -190,7 +188,7 @@ class GameManager(Scene):
         return None
 
     def _update_playing(self, game_state: GameState) -> None | tuple[str, Any]:
-        """PLAYING状態のゲーム進行を管理する関数。
+        """PLAYING状態のゲーム進行を管理する関数.
 
         pacmanの移動、ゴーストの移動、アイテムの取得、衝突判定などを行い、必要に応じてシーンの変更を要求する。
 
@@ -247,7 +245,8 @@ class GameManager(Scene):
         return None
 
     def _update_hit(self, game_state: GameState) -> None | tuple[str, Any]:
-        """HIT状態のゲーム進行を管理する関数。
+        """HIT状態のゲーム進行を管理する関数.
+
         Pacmanがゴーストに当たった後の処理を行い、必要に応じてシーンの変更を要求する。
 
         Args:
@@ -266,7 +265,7 @@ class GameManager(Scene):
         return None
 
     def _update_pause(self, game_state: GameState) -> None | tuple[str, Any]:
-        """PAUSE状態のゲーム進行を管理する関数。
+        """PAUSE状態のゲーム進行を管理する関数.
 
         Args:
             game_state (GameState): ゲームの状態を保持するGameStateオブジェクト
@@ -286,7 +285,7 @@ class GameManager(Scene):
         return None
 
     def _cheating(self) -> None:
-        """チートモードの処理を行う関数。"""
+        """チートモードの処理を行う関数."""
         # 無敵
         self.is_invincible = self.game_state.is_cheat_star
 
@@ -311,7 +310,7 @@ class GameManager(Scene):
             self.character_manager.pacman.walk()
 
     def _level_up(self) -> None:
-        """レベルアップ処理を行う関数。"""
+        """レベルアップ処理を行う関数."""
         if self.game_state.current_level < 9:
             self.game_state.current_level += 1
         self.map.level_up(self.game_state)

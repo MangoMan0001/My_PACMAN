@@ -1,3 +1,4 @@
+"""スコアの管理を行うモジュール."""
 import os
 import json
 from pathlib import Path
@@ -8,7 +9,7 @@ from src.model.base_model.config_model import ConfigModel
 
 
 class ScoreModel(BaseModel):
-    """スコアのデータモデル
+    """スコアのデータモデル.
 
     Attributes:
         name (str): プレイヤーの名前
@@ -19,13 +20,14 @@ class ScoreModel(BaseModel):
 
 
 class ScoreManager():
-    """スコアの管理を行うクラス。
+    """スコアの管理を行うクラス.
 
     Attributes:
         file_path (Path): スコアを保存するファイルのパス
         scores (list[dict[str, str | int]]): スコアのリスト
     """
     def __init__(self, config: ConfigModel):
+        """ScoreManagerのコンストラクタ."""
         self.score_root = Path(__file__).resolve().parents[3] / "data" / "score"
         self.file_path: Path = Path(self.score_root) / config.highscore_filename.name
         self.scores: list[dict[str, str | int]] = [{'name': 'No One', 'score': 0}]
@@ -49,7 +51,7 @@ class ScoreManager():
             self._save_file()
 
     def save_score(self, name: str, score: int) -> None:
-        """スコアを保存するメソッド。
+        """スコアを保存するメソッド.
 
         Args:
             name (str): プレイヤーの名前
@@ -61,7 +63,7 @@ class ScoreManager():
         self._save_file()
 
     def get_highscore(self) -> int:
-        """ハイスコアを取得するメソッド。
+        """ハイスコアを取得するメソッド.
 
         Returns:
             int: ハイスコア
@@ -69,7 +71,7 @@ class ScoreManager():
         return int(max(self.scores, key=lambda x: x['score'])['score'])
 
     def get_sorted_score(self) -> list[dict[str, str | int]]:
-        """スコアを降順にソートして返すメソッド。
+        """スコアを降順にソートして返すメソッド.
 
         Returns:
             list[dict[str, str | int]]: スコアを降順にソートしたリスト
@@ -79,7 +81,7 @@ class ScoreManager():
 #    Private Method
 
     def _save_file(self) -> None:
-        """スコアをファイルに保存するメソッド。
+        """スコアをファイルに保存するメソッド.
 
         Raises:
             OSError: ファイルの保存に失敗した場合
@@ -93,7 +95,7 @@ class ScoreManager():
             print('file save error:', e)
 
     def _validate_score(self, temp_score: Any) -> bool:
-        """スコアのデータを検証するメソッド。
+        """スコアのデータを検証するメソッド.
 
         Args:
             temp_score (Any): 検証するスコアのデータ

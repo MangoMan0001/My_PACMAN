@@ -1,4 +1,4 @@
-"""ゲーム中のポーズメニューを描画するクラス。
+"""ゲーム中のポーズメニューを描画するクラス.
 
 GameManagerクラスの中でのみ使用されるため、Sceneクラスを継承していない。
 
@@ -12,7 +12,7 @@ from src.model.scene.how_to_play import HowToPlay
 
 
 class Pause:
-    """ゲーム中のポーズメニューを描画するシーン。
+    """ゲーム中のポーズメニューを描画するシーン.
 
     Attributes:
         title_image (pygame.Surface): ポーズメニューのタイトル画像
@@ -29,6 +29,7 @@ class Pause:
     ITEM_LINE_SPACE = 0.5  # メニュー項目の行間
 
     def __init__(self) -> None:
+        """Pauseクラスのコンストラクタ."""
         # ポーズの文字列画像
         title_font = ImageFont(Path("pacfont_128"))
         title_text = "PAUSE"
@@ -58,11 +59,12 @@ class Pause:
         self.showing_how_to_play = False
 
     def reset(self) -> None:
-        """ポーズメニューが表示されるたびに、選択インデックスを初期化する。"""
+        """ポーズメニューが表示されるたびに、選択インデックスを初期化する."""
         self.selected_index = 0
 
     def update(self, events: list[pygame.event.Event]) -> None | str:
-        """ポーズメニューの更新処理。
+        """ポーズメニューの更新処理.
+
         イベントを処理する。画面遷移が必要な場合はシーン名と受け渡すデータをタプルで返す。
         何もなければNoneを返す
 
@@ -109,7 +111,7 @@ class Pause:
         return None
 
     def _draw_title(self, screen: pygame.Surface, screen_x: int, screen_y: int) -> None:
-        """PAUSEのタイトルを画面中央に描画する。"""
+        """PAUSEのタイトルを画面中央に描画する."""
         # PAUSEのタイトルを画面中央に描画
         title_x = (screen_x - self.title_image.get_width()) // 2
         title_y = (screen_y // 30) * 5
@@ -118,9 +120,9 @@ class Pause:
     def _draw_menu_item(
         self, screen: pygame.Surface, screen_x: int, screen_y: int
     ) -> None:
-        """メニュー項目の描画。
+        """メニュー項目の描画.
 
-        画面の中央にメニュー項目を描画し、選択中の項目にはカーソルを表示する。
+        画面の中央にメニュー項目を描画し、選択中の項目にはカーソルを表示する
 
         Args:
             screen (pygame.Surface): 描画対象のSurfaceオブジェクト
@@ -146,7 +148,7 @@ class Pause:
                 screen.blit(self.cursor_image, (cursor_x, cursor_y))
 
     def draw(self, screen: pygame.Surface) -> None:
-        """ポーズ画面の描画。
+        """ポーズ画面の描画.
 
         Args:
             screen (pygame.Surface): 描画対象のSurfaceオブジェクト
